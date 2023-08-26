@@ -5,12 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class StatDtoResp {
+public class StatDtoRequest {
     private String app;
     private String uri;
-    private Integer hits;
+    private String ip;
+    private LocalDateTime timestamp;
 }

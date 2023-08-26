@@ -1,4 +1,4 @@
-package ru.practicum.ewm.stat;
+package ru.practicum.ewm.stat_svc;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

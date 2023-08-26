@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>ru.practicum</groupId>
+        <groupId>ru.practicum.ewm.stat_svc</groupId>
         <artifactId>stat_svc</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
@@ -15,4 +15,12 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>ru.practicum.ewm.stat_svc</groupId>
+            <artifactId>dto</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 </project>

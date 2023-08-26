@@ -4,21 +4,23 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>ru.practicum</groupId>
+        <groupId>ru.practicum.ewm.stat_svc</groupId>
         <artifactId>stat_svc</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>server</artifactId>
-    <name>service</name>
+    <name>server</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
+            <groupId>ru.practicum.ewm.stat_svc</groupId>
+            <artifactId>dto</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

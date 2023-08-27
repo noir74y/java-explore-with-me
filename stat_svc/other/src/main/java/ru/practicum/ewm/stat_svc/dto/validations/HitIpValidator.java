@@ -1,8 +1,7 @@
-package ru.practicum.ewm.stat_svc.dto.utils.validations;
+package ru.practicum.ewm.stat_svc.dto.validations;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

@@ -13,6 +13,7 @@ import ru.practicum.ewm.stat_svc.dto.model.HitsRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
@@ -21,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StatController {
     private final StatService statService;
+    private final DateTimeFormatter dateTimeFormatter;
 
     @PostMapping("/hit")
     @ResponseStatus(code = HttpStatus.CREATED)
@@ -31,10 +33,29 @@ public class StatController {
 
     @GetMapping("/stats")
     @Valid
-    public List<DtoHitOut> getHits(@RequestParam @NotNull @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
-                                   @RequestParam @NotNull @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
-                                   @RequestParam(required = false) List<String> uris,
-                                   @RequestParam(defaultValue = "false") Boolean unique
+    public List<DtoHitOut> getHitsWithLocalDateTimeEncoded(@RequestParam @NotNull String start,
+                                                           @RequestParam @NotNull String end,
+                                                           @RequestParam(required = false) List<String> uris,
+                                                           @RequestParam(defaultValue = "false") Boolean unique
+    ) {
+
+        HitsRequest hitsRequest = HitsRequest.builder()
+                .start(LocalDateTime.parse(start, dateTimeFormatter))
+                .end(LocalDateTime.parse(end, dateTimeFormatter))
+                .uris(uris)
+                .unique(unique)
+                .build();
+
+        log.info("GET /stats {}", hitsRequest);
+        return statService.getHits(hitsRequest);
+    }
+
+    @GetMapping("/stats/LocalDateTime")
+    @Valid
+    public List<DtoHitOut> getHitsWithLocalDateTime(@RequestParam @NotNull @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
+                                                    @RequestParam @NotNull @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
+                                                    @RequestParam(required = false) List<String> uris,
+                                                    @RequestParam(defaultValue = "false") Boolean unique
     ) {
         HitsRequest hitsRequest = HitsRequest.builder().start(start).end(end).uris(uris).unique(unique).build();
         log.info("GET /stats {}", hitsRequest);

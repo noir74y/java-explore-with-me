@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.practicum.ewm.stat_svc.dto.model.DtoHitIn;
 import ru.practicum.ewm.stat_svc.dto.model.DtoHitOut;
 import ru.practicum.ewm.stat_svc.dto.model.HitsRequest;
-import ru.practicum.ewm.stat_svc.dto.utils.mapper.HitModelMapper;
+import ru.practicum.ewm.stat_svc.dto.mapper.HitModelMapper;
 
 import java.util.List;
 

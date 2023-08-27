@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.ewm.stat_svc.dto.utils.validations.HitsRequestDatesConstraint;
+import ru.practicum.ewm.stat_svc.dto.validations.HitsRequestDatesConstraint;
 
 import java.time.LocalDateTime;
 import java.util.List;

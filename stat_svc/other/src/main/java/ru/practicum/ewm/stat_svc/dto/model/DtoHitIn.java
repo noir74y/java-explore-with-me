@@ -3,9 +3,8 @@ package ru.practicum.ewm.stat_svc.dto.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.ewm.stat_svc.dto.utils.AppConfig;
-import ru.practicum.ewm.stat_svc.dto.utils.validations.HitIpConstraint;
-import ru.practicum.ewm.stat_svc.dto.utils.validations.HitsRequestDatesConstraint;
+import ru.practicum.ewm.stat_svc.dto.AppConfig;
+import ru.practicum.ewm.stat_svc.dto.validations.HitIpConstraint;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;

@@ -1,4 +1,4 @@
-package ru.practicum.ewm.stat_svc.dto.utils.mapper;
+package ru.practicum.ewm.stat_svc.dto.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;

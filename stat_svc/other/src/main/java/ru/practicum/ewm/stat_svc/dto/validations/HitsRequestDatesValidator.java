@@ -1,4 +1,4 @@
-package ru.practicum.ewm.stat_svc.dto.utils.validations;
+package ru.practicum.ewm.stat_svc.dto.validations;
 
 import ru.practicum.ewm.stat_svc.dto.model.HitsRequest;
 

@@ -14,6 +14,10 @@ import ru.practicum.ewm.stat_svc.dto.model.HitsRequest;
 import javax.validation.Valid;
 import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -36,14 +40,14 @@ public class StatController {
 
     @GetMapping("/stats")
     @Valid
-    public List<DtoHitOut> getHitsWithLocalDateTimeEncoded(@RequestParam @NotNull String start,
+    public List<DtoHitOut> getHitsWithEncodedLocalDateTime(@RequestParam @NotNull String start,
                                                            @RequestParam @NotNull String end,
                                                            @RequestParam(required = false) List<String> uris,
                                                            @RequestParam(defaultValue = "false") Boolean unique
-    ) {
+    ) throws UnsupportedEncodingException {
         HitsRequest hitsRequest = HitsRequest.builder()
-                .start(LocalDateTime.parse(start, dateTimeFormatter))
-                .end(LocalDateTime.parse(end, dateTimeFormatter))
+                .start(LocalDateTime.parse(decodeValue(start), dateTimeFormatter))
+                .end(LocalDateTime.parse(decodeValue(end), dateTimeFormatter))
                 .uris(uris)
                 .unique(unique)
                 .build();
@@ -56,15 +60,22 @@ public class StatController {
         return statService.getHits(hitsRequest);
     }
 
-    @GetMapping("/stats/LocalDateTime")
+    @GetMapping("/stats/plainLocalDateTime")
     @Valid
-    public List<DtoHitOut> getHitsWithLocalDateTime(@RequestParam @NotNull @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
-                                                    @RequestParam @NotNull @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
-                                                    @RequestParam(required = false) List<String> uris,
-                                                    @RequestParam(defaultValue = "false") Boolean unique
-    ) {
-        HitsRequest hitsRequest = HitsRequest.builder().start(start).end(end).uris(uris).unique(unique).build();
-        log.info("GET /stats {}", hitsRequest);
-        return statService.getHits(hitsRequest);
+    public List<DtoHitOut> getHitsWithPlainLocalDateTime(@RequestParam @NotNull @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
+                                                         @RequestParam @NotNull @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
+                                                         @RequestParam(required = false) List<String> uris,
+                                                         @RequestParam(defaultValue = "false") Boolean unique
+    ) throws UnsupportedEncodingException {
+        log.info("GET /stats/plainLocalDateTime {}", HitsRequest.builder().start(start).end(end).uris(uris).unique(unique).build());
+        return getHitsWithEncodedLocalDateTime(encodeValue(start.format(dateTimeFormatter)), encodeValue(end.format(dateTimeFormatter)), uris, unique);
+    }
+
+    private String encodeValue(String value) throws UnsupportedEncodingException {
+        return URLEncoder.encode(value, StandardCharsets.UTF_8);
+    }
+
+    private String decodeValue(String value) throws UnsupportedEncodingException {
+        return URLDecoder.decode(value, StandardCharsets.UTF_8);
     }
 }

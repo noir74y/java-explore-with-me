@@ -1,6 +1,8 @@
 package ru.practicum.ewm.stat_svc.server;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -10,14 +12,12 @@ import ru.practicum.ewm.stat_svc.dto.error.exception.CustomValidationException;
 import ru.practicum.ewm.stat_svc.dto.model.DtoHitIn;
 import ru.practicum.ewm.stat_svc.dto.model.DtoHitOut;
 import ru.practicum.ewm.stat_svc.dto.model.HitsRequest;
+import ru.practicum.ewm.stat_svc.dto.util.UrlCoder;
 
 import javax.validation.Valid;
 import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -26,10 +26,12 @@ import java.util.List;
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class StatController {
-    private final StatService statService;
-    private final DateTimeFormatter dateTimeFormatter;
-    private final Validator hitRequestValidator;
+    final StatService statService;
+    final DateTimeFormatter dateTimeFormatter;
+    final Validator hitRequestValidator;
+    final UrlCoder urlCoder;
 
     @PostMapping("/hit")
     @ResponseStatus(code = HttpStatus.CREATED)
@@ -46,8 +48,8 @@ public class StatController {
                                                            @RequestParam(defaultValue = "false") Boolean unique
     ) throws UnsupportedEncodingException {
         HitsRequest hitsRequest = HitsRequest.builder()
-                .start(LocalDateTime.parse(decodeValue(start), dateTimeFormatter))
-                .end(LocalDateTime.parse(decodeValue(end), dateTimeFormatter))
+                .start(LocalDateTime.parse(urlCoder.decodeValue(start), dateTimeFormatter))
+                .end(LocalDateTime.parse(urlCoder.decodeValue(end), dateTimeFormatter))
                 .uris(uris)
                 .unique(unique)
                 .build();
@@ -68,14 +70,12 @@ public class StatController {
                                                          @RequestParam(defaultValue = "false") Boolean unique
     ) throws UnsupportedEncodingException {
         log.info("GET /stats/plainLocalDateTime {}", HitsRequest.builder().start(start).end(end).uris(uris).unique(unique).build());
-        return getHitsWithEncodedLocalDateTime(encodeValue(start.format(dateTimeFormatter)), encodeValue(end.format(dateTimeFormatter)), uris, unique);
-    }
-
-    private String encodeValue(String value) throws UnsupportedEncodingException {
-        return URLEncoder.encode(value, StandardCharsets.UTF_8);
-    }
-
-    private String decodeValue(String value) throws UnsupportedEncodingException {
-        return URLDecoder.decode(value, StandardCharsets.UTF_8);
+        return getHitsWithEncodedLocalDateTime
+                (
+                        urlCoder.encodeValue(start.format(dateTimeFormatter)),
+                        urlCoder.encodeValue(end.format(dateTimeFormatter)),
+                        uris,
+                        unique
+                );
     }
 }

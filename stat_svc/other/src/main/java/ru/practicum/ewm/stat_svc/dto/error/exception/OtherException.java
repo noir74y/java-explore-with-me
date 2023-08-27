@@ -1,7 +1,6 @@
 package ru.practicum.ewm.stat_svc.dto.error.exception;
 
 import org.springframework.http.HttpStatus;
-import ru.practicum.ewm.stat_svc.dto.error.exception.EwmException;
 
 public class OtherException extends EwmException {
     public OtherException(Exception exception) {

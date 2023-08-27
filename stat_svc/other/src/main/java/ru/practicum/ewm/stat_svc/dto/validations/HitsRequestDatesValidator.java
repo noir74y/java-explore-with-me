@@ -6,7 +6,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Objects;
 
-public class HitsRequestDatesValidator implements ConstraintValidator<HitsRequestDatesConstraint, HitsRequest>  {
+public class HitsRequestDatesValidator implements ConstraintValidator<HitsRequestDatesConstraint, HitsRequest> {
     @Override
     public void initialize(HitsRequestDatesConstraint constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);

@@ -1,4 +1,4 @@
-package ru.practicum.ewm.stat_svc.dto;
+package ru.practicum.ewm.stat_svc.dto.util;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -30,5 +30,10 @@ public class AppConfig {
     public Validator validator() {
         ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
         return validatorFactory.usingContext().getValidator();
+    }
+
+    @Bean
+    public UrlCoder urlCoder() {
+        return new UrlCoder();
     }
 }

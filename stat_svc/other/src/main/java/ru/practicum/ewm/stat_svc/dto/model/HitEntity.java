@@ -29,6 +29,6 @@ public class HitEntity {
     @Column(nullable = false, unique = false, length = 255)
     String ip;
 
-    @Column(name="CREATED", nullable = false, unique = false)
+    @Column(name = "CREATED", nullable = false, unique = false)
     LocalDateTime timestamp;
 }

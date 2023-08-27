@@ -5,7 +5,7 @@ import javax.validation.ConstraintValidatorContext;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class HitIpValidator implements ConstraintValidator<HitsRequestDatesConstraint, String>  {
+public class HitIpValidator implements ConstraintValidator<HitsRequestDatesConstraint, String> {
     @Override
     public void initialize(HitsRequestDatesConstraint constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);

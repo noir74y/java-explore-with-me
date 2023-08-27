@@ -6,11 +6,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.ewm.stat_svc.dto.error.exception.CustomValidationException;
 import ru.practicum.ewm.stat_svc.dto.model.DtoHitIn;
 import ru.practicum.ewm.stat_svc.dto.model.DtoHitOut;
 import ru.practicum.ewm.stat_svc.dto.model.HitsRequest;
 
 import javax.validation.Valid;
+import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -23,6 +25,7 @@ import java.util.List;
 public class StatController {
     private final StatService statService;
     private final DateTimeFormatter dateTimeFormatter;
+    private final Validator hitRequestValidator;
 
     @PostMapping("/hit")
     @ResponseStatus(code = HttpStatus.CREATED)
@@ -38,13 +41,16 @@ public class StatController {
                                                            @RequestParam(required = false) List<String> uris,
                                                            @RequestParam(defaultValue = "false") Boolean unique
     ) {
-
         HitsRequest hitsRequest = HitsRequest.builder()
                 .start(LocalDateTime.parse(start, dateTimeFormatter))
                 .end(LocalDateTime.parse(end, dateTimeFormatter))
                 .uris(uris)
                 .unique(unique)
                 .build();
+
+        hitRequestValidator.validate(hitsRequest).stream().findFirst().ifPresent(constraintViolation -> {
+            throw new CustomValidationException("bad request", constraintViolation.getMessage());
+        });
 
         log.info("GET /stats {}", hitsRequest);
         return statService.getHits(hitsRequest);

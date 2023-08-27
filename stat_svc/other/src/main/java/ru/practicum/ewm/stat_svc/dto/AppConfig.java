@@ -5,6 +5,9 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.time.format.DateTimeFormatter;
 
 @Configuration
@@ -21,5 +24,11 @@ public class AppConfig {
     @Bean
     public DateTimeFormatter dateTimeFormatter() {
         return DateTimeFormatter.ofPattern(DATE_TIME_FORMAT);
+    }
+
+    @Bean
+    public Validator validator() {
+        ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+        return validatorFactory.usingContext().getValidator();
     }
 }

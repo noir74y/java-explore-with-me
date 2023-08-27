@@ -1,6 +1,6 @@
-package ru.practicum.ewm.stat_svc.dto.validations;
+package ru.practicum.ewm.stat_svc.dto.utils.validations;
 
-import ru.practicum.ewm.stat_svc.dto.HitsRequest;
+import ru.practicum.ewm.stat_svc.dto.model.HitsRequest;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

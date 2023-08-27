@@ -1,4 +1,4 @@
-package ru.practicum.ewm.stat_svc.dto.validations;
+package ru.practicum.ewm.stat_svc.dto.utils.validations;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -12,9 +12,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target(ElementType.TYPE_USE)
 @Retention(RUNTIME)
 @Documented
-@Constraint(validatedBy = HitsRequestDatesValidator.class)
-public @interface HitsRequestDatesConstraint {
-    String message() default "End of hits request  has to be later than start of hits request and the both is not null ";
+@Constraint(validatedBy = HitIpValidator.class)
+public @interface HitIpConstraint {
+    String message() default "incorrect ip address";
 
     Class<?>[] groups() default {};
 

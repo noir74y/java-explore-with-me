@@ -6,9 +6,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.stat_svc.dto.DtoHitIn;
-import ru.practicum.ewm.stat_svc.dto.DtoHitOut;
-import ru.practicum.ewm.stat_svc.dto.HitsRequest;
+import ru.practicum.ewm.stat_svc.dto.model.DtoHitIn;
+import ru.practicum.ewm.stat_svc.dto.model.DtoHitOut;
+import ru.practicum.ewm.stat_svc.dto.model.HitsRequest;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -20,7 +20,7 @@ import java.util.List;
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class StatController {
-    StatService statService;
+    private final StatService statService;
 
     @PostMapping("/hit")
     @ResponseStatus(code = HttpStatus.CREATED)

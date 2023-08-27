@@ -1,13 +1,13 @@
 package ru.practicum.ewm.stat_svc.server;
 
-import ru.practicum.ewm.stat_svc.dto.DtoHitOut;
-import ru.practicum.ewm.stat_svc.dto.DtoHitIn;
-import ru.practicum.ewm.stat_svc.dto.HitsRequest;
+import ru.practicum.ewm.stat_svc.dto.model.DtoHitOut;
+import ru.practicum.ewm.stat_svc.dto.model.DtoHitIn;
+import ru.practicum.ewm.stat_svc.dto.model.HitsRequest;
 
 import java.util.List;
 
 public interface StatService {
-    public void saveHit(DtoHitIn dtoHitIn);
+    void saveHit(DtoHitIn dtoHitIn);
 
-    public List<DtoHitOut> getHits(HitsRequest hitsRequest);
+    List<DtoHitOut> getHits(HitsRequest hitsRequest);
 }

@@ -1,4 +1,4 @@
-package ru.practicum.ewm.stat_svc.dto;
+package ru.practicum.ewm.stat_svc.dto.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

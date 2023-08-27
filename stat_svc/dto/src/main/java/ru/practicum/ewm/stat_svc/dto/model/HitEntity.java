@@ -1,8 +1,10 @@
 package ru.practicum.ewm.stat_svc.dto.model;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,20 +14,21 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "stats")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class HitEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    Long id;
 
     @Column(nullable = false, unique = false, length = 255)
-    private String app;
+    String app;
 
     @Column(nullable = false, unique = false, length = 255)
-    private String uri;
+    String uri;
 
     @Column(nullable = false, unique = false, length = 255)
-    private String ip;
+    String ip;
 
     @Column(name="CREATED", nullable = false, unique = false)
-    private LocalDateTime timestamp;
+    LocalDateTime timestamp;
 }

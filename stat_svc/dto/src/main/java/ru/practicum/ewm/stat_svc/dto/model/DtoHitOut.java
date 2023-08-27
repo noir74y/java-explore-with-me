@@ -1,16 +1,15 @@
 package ru.practicum.ewm.stat_svc.dto.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class DtoHitOut {
-    private String app;
-    private String uri;
-    private Integer hits;
+    String app;
+    String uri;
+    Long hits;
 }

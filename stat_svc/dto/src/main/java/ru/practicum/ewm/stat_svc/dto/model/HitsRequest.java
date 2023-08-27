@@ -1,7 +1,9 @@
 package ru.practicum.ewm.stat_svc.dto.model;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 import ru.practicum.ewm.stat_svc.dto.utils.validations.HitsRequestDatesConstraint;
 
 import java.time.LocalDateTime;
@@ -10,9 +12,10 @@ import java.util.List;
 @Data
 @Builder
 @HitsRequestDatesConstraint
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class HitsRequest {
-    private LocalDateTime start;
-    private LocalDateTime end;
-    private List<String> uris;
-    private Boolean unique;
+    LocalDateTime start;
+    LocalDateTime end;
+    List<String> uris;
+    Boolean unique;
 }

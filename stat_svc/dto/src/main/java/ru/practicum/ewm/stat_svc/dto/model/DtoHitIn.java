@@ -1,10 +1,8 @@
 package ru.practicum.ewm.stat_svc.dto.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import ru.practicum.ewm.stat_svc.dto.utils.AppConfig;
 import ru.practicum.ewm.stat_svc.dto.utils.validations.HitIpConstraint;
 import ru.practicum.ewm.stat_svc.dto.utils.validations.HitsRequestDatesConstraint;
@@ -19,21 +17,22 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class DtoHitIn {
     @NotBlank
     @Size(max = 255)
-    private String app;
+    String app;
 
     @NotBlank
     @Size(max = 255)
-    private String uri;
+    String uri;
 
     @NotBlank
     @HitIpConstraint
-    private String ip;
+    String ip;
 
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = AppConfig.DATE_TIME_FORMAT)
     @PastOrPresent
-    private LocalDateTime timestamp;
+    LocalDateTime timestamp;
 }

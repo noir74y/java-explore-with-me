@@ -1,10 +1,10 @@
-package ru.practicum.ewm.stat_svc.dto.mapper;
+package ru.practicum.ewm.stat_svc.other.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
-import ru.practicum.ewm.stat_svc.dto.model.DtoHitIn;
-import ru.practicum.ewm.stat_svc.dto.model.HitEntity;
+import ru.practicum.ewm.stat_svc.other.model.DtoHitIn;
+import ru.practicum.ewm.stat_svc.other.model.HitEntity;
 
 import java.util.Optional;
 

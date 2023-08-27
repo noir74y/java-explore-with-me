@@ -1,8 +1,8 @@
-package ru.practicum.ewm.stat_svc.dto.error.exception;
+package ru.practicum.ewm.stat_svc.other.error.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
-import ru.practicum.ewm.stat_svc.dto.error.ErrorMessage;
+import ru.practicum.ewm.stat_svc.other.error.ErrorMessage;
 
 
 public class EwmException extends RuntimeException {

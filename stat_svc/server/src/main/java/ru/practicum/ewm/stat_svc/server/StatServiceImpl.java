@@ -2,10 +2,10 @@ package ru.practicum.ewm.stat_svc.server;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.ewm.stat_svc.dto.mapper.HitModelMapper;
-import ru.practicum.ewm.stat_svc.dto.model.DtoHitIn;
-import ru.practicum.ewm.stat_svc.dto.model.DtoHitOut;
-import ru.practicum.ewm.stat_svc.dto.model.HitsRequest;
+import ru.practicum.ewm.stat_svc.other.mapper.HitModelMapper;
+import ru.practicum.ewm.stat_svc.other.model.DtoHitIn;
+import ru.practicum.ewm.stat_svc.other.model.DtoHitOut;
+import ru.practicum.ewm.stat_svc.other.model.HitsRequest;
 
 import java.util.List;
 

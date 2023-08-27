@@ -1,4 +1,4 @@
-package ru.practicum.ewm.stat_svc.dto.model;
+package ru.practicum.ewm.stat_svc.other.model;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

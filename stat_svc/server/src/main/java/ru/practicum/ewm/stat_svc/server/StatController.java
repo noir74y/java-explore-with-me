@@ -8,18 +8,17 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.stat_svc.dto.error.exception.CustomValidationException;
-import ru.practicum.ewm.stat_svc.dto.model.DtoHitIn;
-import ru.practicum.ewm.stat_svc.dto.model.DtoHitOut;
-import ru.practicum.ewm.stat_svc.dto.model.HitsRequest;
-import ru.practicum.ewm.stat_svc.dto.util.UrlCoder;
+import ru.practicum.ewm.stat_svc.other.error.exception.CustomValidationException;
+import ru.practicum.ewm.stat_svc.other.model.DtoHitIn;
+import ru.practicum.ewm.stat_svc.other.model.DtoHitOut;
+import ru.practicum.ewm.stat_svc.other.model.HitsRequest;
+import ru.practicum.ewm.stat_svc.other.util.LdtCoder;
 
 import javax.validation.Valid;
 import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
@@ -29,9 +28,8 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class StatController {
     final StatService statService;
-    final DateTimeFormatter dateTimeFormatter;
     final Validator hitRequestValidator;
-    final UrlCoder urlCoder;
+    final LdtCoder ldtCoder;
 
     @PostMapping("/hit")
     @ResponseStatus(code = HttpStatus.CREATED)
@@ -48,8 +46,8 @@ public class StatController {
                                                            @RequestParam(defaultValue = "false") Boolean unique
     ) throws UnsupportedEncodingException {
         HitsRequest hitsRequest = HitsRequest.builder()
-                .start(LocalDateTime.parse(urlCoder.decodeValue(start), dateTimeFormatter))
-                .end(LocalDateTime.parse(urlCoder.decodeValue(end), dateTimeFormatter))
+                .start(ldtCoder.encodedString2ldt(start))
+                .end(ldtCoder.encodedString2ldt(end))
                 .uris(uris)
                 .unique(unique)
                 .build();
@@ -72,8 +70,8 @@ public class StatController {
         log.info("GET /stats/plainLocalDateTime {}", HitsRequest.builder().start(start).end(end).uris(uris).unique(unique).build());
         return getHitsWithEncodedLocalDateTime
                 (
-                        urlCoder.encodeValue(start.format(dateTimeFormatter)),
-                        urlCoder.encodeValue(end.format(dateTimeFormatter)),
+                        ldtCoder.ldt2encodedString(start),
+                        ldtCoder.ldt2encodedString(end),
                         uris,
                         unique
                 );

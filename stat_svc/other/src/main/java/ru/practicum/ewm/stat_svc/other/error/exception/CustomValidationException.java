@@ -1,4 +1,4 @@
-package ru.practicum.ewm.stat_svc.dto.error.exception;
+package ru.practicum.ewm.stat_svc.other.error.exception;
 
 import org.springframework.http.HttpStatus;
 

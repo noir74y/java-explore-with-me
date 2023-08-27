@@ -1,10 +1,10 @@
-package ru.practicum.ewm.stat_svc.dto.model;
+package ru.practicum.ewm.stat_svc.other.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.ewm.stat_svc.dto.util.AppConfig;
-import ru.practicum.ewm.stat_svc.dto.validations.HitIpConstraint;
+import ru.practicum.ewm.stat_svc.other.util.AppConfig;
+import ru.practicum.ewm.stat_svc.other.validations.HitIpConstraint;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;

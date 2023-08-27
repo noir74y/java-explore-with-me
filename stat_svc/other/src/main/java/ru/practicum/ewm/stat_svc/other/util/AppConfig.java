@@ -1,4 +1,4 @@
-package ru.practicum.ewm.stat_svc.dto.util;
+package ru.practicum.ewm.stat_svc.other.util;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import java.time.format.DateTimeFormatter;
 
 @Configuration
 public class AppConfig {
@@ -22,18 +21,13 @@ public class AppConfig {
     }
 
     @Bean
-    public DateTimeFormatter dateTimeFormatter() {
-        return DateTimeFormatter.ofPattern(DATE_TIME_FORMAT);
-    }
-
-    @Bean
     public Validator validator() {
         ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
         return validatorFactory.usingContext().getValidator();
     }
 
     @Bean
-    public UrlCoder urlCoder() {
-        return new UrlCoder();
+    public  LdtCoder ldtCoder() {
+        return new LdtCoder();
     }
 }

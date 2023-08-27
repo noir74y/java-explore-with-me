@@ -1,8 +1,8 @@
 package ru.practicum.ewm.stat_svc.server;
 
-import ru.practicum.ewm.stat_svc.dto.model.DtoHitIn;
-import ru.practicum.ewm.stat_svc.dto.model.DtoHitOut;
-import ru.practicum.ewm.stat_svc.dto.model.HitsRequest;
+import ru.practicum.ewm.stat_svc.other.model.DtoHitIn;
+import ru.practicum.ewm.stat_svc.other.model.DtoHitOut;
+import ru.practicum.ewm.stat_svc.other.model.HitsRequest;
 
 import java.util.List;
 

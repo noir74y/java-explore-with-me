@@ -1,4 +1,4 @@
-package ru.practicum.ewm.stat_svc.dto.error;
+package ru.practicum.ewm.stat_svc.other.error;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -7,9 +7,9 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.practicum.ewm.stat_svc.dto.error.exception.CustomValidationException;
-import ru.practicum.ewm.stat_svc.dto.error.exception.EwmException;
-import ru.practicum.ewm.stat_svc.dto.error.exception.OtherException;
+import ru.practicum.ewm.stat_svc.other.error.exception.EwmException;
+import ru.practicum.ewm.stat_svc.other.error.exception.OtherException;
+import ru.practicum.ewm.stat_svc.other.error.exception.CustomValidationException;
 
 import java.time.format.DateTimeParseException;
 

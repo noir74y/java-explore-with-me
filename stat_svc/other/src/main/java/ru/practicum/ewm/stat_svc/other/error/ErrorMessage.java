@@ -1,4 +1,4 @@
-package ru.practicum.ewm.stat_svc.dto.error;
+package ru.practicum.ewm.stat_svc.other.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

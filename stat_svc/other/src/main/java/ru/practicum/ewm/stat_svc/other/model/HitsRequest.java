@@ -1,10 +1,10 @@
-package ru.practicum.ewm.stat_svc.dto.model;
+package ru.practicum.ewm.stat_svc.other.model;
 
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.ewm.stat_svc.dto.validations.HitsRequestDatesConstraint;
+import ru.practicum.ewm.stat_svc.other.validations.HitsRequestDatesConstraint;
 
 import java.time.LocalDateTime;
 import java.util.List;

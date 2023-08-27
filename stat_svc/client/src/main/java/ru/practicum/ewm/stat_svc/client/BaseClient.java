@@ -1,4 +1,4 @@
-package ru.practicum.ewm.stat_svc;
+package ru.practicum.ewm.stat_svc.client;
 
 import org.springframework.http.*;
 import org.springframework.lang.Nullable;

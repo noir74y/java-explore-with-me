@@ -27,7 +27,7 @@ public class AppConfig {
     }
 
     @Bean
-    public  LdtCoder ldtCoder() {
-        return new LdtCoder();
+    public ParamCoder ldtCoder() {
+        return new ParamCoder();
     }
 }

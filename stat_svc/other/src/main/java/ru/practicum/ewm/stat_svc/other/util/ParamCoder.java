@@ -6,7 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class LdtCoder {
+public class ParamCoder {
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(AppConfig.DATE_TIME_FORMAT);
 
     public String ldt2encodedString(LocalDateTime localDateTime) {

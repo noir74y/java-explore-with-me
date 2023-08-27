@@ -12,7 +12,7 @@ import ru.practicum.ewm.stat_svc.other.error.exception.CustomValidationException
 import ru.practicum.ewm.stat_svc.other.model.DtoHitIn;
 import ru.practicum.ewm.stat_svc.other.model.DtoHitOut;
 import ru.practicum.ewm.stat_svc.other.model.HitsRequest;
-import ru.practicum.ewm.stat_svc.other.util.LdtCoder;
+import ru.practicum.ewm.stat_svc.other.util.ParamCoder;
 
 import javax.validation.Valid;
 import javax.validation.Validator;
@@ -29,7 +29,7 @@ import java.util.List;
 public class StatController {
     final StatService statService;
     final Validator hitRequestValidator;
-    final LdtCoder ldtCoder;
+    final ParamCoder paramCoder;
 
     @PostMapping("/hit")
     @ResponseStatus(code = HttpStatus.CREATED)
@@ -46,8 +46,8 @@ public class StatController {
                                                            @RequestParam(defaultValue = "false") Boolean unique
     ) throws UnsupportedEncodingException {
         HitsRequest hitsRequest = HitsRequest.builder()
-                .start(ldtCoder.encodedString2ldt(start))
-                .end(ldtCoder.encodedString2ldt(end))
+                .start(paramCoder.encodedString2ldt(start))
+                .end(paramCoder.encodedString2ldt(end))
                 .uris(uris)
                 .unique(unique)
                 .build();
@@ -70,8 +70,8 @@ public class StatController {
         log.info("GET /stats/plainLocalDateTime {}", HitsRequest.builder().start(start).end(end).uris(uris).unique(unique).build());
         return getHitsWithEncodedLocalDateTime
                 (
-                        ldtCoder.ldt2encodedString(start),
-                        ldtCoder.ldt2encodedString(end),
+                        paramCoder.ldt2encodedString(start),
+                        paramCoder.ldt2encodedString(end),
                         uris,
                         unique
                 );

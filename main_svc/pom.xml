@@ -10,23 +10,14 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>ru.practicum.ewm.stat_svc</groupId>
-    <artifactId>stat_svc</artifactId>
+    <groupId>ru.practicum.ewm.main_svc</groupId>
+    <artifactId>main_svc</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
-    <packaging>pom</packaging>
-    <name>stat_svc</name>
-
-    <modules>
-        <module>client</module>
-        <module>server</module>
-        <module>other</module>
-    </modules>
+    <packaging>jar</packaging>
+    <name>main_svc</name>
 
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
 </project>

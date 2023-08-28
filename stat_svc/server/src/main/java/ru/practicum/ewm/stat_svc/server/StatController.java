@@ -68,12 +68,10 @@ public class StatController {
                                                          @RequestParam(defaultValue = "false") Boolean unique
     ) throws UnsupportedEncodingException {
         log.info("GET /stats/plainLocalDateTime {}", HitsRequest.builder().start(start).end(end).uris(uris).unique(unique).build());
-        return getHitsWithEncodedLocalDateTime
-                (
-                        paramCoder.ldt2encodedString(start),
-                        paramCoder.ldt2encodedString(end),
-                        uris,
-                        unique
-                );
+        return getHitsWithEncodedLocalDateTime(
+                paramCoder.ldt2encodedString(start),
+                paramCoder.ldt2encodedString(end),
+                uris,
+                unique);
     }
 }

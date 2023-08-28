@@ -1,4 +1,4 @@
 FROM amazoncorretto:11-alpine-jdk
 #ENV JAVA_TOOL_OPTIONS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9092
-COPY target/*.jar stat_svc_app.jar
-ENTRYPOINT ["java","-jar","/stat_svc_app.jar"]
+COPY target/*.jar stat-svc-app.jar
+ENTRYPOINT ["java","-jar","/stat-svc-app.jar"]

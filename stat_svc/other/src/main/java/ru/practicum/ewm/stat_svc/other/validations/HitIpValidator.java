@@ -13,9 +13,8 @@ public class HitIpValidator implements ConstraintValidator<HitsRequestDatesConst
 
     @Override
     public boolean isValid(String ip, ConstraintValidatorContext constraintValidatorContext) {
-        Pattern pattern =
-                Pattern.compile("^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$");
-        Matcher matcher = pattern.matcher(ip);
-        return matcher.matches();
+        Matcher matcherIpV4 = Pattern.compile("^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$").matcher(ip);
+        Matcher matcherIpV6 = Pattern.compile("^(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$").matcher(ip);
+        return matcherIpV4.matches() || matcherIpV6.matches();
     }
 }

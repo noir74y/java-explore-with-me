@@ -3,7 +3,6 @@ package ru.practicum.ewm.main_svc.model.entity;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import ru.practicum.ewm.main_svc.model.enums.EventStatus;
 import ru.practicum.ewm.main_svc.model.enums.RequestStatus;
 
 import javax.persistence.*;

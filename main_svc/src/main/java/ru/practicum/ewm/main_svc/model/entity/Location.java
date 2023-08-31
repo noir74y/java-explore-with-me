@@ -3,8 +3,6 @@ package ru.practicum.ewm.main_svc.model.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
-import java.util.concurrent.Flow;
 
 @Entity
 @Table(name = "location")

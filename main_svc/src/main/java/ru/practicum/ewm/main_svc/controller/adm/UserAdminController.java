@@ -1,4 +1,4 @@
 package ru.practicum.ewm.main_svc.controller.adm;
 
-public class PersonAdminController {
+public class UserAdminController {
 }

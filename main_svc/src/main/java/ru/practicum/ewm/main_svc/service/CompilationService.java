@@ -1,14 +1,18 @@
 package ru.practicum.ewm.main_svc.service;
 
-import ru.practicum.ewm.main_svc.model.dto.req.CompilationCreateReq;
-import ru.practicum.ewm.main_svc.model.dto.req.CompilationUpdateReq;
-import ru.practicum.ewm.main_svc.model.dto.resp.CompilationResp;
-import ru.practicum.ewm.main_svc.model.entity.Compilation;
-
-import java.util.List;
+import ru.practicum.ewm.main_svc.model.dto.CompilationDto;
+import ru.practicum.ewm.main_svc.model.dto.NewCompilationDto;
+import ru.practicum.ewm.main_svc.model.dto.UpdateCompilationRequest;
 
 public interface CompilationService {
-    Iterable<CompilationResp> findAll(Boolean pinned, Integer from, Integer size);
+    Iterable<CompilationDto> publicFindAll(Boolean pinned, Integer from, Integer size);
 
-    Compilation find(Long compilationId);
+    CompilationDto publicFindById(Long compId);
+
+    CompilationDto adminCreate(NewCompilationDto newCompilationDto);
+
+    void adminDelete(Long compId);
+
+    CompilationDto adminUpdate(Long compId, UpdateCompilationRequest updateCompilationRequest);
+
 }

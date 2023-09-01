@@ -6,7 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "compilation")
+@Table(name = "compilations")
 @Getter
 @Setter
 @AllArgsConstructor

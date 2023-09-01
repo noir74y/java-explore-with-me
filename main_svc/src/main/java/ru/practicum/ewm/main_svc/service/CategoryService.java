@@ -1,18 +1,16 @@
 package ru.practicum.ewm.main_svc.service;
 
-import ru.practicum.ewm.main_svc.model.dto.req.CategoryCreateReq;
-import ru.practicum.ewm.main_svc.model.dto.req.CategoryUpdateReq;
-import ru.practicum.ewm.main_svc.model.dto.resp.CategoryResp;
-import ru.practicum.ewm.main_svc.model.entity.Category;
+import ru.practicum.ewm.main_svc.model.dto.CategoryDto;
+import ru.practicum.ewm.main_svc.model.dto.NewCategoryDto;
 
 public interface CategoryService {
-    Category create(CategoryCreateReq categoryCreateReq);
+    CategoryDto adminCreate(NewCategoryDto newCategoryDto);
 
-    Category update(Long categoryId, CategoryUpdateReq updateReq);
+    void adminDelete(Long catId);
 
-    void delete(Long categoryId);
+    CategoryDto adminUpdate(Long catId, CategoryDto categoryDto);
 
-    Iterable<CategoryResp> findAll(Integer from, Integer size);
+    Iterable<CategoryDto> publicFindAll(Integer from, Integer size);
 
-    CategoryResp find(Long categoryId);
+    CategoryDto publicFindById(Long categoryId);
 }

@@ -23,7 +23,7 @@ public class Request {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "initiator_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    Person initiator;
+    User initiator;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")

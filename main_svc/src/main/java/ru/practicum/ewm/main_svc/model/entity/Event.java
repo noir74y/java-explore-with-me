@@ -3,14 +3,14 @@ package ru.practicum.ewm.main_svc.model.entity;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import ru.practicum.ewm.main_svc.model.enums.EventStatus;
+import ru.practicum.ewm.main_svc.model.enums.EventState;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "event")
+@Table(name = "events")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -24,7 +24,7 @@ public class Event {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "initiator_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    Person initiator;
+    User initiator;
 
     @Size(max = 250)
     @Column(nullable = false)
@@ -41,11 +41,11 @@ public class Event {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     @OnDelete(action = OnDeleteAction.NO_ACTION)
-    Category category;
+    CategoryEntity category;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    EventStatus status;
+    EventState status;
 
     Boolean paid;
     Boolean moderation;

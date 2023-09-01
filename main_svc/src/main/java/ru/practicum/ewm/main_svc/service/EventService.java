@@ -13,7 +13,7 @@ public interface EventService {
 
     EventFullDto privateFindById(Long userId, Long eventId);
 
-    EventFullDto privateUpdate(Long userId, Long eventId, UpdateEventUserRequest updateEventUserRequest);
+    EventFullDto privateUpdate(Long userId, Long eventId, UpdateEventRequest updateEventRequest);
 
     Iterable<EventFullDto> adminFind(Iterable<Long> users,
                                      Iterable<EventState> states,
@@ -23,7 +23,7 @@ public interface EventService {
                                      Integer from,
                                      Integer size);
 
-    EventFullDto adminUpdate(Long eventId, UpdateEventAdminRequest updateEventAdminRequest);
+    EventFullDto adminUpdate(Long eventId, UpdateEventRequest updateEventRequest);
 
     Iterable<EventShortDto> publicFind(String searchPattern,
                                        Iterable<Long> categories,

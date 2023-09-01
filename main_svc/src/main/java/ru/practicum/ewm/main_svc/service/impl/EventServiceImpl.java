@@ -24,7 +24,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventFullDto privateUpdate(Long userId, Long eventId, UpdateEventUserRequest updateEventUserRequest) {
+    public EventFullDto privateUpdate(Long userId, Long eventId, UpdateEventRequest updateEventRequest) {
         return null;
     }
 
@@ -34,7 +34,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventFullDto adminUpdate(Long eventId, UpdateEventAdminRequest updateEventAdminRequest) {
+    public EventFullDto adminUpdate(Long eventId, UpdateEventRequest updateEventRequest) {
         return null;
     }
 

@@ -1,13 +1,10 @@
 package ru.practicum.ewm.main_svc.service;
 
-import ru.practicum.ewm.main_svc.model.dto.req.RequestCreateReq;
 import ru.practicum.ewm.main_svc.model.dto.req.RequestUpdateReq;
-import ru.practicum.ewm.main_svc.model.entity.Request;
+import ru.practicum.ewm.main_svc.model.dto.resp.RequestResp;
 
 public interface RequestService {
-    Request create(RequestCreateReq req);
+    Iterable<RequestResp> find(Long personId, Long eventId);
 
-    Request update(RequestUpdateReq req);
-
-    void delete(Long id);
+    RequestResp update(Long personId, Long eventId, RequestUpdateReq updateReq);
 }

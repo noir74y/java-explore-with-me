@@ -2,12 +2,13 @@ package ru.practicum.ewm.main_svc.service;
 
 import ru.practicum.ewm.main_svc.model.dto.req.CompilationCreateReq;
 import ru.practicum.ewm.main_svc.model.dto.req.CompilationUpdateReq;
+import ru.practicum.ewm.main_svc.model.dto.resp.CompilationResp;
 import ru.practicum.ewm.main_svc.model.entity.Compilation;
 
+import java.util.List;
+
 public interface CompilationService {
-    Compilation create(CompilationCreateReq req);
+    Iterable<CompilationResp> findAll(Boolean pinned, Integer from, Integer size);
 
-    Compilation update(CompilationUpdateReq req);
-
-    void delete(Long id);
+    Compilation find(Long compilationId);
 }

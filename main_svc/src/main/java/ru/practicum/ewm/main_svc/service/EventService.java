@@ -1,11 +1,12 @@
 package ru.practicum.ewm.main_svc.service;
 
+import org.springframework.stereotype.Service;
 import ru.practicum.ewm.main_svc.model.dto.*;
 import ru.practicum.ewm.main_svc.model.enums.EventSort;
 import ru.practicum.ewm.main_svc.model.enums.EventState;
 
 import java.time.LocalDateTime;
-
+@Service
 public interface EventService {
     Iterable<EventShortDto> privateFindByUser(Long userId, Integer from, Integer size);
 

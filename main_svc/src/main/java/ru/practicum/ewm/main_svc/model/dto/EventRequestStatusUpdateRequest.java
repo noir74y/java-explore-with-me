@@ -2,7 +2,6 @@ package ru.practicum.ewm.main_svc.model.dto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.ewm.main_svc.model.enums.RequestStatus;
 
 @Data
 @Builder

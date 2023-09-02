@@ -10,9 +10,11 @@ public interface CategoryService {
 
     void adminDelete(Long catId);
 
-    CategoryDto adminUpdate(Long catId, CategoryDto categoryDto);
+    CategoryDto adminUpdate(Long catId,
+                            CategoryDto categoryDto);
 
-    Iterable<CategoryDto> publicFindAll(Integer from, Integer size);
+    Iterable<CategoryDto> publicFindAll(Integer from,
+                                        Integer size);
 
     CategoryDto publicFindById(Long catId);
 }

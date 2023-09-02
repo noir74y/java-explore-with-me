@@ -9,7 +9,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.main_svc.model.dto.EventFullDto;
 import ru.practicum.ewm.main_svc.model.dto.UpdateEventRequest;
-import ru.practicum.ewm.main_svc.model.enums.EventState;
 import ru.practicum.ewm.main_svc.service.EventService;
 
 import javax.validation.Valid;
@@ -28,7 +27,7 @@ public class EventAdminController {
 
     @GetMapping
     public Iterable<EventFullDto> adminFind(@RequestParam Iterable<Long> users,
-                                            @RequestParam Iterable<EventState> states,
+                                            @RequestParam Iterable<String> states,
                                             @RequestParam Iterable<Long> categories,
                                             @RequestParam @FutureOrPresent LocalDateTime rangeStart,
                                             @RequestParam @FutureOrPresent LocalDateTime rangeEnd,

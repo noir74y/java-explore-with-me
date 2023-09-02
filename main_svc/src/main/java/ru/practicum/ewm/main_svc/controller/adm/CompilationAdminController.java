@@ -29,12 +29,12 @@ public class CompilationAdminController {
         return compilationService.adminCreate(newCompilationDto);
     }
 
-    @DeleteMapping("/{compId)")
+    @DeleteMapping("/{compId}")
     public void adminDelete(@PathVariable @NotNull Long compId) {
         compilationService.adminDelete(compId);
     }
 
-    @PatchMapping("/{compId)")
+    @PatchMapping("/{compId}")
     public CompilationDto adminUpdate(@PathVariable @NotNull Long compId,
                                       @RequestBody @NotNull @Valid UpdateCompilationRequest updateCompilationRequest) {
         return compilationService.adminUpdate(compId, updateCompilationRequest);

@@ -6,11 +6,13 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.main_svc.model.dto.EventRequestStatusUpdateRequest;
 import ru.practicum.ewm.main_svc.model.dto.EventRequestStatusUpdateResult;
 import ru.practicum.ewm.main_svc.model.dto.ParticipationRequestDto;
 import ru.practicum.ewm.main_svc.service.RequestService;
+
+import javax.validation.constraints.NotNull;
 
 @Slf4j
 @Controller
@@ -21,23 +23,33 @@ import ru.practicum.ewm.main_svc.service.RequestService;
 public class RequestPrivateController {
     RequestService requestService;
 
-    public Iterable<ParticipationRequestDto> privateFindByUserAndEvent(Long userId, Long eventId) {
+    @GetMapping("/{userId}/events/{eventId}/requests")
+    public Iterable<ParticipationRequestDto> privateFindByUserAndEvent(@PathVariable @NotNull Long userId,
+                                                                       @PathVariable @NotNull Long eventId) {
         return requestService.privateFindByUserAndEvent(userId, eventId);
     }
 
-    public EventRequestStatusUpdateResult privateUpdateStatus(Long userId, Iterable<Long> events, EventRequestStatusUpdateRequest updateReq) {
-        return requestService.privateUpdateStatus(userId, events, updateReq);
+    @PatchMapping("/{userId}/events/{eventId}/requests")
+    public EventRequestStatusUpdateResult privateUpdateStatus(@PathVariable @NotNull Long userId,
+                                                              @PathVariable @NotNull Long eventId,
+                                                              @RequestBody @NotNull EventRequestStatusUpdateRequest updateReq) {
+        return requestService.privateUpdateStatus(userId, eventId, updateReq);
     }
 
-    public Iterable<ParticipationRequestDto> privateFindByUser(Long userId) {
+    @GetMapping("/{userId}/requests")
+    public Iterable<ParticipationRequestDto> privateFindByUser(@PathVariable @NotNull Long userId) {
         return requestService.privateFindByUser(userId);
     }
 
-    public ParticipationRequestDto privateCreate(Long userId, Long eventId) {
+    @PostMapping("/{userId}/requests")
+    public ParticipationRequestDto privateCreate(@PathVariable @NotNull Long userId,
+                                                 @PathVariable @NotNull Long eventId) {
         return requestService.privateCreate(userId, eventId);
     }
 
-    public ParticipationRequestDto privateCancelStatus(Long userId, Long requestId) {
+    @PatchMapping("/{userId}/requests/{requestId}/cancel")
+    public ParticipationRequestDto privateCancelStatus(@PathVariable @NotNull Long userId,
+                                                       @PathVariable @NotNull Long requestId) {
         return requestService.privateCancelStatus(userId, requestId);
     }
 }

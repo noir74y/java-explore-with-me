@@ -6,12 +6,14 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.main_svc.model.dto.EventFullDto;
 import ru.practicum.ewm.main_svc.model.dto.EventShortDto;
 import ru.practicum.ewm.main_svc.model.dto.NewEventDto;
 import ru.practicum.ewm.main_svc.model.dto.UpdateEventRequest;
 import ru.practicum.ewm.main_svc.service.EventService;
+
+import javax.validation.constraints.NotNull;
 
 @Slf4j
 @Controller
@@ -22,19 +24,29 @@ import ru.practicum.ewm.main_svc.service.EventService;
 public class EventPrivateController {
     EventService eventService;
 
-    public Iterable<EventShortDto> privateFindByUser(Long userId, Integer from, Integer size) {
+    @GetMapping("/{userId}/events")
+    public Iterable<EventShortDto> privateFindByUser(@PathVariable @NotNull Long userId,
+                                                     @RequestParam(defaultValue = "0") @NotNull Integer from,
+                                                     @RequestParam(defaultValue = "10") @NotNull Integer size) {
         return eventService.privateFindByUser(userId, from, size);
     }
 
-    public EventFullDto privateCreate(Long userId, NewEventDto newEventDto) {
+    @PostMapping("/{userId}/events")
+    public EventFullDto privateCreate(@PathVariable @NotNull Long userId,
+                                      @RequestBody @NotNull NewEventDto newEventDto) {
         return eventService.privateCreate(userId, newEventDto);
     }
 
-    public EventFullDto privateFindById(Long userId, Long eventId) {
+    @GetMapping("/{userId}/events/{eventId}")
+    public EventFullDto privateFindById(@PathVariable @NotNull Long userId,
+                                        @PathVariable @NotNull Long eventId) {
         return eventService.privateFindById(userId, eventId);
     }
 
-    public EventFullDto privateUpdate(Long userId, Long eventId, UpdateEventRequest updateEventRequest) {
+    @PatchMapping("/{userId}/events/{eventId}")
+    public EventFullDto privateUpdate(@PathVariable @NotNull Long userId,
+                                      @PathVariable @NotNull Long eventId,
+                                      @RequestBody @NotNull UpdateEventRequest updateEventRequest) {
         return eventService.privateUpdate(userId, eventId, updateEventRequest);
     }
 }

@@ -8,7 +8,7 @@ import ru.practicum.ewm.main_svc.model.dto.ParticipationRequestDto;
 public interface RequestService {
     Iterable<ParticipationRequestDto> privateFindByUserAndEvent(Long userId, Long eventId);
 
-    EventRequestStatusUpdateResult privateUpdateStatus(Long userId, Iterable<Long> events, EventRequestStatusUpdateRequest updateReq);
+    EventRequestStatusUpdateResult privateUpdateStatus(Long userId, Long eventId, EventRequestStatusUpdateRequest updateReq);
 
     Iterable<ParticipationRequestDto> privateFindByUser(Long userId);
 

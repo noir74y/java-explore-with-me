@@ -12,7 +12,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public EventRequestStatusUpdateResult privateUpdateStatus(Long userId, Iterable<Long> events, EventRequestStatusUpdateRequest updateReq) {
+    public EventRequestStatusUpdateResult privateUpdateStatus(Long userId, Long eventId, EventRequestStatusUpdateRequest updateReq) {
         return null;
     }
 

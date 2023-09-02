@@ -6,9 +6,11 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.main_svc.model.dto.CategoryDto;
 import ru.practicum.ewm.main_svc.service.CategoryService;
+
+import javax.validation.constraints.NotNull;
 
 @Slf4j
 @Controller
@@ -19,11 +21,14 @@ import ru.practicum.ewm.main_svc.service.CategoryService;
 public class CategoryPublicController {
     CategoryService categoryService;
 
-    public Iterable<CategoryDto> publicFindAll(Integer from, Integer size) {
+    @GetMapping
+    public Iterable<CategoryDto> publicFindAll(@RequestParam(defaultValue = "0") Integer from,
+                                               @RequestParam(defaultValue = "10") Integer size) {
         return categoryService.publicFindAll(from, size);
     }
 
-    public CategoryDto publicFindById(Long categoryId) {
-        return categoryService.publicFindById(categoryId);
+    @GetMapping("/{catId}")
+    public CategoryDto publicFindById(@PathVariable @NotNull Long catId) {
+        return categoryService.publicFindById(catId);
     }
 }

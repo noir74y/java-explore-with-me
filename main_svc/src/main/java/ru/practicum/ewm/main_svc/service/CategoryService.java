@@ -14,5 +14,5 @@ public interface CategoryService {
 
     Iterable<CategoryDto> publicFindAll(Integer from, Integer size);
 
-    CategoryDto publicFindById(Long categoryId);
+    CategoryDto publicFindById(Long catId);
 }

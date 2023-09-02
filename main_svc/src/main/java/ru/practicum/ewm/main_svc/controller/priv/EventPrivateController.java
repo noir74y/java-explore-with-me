@@ -13,6 +13,7 @@ import ru.practicum.ewm.main_svc.model.dto.NewEventDto;
 import ru.practicum.ewm.main_svc.model.dto.UpdateEventRequest;
 import ru.practicum.ewm.main_svc.service.EventService;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 @Slf4j
@@ -33,7 +34,7 @@ public class EventPrivateController {
 
     @PostMapping("/{userId}/events")
     public EventFullDto privateCreate(@PathVariable @NotNull Long userId,
-                                      @RequestBody @NotNull NewEventDto newEventDto) {
+                                      @RequestBody @NotNull @Valid NewEventDto newEventDto) {
         return eventService.privateCreate(userId, newEventDto);
     }
 
@@ -46,7 +47,7 @@ public class EventPrivateController {
     @PatchMapping("/{userId}/events/{eventId}")
     public EventFullDto privateUpdate(@PathVariable @NotNull Long userId,
                                       @PathVariable @NotNull Long eventId,
-                                      @RequestBody @NotNull UpdateEventRequest updateEventRequest) {
+                                      @RequestBody @NotNull @Valid UpdateEventRequest updateEventRequest) {
         return eventService.privateUpdate(userId, eventId, updateEventRequest);
     }
 }

@@ -6,9 +6,11 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.main_svc.model.dto.CompilationDto;
 import ru.practicum.ewm.main_svc.service.CompilationService;
+
+import javax.validation.constraints.NotNull;
 
 @Slf4j
 @Controller
@@ -19,11 +21,15 @@ import ru.practicum.ewm.main_svc.service.CompilationService;
 public class CompilationPublicController {
     CompilationService compilationService;
 
-    public Iterable<CompilationDto> publicFindAll(Boolean pinned, Integer from, Integer size) {
+    @GetMapping
+    public Iterable<CompilationDto> publicFindAll(@RequestParam Boolean pinned,
+                                                  @RequestParam(defaultValue = "0") Integer from,
+                                                  @RequestParam(defaultValue = "10") Integer size) {
         return compilationService.publicFindAll(pinned, from, size);
     }
 
-    public CompilationDto publicFindById(Long compId) {
+    @GetMapping("/{compId}")
+    public CompilationDto publicFindById(@PathVariable @NotNull Long compId) {
         return compilationService.publicFindById(compId);
     }
 }

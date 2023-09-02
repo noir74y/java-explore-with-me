@@ -26,7 +26,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto publicFindById(Long categoryId) {
+    public CategoryDto publicFindById(Long catId) {
         return null;
     }
 }

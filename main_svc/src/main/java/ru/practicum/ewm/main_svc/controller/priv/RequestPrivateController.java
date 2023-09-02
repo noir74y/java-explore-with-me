@@ -12,6 +12,7 @@ import ru.practicum.ewm.main_svc.model.dto.EventRequestStatusUpdateResult;
 import ru.practicum.ewm.main_svc.model.dto.ParticipationRequestDto;
 import ru.practicum.ewm.main_svc.service.RequestService;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 @Slf4j
@@ -32,7 +33,7 @@ public class RequestPrivateController {
     @PatchMapping("/{userId}/events/{eventId}/requests")
     public EventRequestStatusUpdateResult privateUpdateStatus(@PathVariable @NotNull Long userId,
                                                               @PathVariable @NotNull Long eventId,
-                                                              @RequestBody @NotNull EventRequestStatusUpdateRequest updateReq) {
+                                                              @RequestBody @NotNull @Valid EventRequestStatusUpdateRequest updateReq) {
         return requestService.privateUpdateStatus(userId, eventId, updateReq);
     }
 

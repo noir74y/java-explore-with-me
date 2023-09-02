@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.practicum.ewm.main_svc.model.dto.EventFullDto;
 import ru.practicum.ewm.main_svc.model.dto.EventShortDto;
+import ru.practicum.ewm.main_svc.model.enums.EventSort;
+import ru.practicum.ewm.main_svc.model.validation.ValueOfEnumConstraint;
 import ru.practicum.ewm.main_svc.service.EventService;
 
 import javax.validation.constraints.FutureOrPresent;
@@ -34,7 +36,7 @@ public class EventPublicController {
                                               @RequestParam @FutureOrPresent LocalDateTime rangeStart,
                                               @RequestParam @FutureOrPresent LocalDateTime rangeEnd,
                                               @RequestParam(defaultValue = "false") Boolean onlyAvailable,
-                                              @RequestParam String sort,
+                                              @RequestParam @ValueOfEnumConstraint(enumClass = EventSort.class) String sort,
                                               @RequestParam(defaultValue = "0") Integer from,
                                               @RequestParam(defaultValue = "10") Integer size) {
         return eventService.publicFind(searchPattern,

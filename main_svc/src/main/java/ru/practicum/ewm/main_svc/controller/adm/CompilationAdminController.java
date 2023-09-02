@@ -6,11 +6,14 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.main_svc.model.dto.CompilationDto;
 import ru.practicum.ewm.main_svc.model.dto.NewCompilationDto;
 import ru.practicum.ewm.main_svc.model.dto.UpdateCompilationRequest;
 import ru.practicum.ewm.main_svc.service.CompilationService;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @Slf4j
 @Controller
@@ -21,15 +24,19 @@ import ru.practicum.ewm.main_svc.service.CompilationService;
 public class CompilationAdminController {
     CompilationService compilationService;
 
-    public CompilationDto adminCreate(NewCompilationDto newCompilationDto) {
+    @PostMapping
+    public CompilationDto adminCreate(@RequestBody @NotNull @Valid NewCompilationDto newCompilationDto) {
         return compilationService.adminCreate(newCompilationDto);
     }
 
-    public void adminDelete(Long compId) {
+    @DeleteMapping("/{compId)")
+    public void adminDelete(@PathVariable @NotNull Long compId) {
         compilationService.adminDelete(compId);
     }
 
-    public CompilationDto adminUpdate(Long compId, UpdateCompilationRequest updateCompilationRequest) {
+    @PatchMapping("/{compId)")
+    public CompilationDto adminUpdate(@PathVariable @NotNull Long compId,
+                                      @RequestBody @NotNull @Valid UpdateCompilationRequest updateCompilationRequest) {
         return compilationService.adminUpdate(compId, updateCompilationRequest);
     }
 }

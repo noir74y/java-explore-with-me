@@ -6,10 +6,13 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.main_svc.model.dto.NewUserRequest;
 import ru.practicum.ewm.main_svc.model.dto.UserDto;
 import ru.practicum.ewm.main_svc.service.UserService;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @Slf4j
 @Controller
@@ -20,15 +23,20 @@ import ru.practicum.ewm.main_svc.service.UserService;
 public class UserAdminController {
     UserService userService;
 
-    public Iterable<UserDto> adminFindByIds(Iterable<Long> ids, Integer from, Integer size) {
+    @GetMapping
+    public Iterable<UserDto> adminFindByIds(@RequestParam Iterable<Long> ids,
+                                            @RequestParam(defaultValue = "0") Integer from,
+                                            @RequestParam(defaultValue = "10") Integer size) {
         return userService.adminFindByIds(ids, from, size);
     }
 
-    public UserDto adminCreate(NewUserRequest newUserRequest) {
+    @PostMapping
+    public UserDto adminCreate(@RequestBody @NotNull @Valid NewUserRequest newUserRequest) {
         return userService.adminCreate(newUserRequest);
     }
 
-    public void adminDelete(Long userId) {
+    @DeleteMapping("/{userId}")
+    public void adminDelete(@PathVariable @NotNull Long userId) {
         userService.adminDelete(userId);
     }
 }

@@ -25,7 +25,7 @@ public class EventFullDto {
     Integer participantLimit;
     LocalDateTime publishedOn;
     Boolean requestModeration;
-    EventState state;
+    String state;
     String title;
     Long views;
 }

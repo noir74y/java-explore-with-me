@@ -11,5 +11,5 @@ import ru.practicum.ewm.main_svc.model.enums.RequestStatus;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventRequestStatusUpdateRequest {
     Iterable<Long> requestIds;
-    RequestStatus status;
+    String status;
 }

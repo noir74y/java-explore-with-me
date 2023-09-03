@@ -43,7 +43,7 @@ public class Event {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     @OnDelete(action = OnDeleteAction.NO_ACTION)
-    CategoryEntity category;
+    Category category;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

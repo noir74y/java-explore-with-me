@@ -9,8 +9,7 @@ import ru.practicum.ewm.main_svc.model.util.validation.ValueOfEnumConstraint;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateEventAdminRequest extends UpdateEventRequest {
     @ValueOfEnumConstraint(enumClass = EventAdminState.class)
-    String stateAction;
+    private String stateAction;
 }

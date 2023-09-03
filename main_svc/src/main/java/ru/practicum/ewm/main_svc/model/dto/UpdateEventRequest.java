@@ -6,10 +6,6 @@ import lombok.experimental.FieldDefaults;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateEventRequest {
     @Size(min = 20, max = 2000)

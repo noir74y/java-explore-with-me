@@ -1,6 +1,7 @@
 package ru.practicum.ewm.main_svc.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.main_svc.model.dto.NewUserRequest;
 import ru.practicum.ewm.main_svc.model.dto.UserDto;
@@ -16,7 +17,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Iterable<UserDto> adminFindByIds(Iterable<Long> ids, Integer from, Integer size) {
-        return null;
+        return userMapper.bulkEntity2userShortDto(userRepository.findByIdIn(ids, PageRequest.of(from / size, size)));
     }
 
     @Override

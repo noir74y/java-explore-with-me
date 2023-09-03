@@ -12,7 +12,10 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NewCompilationDto {
+    @NotNull
     Iterable<Long> events;
+
+    @NotNull
     Boolean pinned;
 
     @NotNull

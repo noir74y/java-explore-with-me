@@ -8,7 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.main_svc.model.dto.EventFullDto;
-import ru.practicum.ewm.main_svc.model.dto.UpdateEventRequest;
+import ru.practicum.ewm.main_svc.model.dto.UpdateEventAdminRequest;
 import ru.practicum.ewm.main_svc.service.EventService;
 
 import javax.validation.Valid;
@@ -38,7 +38,7 @@ public class EventAdminController {
 
     @PatchMapping("/{eventId}")
     public EventFullDto adminUpdate(@PathVariable @NotNull Long eventId,
-                                    @RequestBody @NotNull @Valid UpdateEventRequest updateEventRequest) {
-        return eventService.adminUpdate(eventId, updateEventRequest);
+                                    @RequestBody @NotNull @Valid UpdateEventAdminRequest updateEventAdminRequest) {
+        return eventService.adminUpdate(eventId, updateEventAdminRequest);
     }
 }

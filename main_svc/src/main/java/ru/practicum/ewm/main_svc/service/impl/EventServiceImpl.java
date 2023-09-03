@@ -1,9 +1,6 @@
 package ru.practicum.ewm.main_svc.service.impl;
 
-import ru.practicum.ewm.main_svc.model.dto.EventFullDto;
-import ru.practicum.ewm.main_svc.model.dto.EventShortDto;
-import ru.practicum.ewm.main_svc.model.dto.NewEventDto;
-import ru.practicum.ewm.main_svc.model.dto.UpdateEventRequest;
+import ru.practicum.ewm.main_svc.model.dto.*;
 import ru.practicum.ewm.main_svc.service.EventService;
 
 import java.time.LocalDateTime;
@@ -31,7 +28,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventFullDto privateUpdate(Long userId,
                                       Long eventId,
-                                      UpdateEventRequest updateEventRequest) {
+                                      UpdateEventUserRequest updateEventUserRequest) {
         return null;
     }
 
@@ -48,7 +45,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventFullDto adminUpdate(Long eventId,
-                                    UpdateEventRequest updateEventRequest) {
+                                    UpdateEventAdminRequest updateEventAdminRequest) {
         return null;
     }
 

@@ -1,10 +1,7 @@
 package ru.practicum.ewm.main_svc.service;
 
 import org.springframework.stereotype.Service;
-import ru.practicum.ewm.main_svc.model.dto.EventFullDto;
-import ru.practicum.ewm.main_svc.model.dto.EventShortDto;
-import ru.practicum.ewm.main_svc.model.dto.NewEventDto;
-import ru.practicum.ewm.main_svc.model.dto.UpdateEventRequest;
+import ru.practicum.ewm.main_svc.model.dto.*;
 
 import java.time.LocalDateTime;
 
@@ -22,7 +19,7 @@ public interface EventService {
 
     EventFullDto privateUpdate(Long userId,
                                Long eventId,
-                               UpdateEventRequest updateEventRequest);
+                               UpdateEventUserRequest updateEventUserRequest);
 
     Iterable<EventFullDto> adminFind(Iterable<Long> users,
                                      Iterable<String> states,
@@ -33,7 +30,7 @@ public interface EventService {
                                      Integer size);
 
     EventFullDto adminUpdate(Long eventId,
-                             UpdateEventRequest updateEventRequest);
+                             UpdateEventAdminRequest updateEventAdminRequest);
 
     Iterable<EventShortDto> publicFind(String searchPattern,
                                        Iterable<Long> categories,

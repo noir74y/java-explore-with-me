@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.main_svc.model.dto.EventFullDto;
 import ru.practicum.ewm.main_svc.model.dto.EventShortDto;
 import ru.practicum.ewm.main_svc.model.dto.NewEventDto;
-import ru.practicum.ewm.main_svc.model.dto.UpdateEventRequest;
+import ru.practicum.ewm.main_svc.model.dto.UpdateEventUserRequest;
 import ru.practicum.ewm.main_svc.service.EventService;
 
 import javax.validation.Valid;
@@ -47,7 +47,7 @@ public class EventPrivateController {
     @PatchMapping("/{userId}/events/{eventId}")
     public EventFullDto privateUpdate(@PathVariable @NotNull Long userId,
                                       @PathVariable @NotNull Long eventId,
-                                      @RequestBody @NotNull @Valid UpdateEventRequest updateEventRequest) {
-        return eventService.privateUpdate(userId, eventId, updateEventRequest);
+                                      @RequestBody @NotNull @Valid UpdateEventUserRequest updateEventUserRequest) {
+        return eventService.privateUpdate(userId, eventId, updateEventUserRequest);
     }
 }

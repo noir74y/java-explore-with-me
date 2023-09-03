@@ -4,7 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import ru.practicum.ewm.main_svc.model.enums.RequestStatus;
+import ru.practicum.ewm.main_svc.model.util.enums.RequestStatus;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

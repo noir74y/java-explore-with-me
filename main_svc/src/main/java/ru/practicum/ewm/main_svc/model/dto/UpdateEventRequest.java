@@ -26,8 +26,6 @@ public class UpdateEventRequest {
     Integer participantLimit;
     Boolean requestModeration;
 
-    String stateAction;
-
     @Size(min = 3, max = 120)
     String title;
 }

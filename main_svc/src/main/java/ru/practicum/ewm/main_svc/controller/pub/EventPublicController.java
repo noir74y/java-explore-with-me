@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.practicum.ewm.main_svc.model.dto.EventFullDto;
 import ru.practicum.ewm.main_svc.model.dto.EventShortDto;
-import ru.practicum.ewm.main_svc.model.enums.EventSort;
-import ru.practicum.ewm.main_svc.model.validation.ValueOfEnumConstraint;
+import ru.practicum.ewm.main_svc.model.util.enums.EventSort;
+import ru.practicum.ewm.main_svc.model.util.validation.ValueOfEnumConstraint;
 import ru.practicum.ewm.main_svc.service.EventService;
 
 import javax.validation.constraints.FutureOrPresent;

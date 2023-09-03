@@ -1,4 +1,4 @@
-package ru.practicum.ewm.main_svc.model.enums;
+package ru.practicum.ewm.main_svc.model.util.enums;
 
 public enum RequestStatus {
     PENDING,

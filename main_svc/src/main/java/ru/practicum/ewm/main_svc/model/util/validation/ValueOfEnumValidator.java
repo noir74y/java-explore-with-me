@@ -1,4 +1,4 @@
-package ru.practicum.ewm.main_svc.model.validation;
+package ru.practicum.ewm.main_svc.model.util.validation;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

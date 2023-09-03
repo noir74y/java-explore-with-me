@@ -1,6 +1,7 @@
 package ru.practicum.ewm.main_svc.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.main_svc.model.dto.NewUserRequest;
 import ru.practicum.ewm.main_svc.model.dto.UserDto;

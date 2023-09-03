@@ -9,6 +9,8 @@ import ru.practicum.ewm.main_svc.model.dto.UserShortDto;
 import ru.practicum.ewm.main_svc.model.entity.User;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Component
 @RequiredArgsConstructor
@@ -25,5 +27,13 @@ public class UserMapper {
 
     public UserShortDto entity2userShortDto(User user) {
         return Optional.ofNullable(user).map(obj -> modelMapper.map(obj, UserShortDto.class)).orElse(null);
+    }
+
+    public Iterable<UserDto> bulkEntity2userShortDto(Iterable<User> users) {
+        return StreamSupport.stream(users.spliterator(), true)
+                .collect(Collectors.toList())
+                .stream()
+                .map(this::entity2userDto)
+                .collect(Collectors.toList());
     }
 }

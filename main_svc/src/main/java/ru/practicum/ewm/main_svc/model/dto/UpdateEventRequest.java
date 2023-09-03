@@ -1,6 +1,6 @@
 package ru.practicum.ewm.main_svc.model.dto;
 
-import lombok.*;
+import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.Size;

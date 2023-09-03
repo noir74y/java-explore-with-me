@@ -1,10 +1,13 @@
 package ru.practicum.ewm.main_svc.service.impl;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import ru.practicum.ewm.main_svc.model.dto.*;
 import ru.practicum.ewm.main_svc.service.EventService;
 
 import java.time.LocalDateTime;
-
+@Service
+@RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
     @Override
     public Iterable<EventShortDto> privateFindByUser(Long userId,

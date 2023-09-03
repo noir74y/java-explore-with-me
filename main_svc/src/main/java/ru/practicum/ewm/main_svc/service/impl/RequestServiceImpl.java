@@ -1,10 +1,13 @@
 package ru.practicum.ewm.main_svc.service.impl;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import ru.practicum.ewm.main_svc.model.dto.EventRequestStatusUpdateRequest;
 import ru.practicum.ewm.main_svc.model.dto.EventRequestStatusUpdateResult;
 import ru.practicum.ewm.main_svc.model.dto.ParticipationRequestDto;
 import ru.practicum.ewm.main_svc.service.RequestService;
-
+@Service
+@RequiredArgsConstructor
 public class RequestServiceImpl implements RequestService {
     @Override
     public Iterable<ParticipationRequestDto> privateFindByUserAndEvent(Long userId, Long eventId) {

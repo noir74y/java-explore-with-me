@@ -5,6 +5,7 @@ import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+
 @Entity
 @Table(name = "users")
 @Getter

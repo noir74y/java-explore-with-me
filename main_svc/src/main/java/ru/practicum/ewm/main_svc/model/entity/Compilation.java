@@ -5,6 +5,7 @@ import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 @Entity
 @Table(name = "compilations")
@@ -23,6 +24,9 @@ public class Compilation {
     @Column(nullable = false, unique = true)
     String title;
 
-    @Column
     Boolean pinned;
+
+    @ManyToMany
+    @JoinTable(name = "events_compilations", joinColumns = @JoinColumn(name = "compilation_id"), inverseJoinColumns = @JoinColumn(name = "event_id"))
+    Set<Event> events;
 }

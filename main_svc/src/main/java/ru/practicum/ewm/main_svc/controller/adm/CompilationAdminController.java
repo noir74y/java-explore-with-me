@@ -16,13 +16,11 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 @Slf4j
-@Controller
+@RestController
 @RequestMapping("/admin/compilations")
 @RequiredArgsConstructor
-@Validated
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CompilationAdminController {
-    CompilationService compilationService;
+    private final CompilationService compilationService;
 
     @PostMapping
     public CompilationDto adminCreate(@RequestBody @NotNull @Valid NewCompilationDto newCompilationDto) {

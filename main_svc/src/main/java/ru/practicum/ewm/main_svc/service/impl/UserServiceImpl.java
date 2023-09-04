@@ -2,7 +2,9 @@ package ru.practicum.ewm.main_svc.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import ru.practicum.ewm.main_svc.model.dto.NewUserRequest;
 import ru.practicum.ewm.main_svc.model.dto.UserDto;
 import ru.practicum.ewm.main_svc.model.util.mappers.UserMapper;

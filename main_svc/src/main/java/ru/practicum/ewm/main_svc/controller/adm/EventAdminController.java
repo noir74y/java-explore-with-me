@@ -17,13 +17,11 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Slf4j
-@Controller
+@RestController
 @RequestMapping("/admin/events")
 @RequiredArgsConstructor
-@Validated
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventAdminController {
-    EventService eventService;
+    private final EventService eventService;
 
     @GetMapping
     public Iterable<EventFullDto> adminFind(@RequestParam Iterable<Long> users,

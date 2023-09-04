@@ -10,6 +10,7 @@ import ru.practicum.ewm.main_svc.model.util.AppConfig;
 import ru.practicum.ewm.main_svc.service.UserService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -22,8 +23,8 @@ public class UserAdminController {
 
     @GetMapping
     public List<UserDto> adminFindByIds(@RequestParam List<Long> ids,
-                                        @RequestParam(defaultValue = AppConfig.FROM) Integer from,
-                                        @RequestParam(defaultValue = AppConfig.SIZE) Integer size) {
+                                        @RequestParam(defaultValue = AppConfig.FROM) @Min(0)  Integer from,
+                                        @RequestParam(defaultValue = AppConfig.SIZE) @Min(1) Integer size) {
         log.info("GET /admin/users {}, {}, {}", ids, from, size);
         return userService.adminFindByIds(ids, from, size);
     }

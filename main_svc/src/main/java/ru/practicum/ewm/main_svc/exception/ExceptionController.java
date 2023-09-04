@@ -1,36 +1,43 @@
 package ru.practicum.ewm.main_svc.exception;
 
 import lombok.extern.slf4j.Slf4j;
+import org.postgresql.util.PSQLException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.practicum.shareit.utils.error.exception.*;
 
-import javax.validation.ConstraintViolationException;
-
-@RestControllerAdvice
 @Slf4j
+@RestControllerAdvice
 public class ExceptionController {
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorMessage> exceptionController(Exception exception) {
-        ShareItException shareItException;
 
+    @ExceptionHandler
+    public ResponseEntity<ApiError> exceptionController(Exception exception) {
         log.error("{}", exception.getMessage());
 
-        if (exception instanceof NotFoundException)
-            shareItException = (NotFoundException) exception;
-        else if (exception instanceof ForbiddenException)
-            shareItException = (ForbiddenException) exception;
-        else if (exception instanceof CustomValidationException)
-            shareItException = (CustomValidationException) exception;
-        else if (exception instanceof ConstraintViolationException)
+        if (exception instanceof MethodArgumentNotValidException)
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(new ErrorMessage(exception.getMessage(), "Unknown state: UNSUPPORTED_STATUS"));
-        else
-            shareItException = new OtherException(exception);
+                    .body(ApiError.builder()
+                            .status(HttpStatus.BAD_REQUEST.toString())
+                            .message(exception.getMessage())
+                            .reason("Incorrectly made request.").build());
+        else if (exception instanceof PSQLException || exception instanceof DataIntegrityViolationException)
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(ApiError.builder()
+                            .status(HttpStatus.CONFLICT.toString())
+                            .message(exception.getMessage())
+                            .reason("Integrity constraint has been violated.").build());
 
-        return ResponseEntity.status(shareItException.getHttpErrorStatus()).body(shareItException.prepareErrorMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ApiError.builder()
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR.toString())
+                        .message(exception.getMessage())
+                        .reason("other error").build());
     }
 }

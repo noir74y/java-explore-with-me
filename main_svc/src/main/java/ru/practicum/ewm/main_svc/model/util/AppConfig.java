@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AppConfig {
     public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public static final String FROM = "0";
+    public static final String SIZE = "0";
 
     @Bean
     public ModelMapper modelMapper() {

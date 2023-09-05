@@ -33,13 +33,13 @@ CREATE TABLE events
     annotation         VARCHAR(2000) NOT NULL,
     description        VARCHAR(7000),
     category_id        BIGINT REFERENCES categories (id) ON DELETE RESTRICT,
-    status             VARCHAR(256),
+    state              VARCHAR(256),
     paid               BOOLEAN,
-    moderation         BOOLEAN DEFAULT TRUE,
-    participants_limit INTEGER DEFAULT 0,
+    request_moderation BOOLEAN DEFAULT TRUE,
+    participant_limit  INTEGER DEFAULT 0,
     location_id        BIGINT REFERENCES locations (id) ON DELETE SET NULL,
     created_on         TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-    planned_on         TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    event_date         TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     published_on       TIMESTAMP WITHOUT TIME zone
 );
 

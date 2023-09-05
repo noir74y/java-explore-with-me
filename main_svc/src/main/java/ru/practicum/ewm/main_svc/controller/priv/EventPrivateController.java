@@ -18,24 +18,24 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Slf4j
-@Controller
+@RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
-@Validated
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventPrivateController {
-    EventService eventService;
+    private final EventService eventService;
 
     @GetMapping("/{userId}/events")
     public List<EventShortDto> privateFindByUser(@PathVariable @NotNull Long userId,
                                                  @RequestParam(defaultValue = "0") @NotNull Integer from,
                                                  @RequestParam(defaultValue = "10") @NotNull Integer size) {
+        log.info("GET /users/{}/events {}, {}", userId, from, size);
         return eventService.privateFindByUser(userId, from, size);
     }
 
     @PostMapping("/{userId}/events")
     public EventFullDto privateCreate(@PathVariable @NotNull Long userId,
                                       @RequestBody @NotNull @Valid NewEventDto newEventDto) {
+        log.info("POST /users/{}/events {}", userId, newEventDto);
         return eventService.privateCreate(userId, newEventDto);
     }
 

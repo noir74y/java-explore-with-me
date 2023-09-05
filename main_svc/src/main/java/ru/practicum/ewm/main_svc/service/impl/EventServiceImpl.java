@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
-    EventRepository eventRepository;
-    EventMapper eventMapper;
+    private final EventRepository eventRepository;
+    private final EventMapper eventMapper;
 
     @Override
     public List<EventShortDto> privateFindByUser(Long userId,

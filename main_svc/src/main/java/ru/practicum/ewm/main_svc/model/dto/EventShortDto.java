@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventShortDto {
+    String description;
     String annotation;
     CategoryDto category;
     Long confirmedRequests;

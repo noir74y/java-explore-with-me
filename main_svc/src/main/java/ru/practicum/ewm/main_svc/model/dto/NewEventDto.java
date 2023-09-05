@@ -1,5 +1,6 @@
 package ru.practicum.ewm.main_svc.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -24,7 +25,8 @@ public class NewEventDto {
 
     @NotNull
     @PositiveOrZero
-    Long category_id;
+    @JsonAlias("category")
+    Long catId;
 
     @NotNull
     @Size(min = 20, max = 7000)
@@ -37,6 +39,7 @@ public class NewEventDto {
 
     @NotNull
     @Valid
+    @JsonAlias("location")
     LocationDto locationDto;
 
     Boolean paid = false;

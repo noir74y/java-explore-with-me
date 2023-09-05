@@ -29,9 +29,9 @@ public class Event {
     @OnDelete(action = OnDeleteAction.CASCADE)
     User initiator;
 
-    @Size(max = 250)
+    @Size(max = 120)
     @Column(nullable = false)
-    String name;
+    String title;
 
     @Size(max = 1024)
     @Column(nullable = false)
@@ -48,25 +48,27 @@ public class Event {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    EventState status;
+    EventState state;
 
     Boolean paid;
-    Boolean moderation;
 
-    @Column(name = "participants_limit")
-    Integer participantsLimit;
+    @Column(name = "request_moderation")
+    Boolean requestModeration;
+
+    @Column(name = "participant_limit")
+    Integer participantLimit;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id")
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     Location location;
 
-    @Column(name = "created_on", nullable = false)
+    @Column(name = "created_on")
     LocalDateTime createdOn;
 
-    @Column(name = "planned_on", nullable = false)
-    LocalDateTime plannedOn;
+    @Column(name = "event_date", nullable = false)
+    LocalDateTime eventDate;
 
-    @Column(name = "published_on", nullable = false)
+    @Column(name = "published_on")
     LocalDateTime publishedOn;
 }

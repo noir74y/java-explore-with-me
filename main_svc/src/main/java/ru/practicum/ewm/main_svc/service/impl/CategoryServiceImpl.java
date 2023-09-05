@@ -1,6 +1,7 @@
 package ru.practicum.ewm.main_svc.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +11,9 @@ import ru.practicum.ewm.main_svc.model.dto.NewCategoryDto;
 import ru.practicum.ewm.main_svc.model.util.mappers.CategoryMapper;
 import ru.practicum.ewm.main_svc.repository.CategoryRepository;
 import ru.practicum.ewm.main_svc.service.CategoryService;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -46,13 +50,18 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional(readOnly = true)
-    public Iterable<CategoryDto> publicFindAll(Integer from, Integer size) {
-        return null;
+    public List<CategoryDto> publicFindAll(Integer from, Integer size) {
+        return categoryRepository
+                .findAll(PageRequest.of(from / size, size))
+                .stream()
+                .map(categoryMapper::entity2categoryDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
     public CategoryDto publicFindById(Long catId) {
-        return null;
+        return categoryMapper.entity2categoryDto(categoryRepository.findById(catId)
+                .orElseThrow(() -> new EwmException(String.format("Category with id=%d was not found.", catId), HttpStatus.NOT_FOUND)));
     }
 }

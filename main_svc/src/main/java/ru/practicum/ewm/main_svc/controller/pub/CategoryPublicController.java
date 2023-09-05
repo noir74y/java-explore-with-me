@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.practicum.ewm.main_svc.model.dto.CategoryDto;
+import ru.practicum.ewm.main_svc.model.util.AppConfig;
 import ru.practicum.ewm.main_svc.service.CategoryService;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -25,8 +27,8 @@ public class CategoryPublicController {
     CategoryService categoryService;
 
     @GetMapping
-    public Iterable<CategoryDto> publicFindAll(@RequestParam(defaultValue = "0") Integer from,
-                                               @RequestParam(defaultValue = "10") Integer size) {
+    public List<CategoryDto> publicFindAll(@RequestParam(defaultValue = AppConfig.FROM) Integer from,
+                                           @RequestParam(defaultValue = AppConfig.SIZE) Integer size) {
         return categoryService.publicFindAll(from, size);
     }
 

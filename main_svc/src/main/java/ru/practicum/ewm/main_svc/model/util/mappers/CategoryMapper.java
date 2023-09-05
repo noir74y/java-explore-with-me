@@ -7,7 +7,9 @@ import ru.practicum.ewm.main_svc.model.dto.CategoryDto;
 import ru.practicum.ewm.main_svc.model.dto.NewCategoryDto;
 import ru.practicum.ewm.main_svc.model.entity.Category;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -24,5 +26,12 @@ public class CategoryMapper {
 
     public CategoryDto entity2categoryDto(Category category) {
         return Optional.ofNullable(category).map(obj -> modelMapper.map(obj, CategoryDto.class)).orElse(null);
+    }
+
+    public List<CategoryDto> bulkEntity2userShortDto(List<Category> categories) {
+        return categories
+                .stream()
+                .map(this::entity2categoryDto)
+                .collect(Collectors.toList());
     }
 }

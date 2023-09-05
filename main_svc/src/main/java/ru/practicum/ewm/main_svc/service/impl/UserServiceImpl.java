@@ -36,7 +36,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void adminDelete(Long userId) {
         if (userRepository.existsById(userId)) userRepository.deleteById(userId);
-        //else throw new NotFoundException(String.format("User with id=%d was not found.", userId));
         else throw new EwmException(String.format("User with id=%d was not found.", userId), HttpStatus.NOT_FOUND);
     }
 }

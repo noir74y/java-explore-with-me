@@ -15,6 +15,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -24,13 +25,13 @@ public class EventAdminController {
     private final EventService eventService;
 
     @GetMapping
-    public Iterable<EventFullDto> adminFind(@RequestParam Iterable<Long> users,
-                                            @RequestParam Iterable<String> states,
-                                            @RequestParam Iterable<Long> categories,
-                                            @RequestParam @FutureOrPresent LocalDateTime rangeStart,
-                                            @RequestParam @FutureOrPresent LocalDateTime rangeEnd,
-                                            @RequestParam(defaultValue = "0") Integer from,
-                                            @RequestParam(defaultValue = "10") Integer size) {
+    public List<EventFullDto> adminFind(@RequestParam Iterable<Long> users,
+                                        @RequestParam Iterable<String> states,
+                                        @RequestParam Iterable<Long> categories,
+                                        @RequestParam @FutureOrPresent LocalDateTime rangeStart,
+                                        @RequestParam @FutureOrPresent LocalDateTime rangeEnd,
+                                        @RequestParam(defaultValue = "0") Integer from,
+                                        @RequestParam(defaultValue = "10") Integer size) {
         return eventService.adminFind(users, states, categories, rangeStart, rangeEnd, from, size);
     }
 

@@ -14,6 +14,7 @@ import ru.practicum.ewm.main_svc.service.RequestService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -25,8 +26,8 @@ public class RequestPrivateController {
     RequestService requestService;
 
     @GetMapping("/{userId}/events/{eventId}/requests")
-    public Iterable<ParticipationRequestDto> privateFindByUserAndEvent(@PathVariable @NotNull Long userId,
-                                                                       @PathVariable @NotNull Long eventId) {
+    public List<ParticipationRequestDto> privateFindByUserAndEvent(@PathVariable @NotNull Long userId,
+                                                                   @PathVariable @NotNull Long eventId) {
         return requestService.privateFindByUserAndEvent(userId, eventId);
     }
 
@@ -38,7 +39,7 @@ public class RequestPrivateController {
     }
 
     @GetMapping("/{userId}/requests")
-    public Iterable<ParticipationRequestDto> privateFindByUser(@PathVariable @NotNull Long userId) {
+    public List<ParticipationRequestDto> privateFindByUser(@PathVariable @NotNull Long userId) {
         return requestService.privateFindByUser(userId);
     }
 

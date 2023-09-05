@@ -14,6 +14,7 @@ import ru.practicum.ewm.main_svc.model.dto.CompilationDto;
 import ru.practicum.ewm.main_svc.service.CompilationService;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -25,9 +26,9 @@ public class CompilationPublicController {
     CompilationService compilationService;
 
     @GetMapping
-    public Iterable<CompilationDto> publicFindAll(@RequestParam Boolean pinned,
-                                                  @RequestParam(defaultValue = "0") Integer from,
-                                                  @RequestParam(defaultValue = "10") Integer size) {
+    public List<CompilationDto> publicFindAll(@RequestParam Boolean pinned,
+                                              @RequestParam(defaultValue = "0") Integer from,
+                                              @RequestParam(defaultValue = "10") Integer size) {
         return compilationService.publicFindAll(pinned, from, size);
     }
 

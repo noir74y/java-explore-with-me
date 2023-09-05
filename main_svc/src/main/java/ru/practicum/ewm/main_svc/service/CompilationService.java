@@ -5,11 +5,13 @@ import ru.practicum.ewm.main_svc.model.dto.CompilationDto;
 import ru.practicum.ewm.main_svc.model.dto.NewCompilationDto;
 import ru.practicum.ewm.main_svc.model.dto.UpdateCompilationRequest;
 
+import java.util.List;
+
 @Service
 public interface CompilationService {
-    Iterable<CompilationDto> publicFindAll(Boolean pinned,
-                                           Integer from,
-                                           Integer size);
+    List<CompilationDto> publicFindAll(Boolean pinned,
+                                       Integer from,
+                                       Integer size);
 
     CompilationDto publicFindById(Long compId);
 

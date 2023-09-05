@@ -15,6 +15,7 @@ import ru.practicum.ewm.main_svc.service.EventService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -26,9 +27,9 @@ public class EventPrivateController {
     EventService eventService;
 
     @GetMapping("/{userId}/events")
-    public Iterable<EventShortDto> privateFindByUser(@PathVariable @NotNull Long userId,
-                                                     @RequestParam(defaultValue = "0") @NotNull Integer from,
-                                                     @RequestParam(defaultValue = "10") @NotNull Integer size) {
+    public List<EventShortDto> privateFindByUser(@PathVariable @NotNull Long userId,
+                                                 @RequestParam(defaultValue = "0") @NotNull Integer from,
+                                                 @RequestParam(defaultValue = "10") @NotNull Integer size) {
         return eventService.privateFindByUser(userId, from, size);
     }
 

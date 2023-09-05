@@ -6,11 +6,14 @@ import ru.practicum.ewm.main_svc.model.dto.CompilationDto;
 import ru.practicum.ewm.main_svc.model.dto.NewCompilationDto;
 import ru.practicum.ewm.main_svc.model.dto.UpdateCompilationRequest;
 import ru.practicum.ewm.main_svc.service.CompilationService;
+
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CompilationServiceImpl implements CompilationService {
     @Override
-    public Iterable<CompilationDto> publicFindAll(Boolean pinned, Integer from, Integer size) {
+    public List<CompilationDto> publicFindAll(Boolean pinned, Integer from, Integer size) {
         return null;
     }
 

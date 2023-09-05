@@ -6,11 +6,14 @@ import ru.practicum.ewm.main_svc.model.dto.EventRequestStatusUpdateRequest;
 import ru.practicum.ewm.main_svc.model.dto.EventRequestStatusUpdateResult;
 import ru.practicum.ewm.main_svc.model.dto.ParticipationRequestDto;
 import ru.practicum.ewm.main_svc.service.RequestService;
+
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class RequestServiceImpl implements RequestService {
     @Override
-    public Iterable<ParticipationRequestDto> privateFindByUserAndEvent(Long userId, Long eventId) {
+    public List<ParticipationRequestDto> privateFindByUserAndEvent(Long userId, Long eventId) {
         return null;
     }
 
@@ -20,7 +23,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Iterable<ParticipationRequestDto> privateFindByUser(Long userId) {
+    public List<ParticipationRequestDto> privateFindByUser(Long userId) {
         return null;
     }
 

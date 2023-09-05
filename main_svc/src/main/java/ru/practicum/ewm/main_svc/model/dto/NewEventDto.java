@@ -4,10 +4,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.ewm.main_svc.model.util.AppConfig;
-import ru.practicum.ewm.main_svc.model.util.enums.EventState;
-import ru.practicum.ewm.main_svc.model.util.validation.ValueOfEnumConstraint;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
@@ -22,8 +23,8 @@ public class NewEventDto {
     String annotation;
 
     @NotNull
-    @ValueOfEnumConstraint(enumClass = EventState.class)
-    Long category;
+    @PositiveOrZero
+    Long category_id;
 
     @NotNull
     @Size(min = 20, max = 7000)
@@ -31,15 +32,19 @@ public class NewEventDto {
 
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = AppConfig.DATE_TIME_FORMAT)
+    @Future
     LocalDateTime eventDate;
 
     @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = AppConfig.DATE_TIME_FORMAT)
-    LocationDto location;
+    @Valid
+    LocationDto locationDto;
 
-    Boolean paid;
-    Integer participantLimit;
-    Boolean requestModeration;
+    Boolean paid = false;
+
+    @PositiveOrZero
+    Integer participantLimit = 0;
+
+    Boolean requestModeration = true;
 
     @NotNull
     @Size(min = 3, max = 120)

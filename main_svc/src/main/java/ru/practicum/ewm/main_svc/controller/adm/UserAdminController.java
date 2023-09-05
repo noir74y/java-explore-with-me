@@ -23,7 +23,7 @@ public class UserAdminController {
 
     @GetMapping
     public List<UserDto> adminFindByIds(@RequestParam List<Long> ids,
-                                        @RequestParam(defaultValue = AppConfig.FROM) @Min(0)  Integer from,
+                                        @RequestParam(defaultValue = AppConfig.FROM) @Min(0) Integer from,
                                         @RequestParam(defaultValue = AppConfig.SIZE) @Min(1) Integer size) {
         log.info("GET /admin/users {}, {}, {}", ids, from, size);
         return userService.adminFindByIds(ids, from, size);

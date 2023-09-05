@@ -8,28 +8,25 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.practicum.ewm.main_svc.error.exception.KnownException;
-import ru.practicum.ewm.main_svc.error.exception.EwmException;
-import ru.practicum.ewm.main_svc.error.exception.UnknownException;
 
 @Slf4j
 @RestControllerAdvice
 public class ExceptionController {
 
     @ExceptionHandler
-    public ResponseEntity<ApiError> exceptionController(Exception initialException) {
+    public ResponseEntity<ApiError> exceptionController(Exception exception) {
         EwmException ewmException;
 
-        log.error("{}", initialException.getMessage());
+        log.error("{}", exception.getMessage());
 
-        if (initialException instanceof MethodArgumentNotValidException)
-            ewmException = new KnownException("Incorrectly made request.", HttpStatus.BAD_REQUEST);
-        else if (initialException instanceof PSQLException || initialException instanceof DataIntegrityViolationException)
-            ewmException = new KnownException("Integrity constraint has been violated.", HttpStatus.CONFLICT);
-        else if (initialException instanceof KnownException)
-            ewmException = (KnownException) initialException;
+        if (exception instanceof MethodArgumentNotValidException)
+            ewmException = new EwmException("Incorrectly made request.", HttpStatus.BAD_REQUEST);
+        else if (exception instanceof PSQLException || exception instanceof DataIntegrityViolationException)
+            ewmException = new EwmException("Integrity constraint has been violated.", HttpStatus.CONFLICT);
+        else if (exception instanceof EwmException)
+            ewmException = (EwmException) exception;
         else
-            ewmException = (UnknownException) initialException;
+            ewmException = new EwmException("UnknownException", HttpStatus.INTERNAL_SERVER_ERROR);
 
         return ewmException.getApiErrorMessage();
     }

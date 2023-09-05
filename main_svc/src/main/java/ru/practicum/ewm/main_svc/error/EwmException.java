@@ -1,4 +1,4 @@
-package ru.practicum.ewm.main_svc.error.exception;
+package ru.practicum.ewm.main_svc.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

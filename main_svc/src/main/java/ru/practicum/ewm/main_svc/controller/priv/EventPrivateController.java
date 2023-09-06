@@ -25,30 +25,30 @@ public class EventPrivateController {
     private final EventService eventService;
 
     @GetMapping("/{userId}/events")
-    public List<EventShortDto> privateFindByUser(@PathVariable @NotNull Long userId,
+    public List<EventShortDto> privateFindByUser(@PathVariable("userId") @NotNull Long initiatorId,
                                                  @RequestParam(defaultValue = "0") @NotNull Integer from,
                                                  @RequestParam(defaultValue = "10") @NotNull Integer size) {
-        log.info("GET /users/{}/events {}, {}", userId, from, size);
-        return eventService.privateFindByUser(userId, from, size);
+        log.info("GET /users/{}/events {}, {}", initiatorId, from, size);
+        return eventService.privateFindByUser(initiatorId, from, size);
     }
 
     @PostMapping("/{userId}/events")
-    public EventFullDto privateCreate(@PathVariable @NotNull Long userId,
+    public EventFullDto privateCreate(@PathVariable("userId") @NotNull Long initiatorId,
                                       @RequestBody @NotNull @Valid NewEventDto newEventDto) {
-        log.info("POST /users/{}/events {}", userId, newEventDto);
-        return eventService.privateCreate(userId, newEventDto);
+        log.info("POST /users/{}/events {}", initiatorId, newEventDto);
+        return eventService.privateCreate(initiatorId, newEventDto);
     }
 
     @GetMapping("/{userId}/events/{eventId}")
-    public EventFullDto privateFindById(@PathVariable @NotNull Long userId,
-                                        @PathVariable @NotNull Long eventId) {
-        return eventService.privateFindById(userId, eventId);
+    public EventFullDto privateFindById(@PathVariable("userId") @NotNull Long initiatorId,
+                                        @PathVariable @NotNull Long eventId) throws Throwable {
+        return eventService.privateFindById(initiatorId, eventId);
     }
 
     @PatchMapping("/{userId}/events/{eventId}")
-    public EventFullDto privateUpdate(@PathVariable @NotNull Long userId,
+    public EventFullDto privateUpdate(@PathVariable("userId") @NotNull Long initiatorId,
                                       @PathVariable @NotNull Long eventId,
                                       @RequestBody @NotNull @Valid UpdateEventUserRequest updateEventUserRequest) {
-        return eventService.privateUpdate(userId, eventId, updateEventUserRequest);
+        return eventService.privateUpdate(initiatorId, eventId, updateEventUserRequest);
     }
 }

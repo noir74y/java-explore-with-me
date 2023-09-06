@@ -27,11 +27,11 @@ public class EventMapper {
     final LocationMapper locationMapper;
     final LocationRepository locationRepository;
 
-    public Event newEventDto2entity(Long userId,
+    public Event newEventDto2entity(Long initiatorId,
                                     NewEventDto newEventDto) {
         var event = modelMapper.map(newEventDto, Event.class);
         event.setState(EventState.PENDING);
-        event.setInitiator(userRepository.findById(userId).orElse(null));
+        event.setInitiator(userRepository.findById(initiatorId).orElse(null));
         event.setCategory(categoryRepository.findById(newEventDto.getCatId()).orElse(null));
         event.setLocation(locationRepository.save(locationMapper.locationDto2entity(newEventDto.getLocationDto())));
         event.setCreatedOn(LocalDateTime.now());

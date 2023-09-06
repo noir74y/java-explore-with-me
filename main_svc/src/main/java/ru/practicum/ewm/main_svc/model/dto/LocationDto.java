@@ -13,8 +13,6 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LocationDto {
-    Long id;
-
     @Min(-90)
     @Max(90)
     @NotNull

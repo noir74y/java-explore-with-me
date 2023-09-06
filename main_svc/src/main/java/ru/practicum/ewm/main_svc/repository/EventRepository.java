@@ -6,12 +6,10 @@ import org.springframework.stereotype.Repository;
 import ru.practicum.ewm.main_svc.model.entity.Event;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findAllByInitiatorId(Long userId, PageRequest pageRequest);
+
     Event findByInitiatorIdAndId(Long userId, Long eventId);
-
-
 }

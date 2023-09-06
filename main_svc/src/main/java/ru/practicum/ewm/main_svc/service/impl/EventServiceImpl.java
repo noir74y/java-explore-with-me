@@ -47,6 +47,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventFullDto privateFindById(Long initiatorId,
                                         Long eventId) throws Throwable {
+        var xxx = eventMapper.entity2eventFullDto(eventRepository.findByInitiatorIdAndId(initiatorId, eventId));
         return Optional.ofNullable(eventMapper.entity2eventFullDto(eventRepository.findByInitiatorIdAndId(initiatorId, eventId)))
                 .orElseThrow((Supplier<Throwable>) () -> new EwmException(String.format("there is no event with id=%d and initiatorId=%d", initiatorId, eventId), HttpStatus.NOT_FOUND));
     }

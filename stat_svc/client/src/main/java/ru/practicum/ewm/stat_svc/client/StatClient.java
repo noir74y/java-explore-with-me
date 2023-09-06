@@ -31,7 +31,7 @@ public class StatClient extends BaseClient {
         post(serverPath, null, null, hitIn);
     }
 
-    public ResponseEntity<Object> getHitsWithEncodedLocalDateTime(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
+    public ResponseEntity<Object> getHits(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
         Map<String, Object> paramsMap = Map.of(
                 "start", paramCoder.ldt2encodedString(start),
                 "end", paramCoder.ldt2encodedString(end),

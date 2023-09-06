@@ -1,23 +1,24 @@
 package ru.practicum.ewm.main_svc.controller.pub;
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.practicum.ewm.main_svc.model.dto.EventFullDto;
 import ru.practicum.ewm.main_svc.model.dto.EventShortDto;
+import ru.practicum.ewm.main_svc.model.util.AppConfig;
 import ru.practicum.ewm.main_svc.model.util.enums.EventSort;
 import ru.practicum.ewm.main_svc.model.util.validation.ValueOfEnumConstraint;
 import ru.practicum.ewm.main_svc.service.EventService;
 
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,21 +26,19 @@ import java.util.List;
 @Controller
 @RequestMapping("/events")
 @RequiredArgsConstructor
-@Validated
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventPublicController {
-    EventService eventService;
+    private final EventService eventService;
 
     @GetMapping
     public List<EventShortDto> publicFind(@RequestParam String searchPattern,
-                                          @RequestParam Iterable<Long> categories,
+                                          @RequestParam List<Long> categories,
                                           @RequestParam Boolean paid,
-                                          @RequestParam @FutureOrPresent LocalDateTime rangeStart,
-                                          @RequestParam @FutureOrPresent LocalDateTime rangeEnd,
+                                          @RequestParam @FutureOrPresent @DateTimeFormat(pattern = AppConfig.DATE_TIME_FORMAT) LocalDateTime rangeStart,
+                                          @RequestParam @FutureOrPresent @DateTimeFormat(pattern = AppConfig.DATE_TIME_FORMAT) LocalDateTime rangeEnd,
                                           @RequestParam(defaultValue = "false") Boolean onlyAvailable,
                                           @RequestParam @ValueOfEnumConstraint(enumClass = EventSort.class) String sort,
-                                          @RequestParam(defaultValue = "0") Integer from,
-                                          @RequestParam(defaultValue = "10") Integer size) {
+                                          @RequestParam(defaultValue = AppConfig.FROM) @PositiveOrZero Integer from,
+                                          @RequestParam(defaultValue = AppConfig.SIZE) @Positive Integer size) {
         return eventService.publicFind(searchPattern,
                 categories,
                 paid,

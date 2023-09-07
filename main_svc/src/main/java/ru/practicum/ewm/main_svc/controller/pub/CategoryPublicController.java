@@ -6,10 +6,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.main_svc.model.dto.CategoryDto;
 import ru.practicum.ewm.main_svc.model.util.AppConfig;
 import ru.practicum.ewm.main_svc.service.CategoryService;
@@ -18,13 +15,13 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Slf4j
-@Controller
+@RestController
 @RequestMapping("/categories")
 @RequiredArgsConstructor
 @Validated
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CategoryPublicController {
-    CategoryService categoryService;
+    final CategoryService categoryService;
 
     @GetMapping
     public List<CategoryDto> publicFindAll(@RequestParam(defaultValue = AppConfig.FROM) Integer from,

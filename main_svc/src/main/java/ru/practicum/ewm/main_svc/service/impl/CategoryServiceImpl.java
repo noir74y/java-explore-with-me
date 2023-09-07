@@ -51,11 +51,18 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional(readOnly = true)
     public List<CategoryDto> publicFindAll(Integer from, Integer size) {
-        return categoryRepository
+        var ddd = categoryRepository
                 .findAll(PageRequest.of(from / size, size))
                 .stream()
                 .map(categoryMapper::entity2categoryDto)
                 .collect(Collectors.toList());
+
+        return ddd;
+//        return categoryRepository
+//                .findAll(PageRequest.of(from / size, size))
+//                .stream()
+//                .map(categoryMapper::entity2categoryDto)
+//                .collect(Collectors.toList());
     }
 
     @Override

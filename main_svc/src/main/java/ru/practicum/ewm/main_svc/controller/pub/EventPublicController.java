@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.main_svc.model.dto.EventFullDto;
 import ru.practicum.ewm.main_svc.model.dto.EventShortDto;
 import ru.practicum.ewm.main_svc.model.util.AppConfig;
@@ -23,7 +20,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
-@Controller
+@RestController
 @RequestMapping("/events")
 @RequiredArgsConstructor
 public class EventPublicController {

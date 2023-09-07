@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Slf4j
-@Controller
+@RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
 @Validated

@@ -2,6 +2,7 @@ package ru.practicum.ewm.main_svc.controller.priv;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.main_svc.model.dto.EventFullDto;
 import ru.practicum.ewm.main_svc.model.dto.EventShortDto;
@@ -32,6 +33,7 @@ public class EventPrivateController {
     }
 
     @PostMapping("/{userId}/events")
+    @ResponseStatus(code = HttpStatus.CREATED)
     public EventFullDto privateCreate(@PathVariable("userId") @NotNull Long initiatorId,
                                       @RequestBody @NotNull @Valid NewEventDto newEventDto) {
         log.info("POST /users/{}/events {}", initiatorId, newEventDto);

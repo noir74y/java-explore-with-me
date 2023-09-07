@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.practicum.ewm.main_svc.model.entity.Event;
+import ru.practicum.ewm.main_svc.model.entity.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,15 +20,15 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     Event findByInitiatorIdAndId(Long initiatorId, Long eventId);
 
     @Query("SELECT e FROM Event e " +
-            "WHERE (:initiators IS NULL OR e.initiator IN :initiators) " +
+            "WHERE (:initiators IS NULL OR e.initiator.id IN :initiators) " +
             "AND (:states IS NULL OR e.state IN :states) " +
-            "AND (:categories IS NULL OR e.category IN :categories) " +
+            "AND (:categories IS NULL OR e.category.id IN :categories) " +
             "AND e.eventDate BETWEEN :rangeStart AND :rangeEnd " +
             "ORDER BY e.createdOn DESC")
-    Page<Event> adminFind(@Param("initiators") List<Long> initiators,
-                          @Param("states") List<String> states,
-                          @Param("categories") List<Long> categories,
-                          @Param("rangeStart") LocalDateTime rangeStart,
-                          @Param("rangeEnd") LocalDateTime rangeEnd,
+    Page<Event> adminFind(List<Long> initiators,
+                          List<String> states,
+                          List<Long> categories,
+                          LocalDateTime rangeStart,
+                          LocalDateTime rangeEnd,
                           Pageable pageable);
 }

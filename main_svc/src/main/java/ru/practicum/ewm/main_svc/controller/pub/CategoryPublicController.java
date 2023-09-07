@@ -12,6 +12,8 @@ import ru.practicum.ewm.main_svc.model.util.AppConfig;
 import ru.practicum.ewm.main_svc.service.CategoryService;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @Slf4j
@@ -24,8 +26,8 @@ public class CategoryPublicController {
     final CategoryService categoryService;
 
     @GetMapping
-    public List<CategoryDto> publicFindAll(@RequestParam(defaultValue = AppConfig.FROM) Integer from,
-                                           @RequestParam(defaultValue = AppConfig.SIZE) Integer size) {
+    public List<CategoryDto> publicFindAll(@RequestParam(defaultValue = AppConfig.FROM) @PositiveOrZero Integer from,
+                                           @RequestParam(defaultValue = AppConfig.SIZE) @Positive Integer size) {
         return categoryService.publicFindAll(from, size);
     }
 

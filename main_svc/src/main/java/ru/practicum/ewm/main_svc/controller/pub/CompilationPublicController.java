@@ -8,9 +8,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.main_svc.model.dto.CompilationDto;
+import ru.practicum.ewm.main_svc.model.util.AppConfig;
 import ru.practicum.ewm.main_svc.service.CompilationService;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @Slf4j
@@ -24,8 +27,8 @@ public class CompilationPublicController {
 
     @GetMapping
     public List<CompilationDto> publicFindAll(@RequestParam Boolean pinned,
-                                              @RequestParam(defaultValue = "0") Integer from,
-                                              @RequestParam(defaultValue = "10") Integer size) {
+                                              @RequestParam(defaultValue = AppConfig.FROM) @PositiveOrZero Integer from,
+                                              @RequestParam(defaultValue = AppConfig.SIZE) @Positive Integer size) {
         return compilationService.publicFindAll(pinned, from, size);
     }
 

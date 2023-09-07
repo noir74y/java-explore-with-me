@@ -12,6 +12,8 @@ import ru.practicum.ewm.main_svc.service.UserService;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @Slf4j
@@ -23,8 +25,8 @@ public class UserAdminController {
 
     @GetMapping
     public List<UserDto> adminFindByIds(@RequestParam List<Long> ids,
-                                        @RequestParam(defaultValue = AppConfig.FROM) @Min(0) Integer from,
-                                        @RequestParam(defaultValue = AppConfig.SIZE) @Min(1) Integer size) {
+                                        @RequestParam(defaultValue = AppConfig.FROM) @PositiveOrZero Integer from,
+                                        @RequestParam(defaultValue = AppConfig.SIZE) @Positive Integer size) {
         log.info("GET /admin/users {}, {}, {}", ids, from, size);
         return userService.adminFindByIds(ids, from, size);
     }

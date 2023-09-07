@@ -1,19 +1,19 @@
 package ru.practicum.ewm.main_svc.controller.adm;
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.main_svc.model.dto.EventFullDto;
 import ru.practicum.ewm.main_svc.model.dto.UpdateEventAdminRequest;
+import ru.practicum.ewm.main_svc.model.util.AppConfig;
 import ru.practicum.ewm.main_svc.service.EventService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,10 +28,10 @@ public class EventAdminController {
     public List<EventFullDto> adminFind(@RequestParam Iterable<Long> users,
                                         @RequestParam Iterable<String> states,
                                         @RequestParam Iterable<Long> categories,
-                                        @RequestParam @FutureOrPresent LocalDateTime rangeStart,
-                                        @RequestParam @FutureOrPresent LocalDateTime rangeEnd,
-                                        @RequestParam(defaultValue = "0") Integer from,
-                                        @RequestParam(defaultValue = "10") Integer size) {
+                                        @RequestParam @FutureOrPresent @DateTimeFormat(pattern = AppConfig.DATE_TIME_FORMAT) LocalDateTime rangeStart,
+                                        @RequestParam @FutureOrPresent @DateTimeFormat(pattern = AppConfig.DATE_TIME_FORMAT) LocalDateTime rangeEnd,
+                                        @RequestParam(defaultValue = AppConfig.FROM) @PositiveOrZero Integer from,
+                                        @RequestParam(defaultValue = AppConfig.SIZE) @Positive Integer size) {
         return eventService.adminFind(users, states, categories, rangeStart, rangeEnd, from, size);
     }
 

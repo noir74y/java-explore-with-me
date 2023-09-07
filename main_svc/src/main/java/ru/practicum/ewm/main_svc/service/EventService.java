@@ -22,9 +22,9 @@ public interface EventService {
                                Long eventId,
                                UpdateEventUserRequest updateEventUserRequest) throws Throwable;
 
-    List<EventFullDto> adminFind(Iterable<Long> users,
-                                 Iterable<String> states,
-                                 Iterable<Long> categories,
+    List<EventFullDto> adminFind(List<Long> initiators,
+                                 List<String> states,
+                                 List<Long> categories,
                                  LocalDateTime rangeStart,
                                  LocalDateTime rangeEnd,
                                  Integer from,

@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.main_svc.error.EwmException;
 import ru.practicum.ewm.main_svc.model.dto.*;
+import ru.practicum.ewm.main_svc.model.entity.Event;
+import ru.practicum.ewm.main_svc.model.util.enums.EventAdminState;
 import ru.practicum.ewm.main_svc.model.util.enums.EventState;
 import ru.practicum.ewm.main_svc.model.util.enums.EventUserState;
 import ru.practicum.ewm.main_svc.model.util.mappers.EventMapper;
@@ -18,6 +20,7 @@ import ru.practicum.ewm.main_svc.repository.LocationRepository;
 import ru.practicum.ewm.main_svc.service.EventService;
 
 import java.time.LocalDateTime;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -67,52 +70,53 @@ public class EventServiceImpl implements EventService {
         if (currentEvent.getState().equals(EventState.PUBLISHED) || LocalDateTime.now().plusHours(2).isAfter(currentEvent.getEventDate()))
             throw new EwmException("the event is not updatable", HttpStatus.CONFLICT);
 
-        Optional.ofNullable(updateEventUserRequest.getAnnotation())
-                .ifPresent(currentEvent::setAnnotation);
-        Optional.ofNullable(updateEventUserRequest.getDescription())
-                .ifPresent(currentEvent::setDescription);
-        Optional.ofNullable(updateEventUserRequest.getEventDate())
-                .ifPresent(currentEvent::setEventDate);
-        Optional.ofNullable(updateEventUserRequest.getPaid())
-                .ifPresent(currentEvent::setPaid);
-        Optional.ofNullable(updateEventUserRequest.getParticipantLimit())
-                .ifPresent(currentEvent::setParticipantLimit);
-        Optional.ofNullable(updateEventUserRequest.getRequestModeration())
-                .ifPresent(currentEvent::setRequestModeration);
-        Optional.ofNullable(updateEventUserRequest.getTitle())
-                .ifPresent(currentEvent::setTitle);
-
         Optional.ofNullable(updateEventUserRequest.getStateAction())
                 .ifPresent(newState -> currentEvent.setState(EventUserState.valueOf(newState) == EventUserState.SEND_TO_REVIEW ? EventState.PENDING : EventState.CANCELED));
 
-        Optional.ofNullable(updateEventUserRequest.getCatId())
-                .ifPresent(newCatId -> currentEvent.setCategory(categoryRepository.findById(updateEventUserRequest.getCatId())
-                        .orElseThrow(() -> new EwmException(String.format("there is no category with id=%d", newCatId), HttpStatus.NOT_FOUND))));
-
-        Optional.ofNullable(updateEventUserRequest.getLocation()).ifPresent(newLocationDto -> {
-            var newLocation = locationMapper.locationDto2entity(newLocationDto);
-            newLocation.setId(currentEvent.getLocation().getId());
-            currentEvent.setLocation(newLocation);
-        });
+        updateEventParameters(currentEvent, updateEventUserRequest);
 
         return eventMapper.entity2eventFullDto(eventRepository.save(currentEvent));
     }
 
     @Override
-    public List<EventFullDto> adminFind(Iterable<Long> users,
-                                        Iterable<String> states,
-                                        Iterable<Long> categories,
+    public List<EventFullDto> adminFind(List<Long> initiators,
+                                        List<String> states,
+                                        List<Long> categories,
                                         LocalDateTime rangeStart,
                                         LocalDateTime rangeEnd,
                                         Integer from,
                                         Integer size) {
-        return null;
+        if (rangeStart.isAfter(rangeEnd))
+            throw new EwmException("rangeStart is after rangeEnd", HttpStatus.BAD_REQUEST);
+
+        return eventRepository
+                .adminFind(initiators, states, categories, rangeStart, rangeEnd, PageRequest.of(from, size))
+                .getContent()
+                .stream()
+                .map(eventMapper::entity2eventFullDto)
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
     public EventFullDto adminUpdate(Long eventId,
                                     UpdateEventAdminRequest updateEventAdminRequest) {
-        return null;
+
+        var currentEvent = eventRepository.findById(eventId)
+                .orElseThrow(() -> new EwmException(String.format("there is no event with id=%d", eventId), HttpStatus.NOT_FOUND));
+
+        if (LocalDateTime.now().plusHours(1).isAfter(currentEvent.getEventDate()))
+            throw new EwmException("it's too late to update this event", HttpStatus.CONFLICT);
+
+        Optional.ofNullable(updateEventAdminRequest.getStateAction()).ifPresent(newState -> {
+            if (currentEvent.getState().equals(EventState.PENDING))
+                currentEvent.setState(updateEventAdminRequest.getStateAction().equals(EventAdminState.PUBLISH_EVENT.name()) ? EventState.PUBLISHED : EventState.CANCELED);
+            else
+                throw new EwmException("wrong state to update this event", HttpStatus.CONFLICT);
+        });
+
+        updateEventParameters(currentEvent, updateEventAdminRequest);
+
+        return eventMapper.entity2eventFullDto(eventRepository.save(currentEvent));
     }
 
     @Override
@@ -131,5 +135,30 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventFullDto publicFindById(Long id) {
         return null;
+    }
+
+    private void updateEventParameters(Event currentEvent, UpdateEventRequest updateEventRequest) {
+        Optional.ofNullable(updateEventRequest.getCatId())
+                .ifPresent(newCatId -> currentEvent.setCategory(categoryRepository.findById(updateEventRequest.getCatId())
+                        .orElseThrow(() -> new EwmException(String.format("there is no category with id=%d", newCatId), HttpStatus.NOT_FOUND))));
+        Optional.ofNullable(updateEventRequest.getAnnotation())
+                .ifPresent(currentEvent::setAnnotation);
+        Optional.ofNullable(updateEventRequest.getDescription())
+                .ifPresent(currentEvent::setDescription);
+        Optional.ofNullable(updateEventRequest.getEventDate())
+                .ifPresent(currentEvent::setEventDate);
+        Optional.ofNullable(updateEventRequest.getPaid())
+                .ifPresent(currentEvent::setPaid);
+        Optional.ofNullable(updateEventRequest.getParticipantLimit())
+                .ifPresent(currentEvent::setParticipantLimit);
+        Optional.ofNullable(updateEventRequest.getRequestModeration())
+                .ifPresent(currentEvent::setRequestModeration);
+        Optional.ofNullable(updateEventRequest.getTitle())
+                .ifPresent(currentEvent::setTitle);
+        Optional.ofNullable(updateEventRequest.getLocation()).ifPresent(newLocationDto -> {
+            var newLocation = locationMapper.locationDto2entity(newLocationDto);
+            newLocation.setId(currentEvent.getLocation().getId());
+            currentEvent.setLocation(newLocation);
+        });
     }
 }

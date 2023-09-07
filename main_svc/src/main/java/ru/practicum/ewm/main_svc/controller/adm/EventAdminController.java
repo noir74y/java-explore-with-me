@@ -25,14 +25,14 @@ public class EventAdminController {
     private final EventService eventService;
 
     @GetMapping
-    public List<EventFullDto> adminFind(@RequestParam Iterable<Long> users,
-                                        @RequestParam Iterable<String> states,
-                                        @RequestParam Iterable<Long> categories,
+    public List<EventFullDto> adminFind(@RequestParam("users") List<Long> initiators,
+                                        @RequestParam List<String> states,
+                                        @RequestParam List<Long> categories,
                                         @RequestParam @FutureOrPresent @DateTimeFormat(pattern = AppConfig.DATE_TIME_FORMAT) LocalDateTime rangeStart,
                                         @RequestParam @FutureOrPresent @DateTimeFormat(pattern = AppConfig.DATE_TIME_FORMAT) LocalDateTime rangeEnd,
                                         @RequestParam(defaultValue = AppConfig.FROM) @PositiveOrZero Integer from,
                                         @RequestParam(defaultValue = AppConfig.SIZE) @Positive Integer size) {
-        return eventService.adminFind(users, states, categories, rangeStart, rangeEnd, from, size);
+        return eventService.adminFind(initiators, states, categories, rangeStart, rangeEnd, from, size);
     }
 
     @PatchMapping("/{eventId}")

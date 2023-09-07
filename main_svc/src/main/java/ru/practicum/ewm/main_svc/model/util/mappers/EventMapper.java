@@ -40,8 +40,7 @@ public class EventMapper {
     }
 
     public Event updateEventUserRequest2entity(UpdateEventUserRequest updateEventUserRequest) {
-        var event = modelMapper.map(updateEventUserRequest, Event.class);
-        return event;
+        return modelMapper.map(updateEventUserRequest, Event.class);
     }
 
     public EventShortDto entity2eventShortDto(Event event) {

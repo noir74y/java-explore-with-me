@@ -48,7 +48,7 @@ public class EventPrivateController {
     @PatchMapping("/{userId}/events/{eventId}")
     public EventFullDto privateUpdate(@PathVariable("userId") @NotNull Long initiatorId,
                                       @PathVariable @NotNull Long eventId,
-                                      @RequestBody @NotNull @Valid UpdateEventUserRequest updateEventUserRequest) {
+                                      @RequestBody @NotNull @Valid UpdateEventUserRequest updateEventUserRequest) throws Throwable {
         log.info("PATCH /users/{}/events/{}", initiatorId, eventId);
         return eventService.privateUpdate(initiatorId, eventId, updateEventUserRequest);
     }

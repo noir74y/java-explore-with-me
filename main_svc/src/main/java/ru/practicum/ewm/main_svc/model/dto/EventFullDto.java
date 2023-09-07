@@ -16,6 +16,7 @@ public class EventFullDto {
     Long confirmedRequests;
     LocalDateTime createdOn;
     String description;
+    LocalDateTime eventDate;
     Long id;
     UserShortDto initiator;
     LocationDto location;

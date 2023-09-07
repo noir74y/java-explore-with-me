@@ -8,15 +8,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.main_svc.error.EwmException;
 import ru.practicum.ewm.main_svc.model.dto.*;
+import ru.practicum.ewm.main_svc.model.util.enums.EventState;
+import ru.practicum.ewm.main_svc.model.util.enums.EventUserState;
 import ru.practicum.ewm.main_svc.model.util.mappers.EventMapper;
+import ru.practicum.ewm.main_svc.model.util.mappers.LocationMapper;
+import ru.practicum.ewm.main_svc.repository.CategoryRepository;
 import ru.practicum.ewm.main_svc.repository.EventRepository;
-import ru.practicum.ewm.main_svc.repository.UserRepository;
+import ru.practicum.ewm.main_svc.repository.LocationRepository;
 import ru.practicum.ewm.main_svc.service.EventService;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,7 +28,9 @@ import java.util.stream.Collectors;
 public class EventServiceImpl implements EventService {
     final EventRepository eventRepository;
     final EventMapper eventMapper;
-    final UserRepository userRepository;
+    final CategoryRepository categoryRepository;
+    final LocationRepository locationRepository;
+    final LocationMapper locationMapper;
 
     @Override
     public List<EventShortDto> privateFindByUser(Long initiatorId,
@@ -47,16 +52,50 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventFullDto privateFindById(Long initiatorId,
                                         Long eventId) throws Throwable {
-        var xxx = eventMapper.entity2eventFullDto(eventRepository.findByInitiatorIdAndId(initiatorId, eventId));
         return Optional.ofNullable(eventMapper.entity2eventFullDto(eventRepository.findByInitiatorIdAndId(initiatorId, eventId)))
-                .orElseThrow((Supplier<Throwable>) () -> new EwmException(String.format("there is no event with id=%d and initiatorId=%d", initiatorId, eventId), HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new EwmException(String.format("there is no event with id=%d and initiatorId=%d", initiatorId, eventId), HttpStatus.NOT_FOUND));
     }
 
     @Override
     public EventFullDto privateUpdate(Long initiatorId,
                                       Long eventId,
-                                      UpdateEventUserRequest updateEventUserRequest) {
-        return null;
+                                      UpdateEventUserRequest updateEventUserRequest) throws Throwable {
+
+        var currentEvent = Optional.ofNullable(eventRepository.findByInitiatorIdAndId(initiatorId, eventId))
+                .orElseThrow(() -> new EwmException(String.format("there is no event with id=%d and initiatorId=%d", initiatorId, eventId), HttpStatus.NOT_FOUND));
+
+        if (currentEvent.getState().equals(EventState.PUBLISHED) || LocalDateTime.now().plusHours(2).isAfter(currentEvent.getEventDate()))
+            throw new EwmException("the event is not updatable", HttpStatus.CONFLICT);
+
+        Optional.ofNullable(updateEventUserRequest.getAnnotation())
+                .ifPresent(currentEvent::setAnnotation);
+        Optional.ofNullable(updateEventUserRequest.getDescription())
+                .ifPresent(currentEvent::setDescription);
+        Optional.ofNullable(updateEventUserRequest.getEventDate())
+                .ifPresent(currentEvent::setEventDate);
+        Optional.ofNullable(updateEventUserRequest.getPaid())
+                .ifPresent(currentEvent::setPaid);
+        Optional.ofNullable(updateEventUserRequest.getParticipantLimit())
+                .ifPresent(currentEvent::setParticipantLimit);
+        Optional.ofNullable(updateEventUserRequest.getRequestModeration())
+                .ifPresent(currentEvent::setRequestModeration);
+        Optional.ofNullable(updateEventUserRequest.getTitle())
+                .ifPresent(currentEvent::setTitle);
+
+        Optional.ofNullable(updateEventUserRequest.getStateAction())
+                .ifPresent(newState -> currentEvent.setState(EventUserState.valueOf(newState) == EventUserState.SEND_TO_REVIEW ? EventState.PENDING : EventState.CANCELED));
+
+        Optional.ofNullable(updateEventUserRequest.getCatId())
+                .ifPresent(newCatId -> currentEvent.setCategory(categoryRepository.findById(updateEventUserRequest.getCatId())
+                        .orElseThrow(() -> new EwmException(String.format("there is no category with id=%d", newCatId), HttpStatus.NOT_FOUND))));
+
+        Optional.ofNullable(updateEventUserRequest.getLocation()).ifPresent(newLocationDto -> {
+            var newLocation = locationMapper.locationDto2entity(newLocationDto);
+            newLocation.setId(currentEvent.getLocation().getId());
+            currentEvent.setLocation(newLocation);
+        });
+
+        return eventMapper.entity2eventFullDto(eventRepository.save(currentEvent));
     }
 
     @Override

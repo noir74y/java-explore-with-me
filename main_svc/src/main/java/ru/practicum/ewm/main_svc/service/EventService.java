@@ -20,7 +20,7 @@ public interface EventService {
 
     EventFullDto privateUpdate(Long initiatorId,
                                Long eventId,
-                               UpdateEventUserRequest updateEventUserRequest);
+                               UpdateEventUserRequest updateEventUserRequest) throws Throwable;
 
     List<EventFullDto> adminFind(Iterable<Long> users,
                                  Iterable<String> states,

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import ru.practicum.ewm.main_svc.model.dto.EventFullDto;
 import ru.practicum.ewm.main_svc.model.dto.EventShortDto;
 import ru.practicum.ewm.main_svc.model.dto.NewEventDto;
+import ru.practicum.ewm.main_svc.model.dto.UpdateEventUserRequest;
 import ru.practicum.ewm.main_svc.model.entity.Event;
 import ru.practicum.ewm.main_svc.model.util.enums.EventState;
 import ru.practicum.ewm.main_svc.repository.CategoryRepository;
@@ -35,6 +36,11 @@ public class EventMapper {
         event.setCategory(categoryRepository.findById(newEventDto.getCatId()).orElse(null));
         event.setLocation(locationRepository.save(locationMapper.locationDto2entity(newEventDto.getLocationDto())));
         event.setCreatedOn(LocalDateTime.now());
+        return event;
+    }
+
+    public Event updateEventUserRequest2entity(UpdateEventUserRequest updateEventUserRequest) {
+        var event = modelMapper.map(updateEventUserRequest, Event.class);
         return event;
     }
 

@@ -3,10 +3,11 @@ package ru.practicum.ewm.main_svc.service.impl;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import ru.practicum.ewm.main_svc.error.EwmException;
+import ru.practicum.ewm.main_svc.error.MainEwmException;
 import ru.practicum.ewm.main_svc.model.dto.*;
 import ru.practicum.ewm.main_svc.model.entity.Event;
 import ru.practicum.ewm.main_svc.model.util.enums.EventAdminState;
@@ -19,8 +20,12 @@ import ru.practicum.ewm.main_svc.repository.EventRepository;
 import ru.practicum.ewm.main_svc.repository.LocationRepository;
 import ru.practicum.ewm.main_svc.repository.UserRepository;
 import ru.practicum.ewm.main_svc.service.EventService;
+import ru.practicum.ewm.stat_svc.client.StatClient;
+import ru.practicum.ewm.stat_svc.other.model.DtoHitIn;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +40,11 @@ public class EventServiceImpl implements EventService {
     final CategoryRepository categoryRepository;
     final LocationRepository locationRepository;
     final LocationMapper locationMapper;
-    private final UserRepository userRepository;
+    final UserRepository userRepository;
+    final StatClient statClient;
+
+    @Value("${application.name}")
+    String applicationName;
 
     @Override
     public List<EventShortDto> privateFindByUser(Long initiatorId,
@@ -58,7 +67,7 @@ public class EventServiceImpl implements EventService {
     public EventFullDto privateFindById(Long initiatorId,
                                         Long eventId) throws Throwable {
         return Optional.ofNullable(eventMapper.entity2eventFullDto(eventRepository.findByInitiatorIdAndId(initiatorId, eventId)))
-                .orElseThrow(() -> new EwmException(String.format("there is no event with id=%d and initiatorId=%d", initiatorId, eventId), HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new MainEwmException(String.format("there is no event with id=%d and initiatorId=%d", initiatorId, eventId), HttpStatus.NOT_FOUND));
     }
 
     @Override
@@ -67,10 +76,10 @@ public class EventServiceImpl implements EventService {
                                       UpdateEventUserRequest updateEventUserRequest) throws Throwable {
 
         var currentEvent = Optional.ofNullable(eventRepository.findByInitiatorIdAndId(initiatorId, eventId))
-                .orElseThrow(() -> new EwmException(String.format("there is no event with id=%d and initiatorId=%d", initiatorId, eventId), HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new MainEwmException(String.format("there is no event with id=%d and initiatorId=%d", initiatorId, eventId), HttpStatus.NOT_FOUND));
 
         if (currentEvent.getState().equals(EventState.PUBLISHED.name()) || LocalDateTime.now().plusHours(2).isAfter(currentEvent.getEventDate()))
-            throw new EwmException("the event is not updatable", HttpStatus.CONFLICT);
+            throw new MainEwmException("the event is not updatable", HttpStatus.CONFLICT);
 
         Optional.ofNullable(updateEventUserRequest.getStateAction())
                 .ifPresent(newState -> currentEvent.setState(newState == EventUserState.SEND_TO_REVIEW.name() ? EventState.PENDING.name() : EventState.CANCELED.name()));
@@ -89,11 +98,11 @@ public class EventServiceImpl implements EventService {
                                         Integer from,
                                         Integer size) {
         if (rangeStart.isAfter(rangeEnd))
-            throw new EwmException("rangeStart is after rangeEnd", HttpStatus.BAD_REQUEST);
+            throw new MainEwmException("rangeStart is after rangeEnd", HttpStatus.BAD_REQUEST);
 
         return eventRepository
                 .adminFind(initiators, states, categories, rangeStart, rangeEnd, PageRequest.of(from, size))
-                .getContent()
+                .orElse(Collections.emptyList())
                 .stream()
                 .map(eventMapper::entity2eventFullDto)
                 .collect(Collectors.toCollection(LinkedList::new));
@@ -104,16 +113,16 @@ public class EventServiceImpl implements EventService {
                                     UpdateEventAdminRequest updateEventAdminRequest) {
 
         var currentEvent = eventRepository.findById(eventId)
-                .orElseThrow(() -> new EwmException(String.format("there is no event with id=%d", eventId), HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new MainEwmException(String.format("there is no event with id=%d", eventId), HttpStatus.NOT_FOUND));
 
         if (LocalDateTime.now().plusHours(1).isAfter(currentEvent.getEventDate()))
-            throw new EwmException("it's too late to update this event", HttpStatus.CONFLICT);
+            throw new MainEwmException("it's too late to update this event", HttpStatus.CONFLICT);
 
         Optional.ofNullable(updateEventAdminRequest.getStateAction()).ifPresent(newState -> {
             if (currentEvent.getState().equals(EventState.PENDING.name()))
                 currentEvent.setState(updateEventAdminRequest.getStateAction().equals(EventAdminState.PUBLISH_EVENT.name()) ? EventState.PUBLISHED.name() : EventState.CANCELED.name());
             else
-                throw new EwmException("wrong state to update this event", HttpStatus.CONFLICT);
+                throw new MainEwmException("wrong state to update this event", HttpStatus.CONFLICT);
         });
 
         updateEventParameters(currentEvent, updateEventAdminRequest);
@@ -130,19 +139,51 @@ public class EventServiceImpl implements EventService {
                                           Boolean onlyAvailable,
                                           String sort,
                                           Integer from,
-                                          Integer size) {
-        return null;
+                                          Integer size,
+                                          HttpServletRequest request) {
+
+        var eventShortDtoList = eventRepository.publicFind(
+                        EventState.PUBLISHED.name(),
+                        searchPattern.toLowerCase(),
+                        categories,
+                        paid,
+                        Optional.ofNullable(rangeStart).orElse(LocalDateTime.now()),
+                        Optional.ofNullable(rangeEnd).orElse(LocalDateTime.MAX),
+                        PageRequest.of(from, size))
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(eventMapper::entity2eventShortDto)
+                .collect(Collectors.toList());
+
+// TODO - добавить запрос статистики
+// TODO - добавить запрос реквестов
+// TODO - добавить сортировку
+
+        statClient.saveHit(DtoHitIn.builder()
+                .app(applicationName)
+                .uri(request.getRequestURI())
+                .ip(request.getRemoteAddr())
+                .timestamp(LocalDateTime.now()).build());
+
+        return eventShortDtoList;
     }
 
     @Override
-    public EventFullDto publicFindById(Long id) {
+    public EventFullDto publicFindById(Long id, HttpServletRequest request) {
+
+        statClient.saveHit(DtoHitIn.builder()
+                .app(applicationName)
+                .uri(request.getRequestURI())
+                .ip(request.getRemoteAddr())
+                .timestamp(LocalDateTime.now()).build());
+
         return null;
     }
 
     private void updateEventParameters(Event currentEvent, UpdateEventRequest updateEventRequest) {
         Optional.ofNullable(updateEventRequest.getCatId())
                 .ifPresent(newCatId -> currentEvent.setCategory(categoryRepository.findById(updateEventRequest.getCatId())
-                        .orElseThrow(() -> new EwmException(String.format("there is no category with id=%d", newCatId), HttpStatus.NOT_FOUND))));
+                        .orElseThrow(() -> new MainEwmException(String.format("there is no category with id=%d", newCatId), HttpStatus.NOT_FOUND))));
         Optional.ofNullable(updateEventRequest.getAnnotation())
                 .ifPresent(currentEvent::setAnnotation);
         Optional.ofNullable(updateEventRequest.getDescription())

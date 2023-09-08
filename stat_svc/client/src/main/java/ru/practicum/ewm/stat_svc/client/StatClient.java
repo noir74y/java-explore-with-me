@@ -19,6 +19,9 @@ public class StatClient extends BaseClient {
     @Autowired
     private ParamCoder paramCoder;
 
+    @Value("${stat.server.path}")
+    private String serverPath;
+
     @Autowired
     public StatClient(@Value("${stat.server.url}") String serverUrl, RestTemplateBuilder builder) {
         super(builder
@@ -27,7 +30,8 @@ public class StatClient extends BaseClient {
                 .build());
     }
 
-    public void saveHit(@Value("${stat.server.path}") String serverPath, DtoHitIn hitIn) {
+
+    public void saveHit(DtoHitIn hitIn) {
         post(serverPath, null, null, hitIn);
     }
 

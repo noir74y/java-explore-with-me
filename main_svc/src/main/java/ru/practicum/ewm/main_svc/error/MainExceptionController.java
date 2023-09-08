@@ -11,23 +11,23 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
 @RestControllerAdvice
-public class ExceptionController {
+public class MainExceptionController {
 
     @ExceptionHandler
-    public ResponseEntity<ApiError> exceptionController(Exception exception) {
-        EwmException ewmException;
+    public ResponseEntity<MainErrorMessage> exceptionController(Exception exception) {
+        MainEwmException mainEwmException;
 
         log.error("{}", exception.getMessage());
 
         if (exception instanceof MethodArgumentNotValidException)
-            ewmException = new EwmException("Incorrectly made request.", HttpStatus.BAD_REQUEST);
+            mainEwmException = new MainEwmException("Incorrectly made request.", HttpStatus.BAD_REQUEST);
         else if (exception instanceof PSQLException || exception instanceof DataIntegrityViolationException)
-            ewmException = new EwmException("Integrity constraint has been violated.", HttpStatus.CONFLICT);
-        else if (exception instanceof EwmException)
-            ewmException = (EwmException) exception;
+            mainEwmException = new MainEwmException("Integrity constraint has been violated.", HttpStatus.CONFLICT);
+        else if (exception instanceof MainEwmException)
+            mainEwmException = (MainEwmException) exception;
         else
-            ewmException = new EwmException("UnknownException", HttpStatus.INTERNAL_SERVER_ERROR);
+            mainEwmException = new MainEwmException("UnknownException", HttpStatus.INTERNAL_SERVER_ERROR);
 
-        return ewmException.getApiErrorMessage();
+        return mainEwmException.getApiErrorMessage();
     }
 }

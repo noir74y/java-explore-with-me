@@ -6,7 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.main_svc.model.dto.EventFullDto;
 import ru.practicum.ewm.main_svc.model.dto.UpdateEventAdminRequest;
-import ru.practicum.ewm.main_svc.model.util.AppConfig;
+import ru.practicum.ewm.main_svc.model.util.MainAppConfig;
 import ru.practicum.ewm.main_svc.service.EventService;
 
 import javax.validation.Valid;
@@ -28,16 +28,18 @@ public class EventAdminController {
     public List<EventFullDto> adminFind(@RequestParam("users") List<Long> initiators,
                                         @RequestParam List<String> states,
                                         @RequestParam List<Long> categories,
-                                        @RequestParam @FutureOrPresent @DateTimeFormat(pattern = AppConfig.DATE_TIME_FORMAT) LocalDateTime rangeStart,
-                                        @RequestParam @FutureOrPresent @DateTimeFormat(pattern = AppConfig.DATE_TIME_FORMAT) LocalDateTime rangeEnd,
-                                        @RequestParam(defaultValue = AppConfig.FROM) @PositiveOrZero Integer from,
-                                        @RequestParam(defaultValue = AppConfig.SIZE) @Positive Integer size) {
+                                        @RequestParam @FutureOrPresent @DateTimeFormat(pattern = MainAppConfig.DATE_TIME_FORMAT) LocalDateTime rangeStart,
+                                        @RequestParam @FutureOrPresent @DateTimeFormat(pattern = MainAppConfig.DATE_TIME_FORMAT) LocalDateTime rangeEnd,
+                                        @RequestParam(defaultValue = MainAppConfig.FROM) @PositiveOrZero Integer from,
+                                        @RequestParam(defaultValue = MainAppConfig.SIZE) @Positive Integer size) {
+        log.info("GET /admin/events");
         return eventService.adminFind(initiators, states, categories, rangeStart, rangeEnd, from, size);
     }
 
     @PatchMapping("/{eventId}")
     public EventFullDto adminUpdate(@PathVariable @NotNull Long eventId,
                                     @RequestBody @NotNull @Valid UpdateEventAdminRequest updateEventAdminRequest) {
+        log.info("PATCH /admin/events/{} {}", eventId, updateEventAdminRequest);
         return eventService.adminUpdate(eventId, updateEventAdminRequest);
     }
 }

@@ -8,7 +8,7 @@ import ru.practicum.ewm.main_svc.model.dto.EventFullDto;
 import ru.practicum.ewm.main_svc.model.dto.EventShortDto;
 import ru.practicum.ewm.main_svc.model.dto.NewEventDto;
 import ru.practicum.ewm.main_svc.model.dto.UpdateEventUserRequest;
-import ru.practicum.ewm.main_svc.model.util.AppConfig;
+import ru.practicum.ewm.main_svc.model.util.MainAppConfig;
 import ru.practicum.ewm.main_svc.service.EventService;
 
 import javax.validation.Valid;
@@ -26,8 +26,8 @@ public class EventPrivateController {
 
     @GetMapping("/{userId}/events")
     public List<EventShortDto> privateFindByInitiator(@PathVariable("userId") @NotNull Long initiatorId,
-                                                      @RequestParam(defaultValue = AppConfig.FROM) @NotNull @PositiveOrZero Integer from,
-                                                      @RequestParam(defaultValue = AppConfig.SIZE) @NotNull @Positive Integer size) {
+                                                      @RequestParam(defaultValue = MainAppConfig.FROM) @NotNull @PositiveOrZero Integer from,
+                                                      @RequestParam(defaultValue = MainAppConfig.SIZE) @NotNull @Positive Integer size) {
         log.info("GET /users/{}/events {}, {}", initiatorId, from, size);
         return eventService.privateFindByUser(initiatorId, from, size);
     }

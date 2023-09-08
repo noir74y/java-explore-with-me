@@ -22,11 +22,8 @@ public class StatServiceImpl implements StatService {
 
     @Override
     public List<DtoHitOut> getHits(HitsRequest hitsRequest) {
-        var r =
-                hitsRequest.getUnique() ?
-                        statRepository.getHitsWithUniqueIp(hitsRequest.getStart(), hitsRequest.getEnd(), hitsRequest.getUris()) :
-                        statRepository.getHitsWithAllIp(hitsRequest.getStart(), hitsRequest.getEnd(), hitsRequest.getUris());
-
-        return r;
+        return hitsRequest.getUnique() ?
+                statRepository.getHitsWithUniqueIp(hitsRequest.getStart(), hitsRequest.getEnd(), hitsRequest.getUris()) :
+                statRepository.getHitsWithAllIp(hitsRequest.getStart(), hitsRequest.getEnd(), hitsRequest.getUris());
     }
 }

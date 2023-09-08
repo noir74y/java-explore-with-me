@@ -5,7 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.main_svc.error.EwmException;
+import ru.practicum.ewm.main_svc.error.MainEwmException;
 import ru.practicum.ewm.main_svc.model.dto.NewUserRequest;
 import ru.practicum.ewm.main_svc.model.dto.UserDto;
 import ru.practicum.ewm.main_svc.model.util.mappers.UserMapper;
@@ -36,6 +36,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void adminDelete(Long userId) {
         if (userRepository.existsById(userId)) userRepository.deleteById(userId);
-        else throw new EwmException(String.format("User with id=%d was not found.", userId), HttpStatus.NOT_FOUND);
+        else throw new MainEwmException(String.format("User with id=%d was not found.", userId), HttpStatus.NOT_FOUND);
     }
 }

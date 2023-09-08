@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class ParamCoder {
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(AppConfig.DATE_TIME_FORMAT);
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(StatAppConfig.DATE_TIME_FORMAT);
 
     public String ldt2encodedString(LocalDateTime localDateTime) {
         return URLEncoder.encode(localDateTime.format(dateTimeFormatter), StandardCharsets.UTF_8);

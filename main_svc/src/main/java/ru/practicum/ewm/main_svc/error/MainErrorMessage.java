@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
+import ru.practicum.ewm.main_svc.model.util.MainAppConfig;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,11 +13,11 @@ import java.util.List;
 @Builder
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ApiError {
+public class MainErrorMessage {
     final List<String> errors;
     final String message;
     final String reason;
     final String status;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = MainAppConfig.DATE_TIME_FORMAT)
     final LocalDateTime timestamp = LocalDateTime.now();
 }

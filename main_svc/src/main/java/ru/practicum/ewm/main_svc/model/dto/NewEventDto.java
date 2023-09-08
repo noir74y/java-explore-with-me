@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.ewm.main_svc.model.util.AppConfig;
+import ru.practicum.ewm.main_svc.model.util.MainAppConfig;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Future;
@@ -33,7 +33,7 @@ public class NewEventDto {
     String description;
 
     @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = AppConfig.DATE_TIME_FORMAT)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = MainAppConfig.DATE_TIME_FORMAT)
     @Future
     LocalDateTime eventDate;
 

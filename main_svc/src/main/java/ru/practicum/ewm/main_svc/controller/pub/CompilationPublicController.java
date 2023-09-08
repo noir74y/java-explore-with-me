@@ -4,11 +4,10 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.main_svc.model.dto.CompilationDto;
-import ru.practicum.ewm.main_svc.model.util.AppConfig;
+import ru.practicum.ewm.main_svc.model.util.MainAppConfig;
 import ru.practicum.ewm.main_svc.service.CompilationService;
 
 import javax.validation.constraints.NotNull;
@@ -27,8 +26,8 @@ public class CompilationPublicController {
 
     @GetMapping
     public List<CompilationDto> publicFindAll(@RequestParam Boolean pinned,
-                                              @RequestParam(defaultValue = AppConfig.FROM) @PositiveOrZero Integer from,
-                                              @RequestParam(defaultValue = AppConfig.SIZE) @Positive Integer size) {
+                                              @RequestParam(defaultValue = MainAppConfig.FROM) @PositiveOrZero Integer from,
+                                              @RequestParam(defaultValue = MainAppConfig.SIZE) @Positive Integer size) {
         return compilationService.publicFindAll(pinned, from, size);
     }
 

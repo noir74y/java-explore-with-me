@@ -3,7 +3,7 @@ package ru.practicum.ewm.stat_svc.other.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.ewm.stat_svc.other.util.AppConfig;
+import ru.practicum.ewm.stat_svc.other.util.StatAppConfig;
 import ru.practicum.ewm.stat_svc.other.validations.HitIpConstraint;
 
 import javax.validation.constraints.NotBlank;
@@ -31,7 +31,7 @@ public class DtoHitIn {
     String ip;
 
     @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = AppConfig.DATE_TIME_FORMAT)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = StatAppConfig.DATE_TIME_FORMAT)
     @PastOrPresent
     LocalDateTime timestamp;
 }

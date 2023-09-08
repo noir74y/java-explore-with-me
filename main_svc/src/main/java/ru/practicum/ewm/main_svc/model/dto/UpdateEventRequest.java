@@ -6,7 +6,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.ewm.main_svc.model.util.AppConfig;
+import ru.practicum.ewm.main_svc.model.util.MainAppConfig;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.PositiveOrZero;
@@ -26,7 +26,7 @@ public class UpdateEventRequest {
     @Size(min = 20, max = 7000)
     String description;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = AppConfig.DATE_TIME_FORMAT)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = MainAppConfig.DATE_TIME_FORMAT)
     @Future
     LocalDateTime eventDate;
 

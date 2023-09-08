@@ -2,17 +2,17 @@ package ru.practicum.ewm.stat_svc.other.error.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
-import ru.practicum.ewm.stat_svc.other.error.ErrorMessage;
+import ru.practicum.ewm.stat_svc.other.error.StatErrorMessage;
 
 
-public class EwmException extends RuntimeException {
+public class StatEwmException extends RuntimeException {
     @Getter
     protected HttpStatus httpErrorStatus;
     protected String cause;
     protected String message;
 
-    public ErrorMessage prepareErrorMessage() {
-        return new ErrorMessage(cause, message);
+    public StatErrorMessage prepareErrorMessage() {
+        return new StatErrorMessage(cause, message);
     }
 
 }

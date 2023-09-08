@@ -13,6 +13,7 @@ import ru.practicum.ewm.main_svc.error.MainEwmException;
 import ru.practicum.ewm.main_svc.model.dto.*;
 import ru.practicum.ewm.main_svc.model.entity.Event;
 import ru.practicum.ewm.main_svc.model.util.enums.EventAdminState;
+import ru.practicum.ewm.main_svc.model.util.enums.EventSort;
 import ru.practicum.ewm.main_svc.model.util.enums.EventState;
 import ru.practicum.ewm.main_svc.model.util.enums.EventUserState;
 import ru.practicum.ewm.main_svc.model.util.mappers.EventMapper;
@@ -160,24 +161,33 @@ public class EventServiceImpl implements EventService {
                 .collect(Collectors.toList());
 
         // prepare list of uri to be sent to stat-svc
-        List<String> eventUris = eventShortDtoList.stream().map(eventShortDto -> "/events/" + eventShortDto.getId()).collect(Collectors.toList());
+        List<String> eventUris = eventShortDtoList
+                .stream()
+                .map(eventShortDto -> "/events/" + eventShortDto.getId())
+                .collect(Collectors.toList());
 
         // initialize map to store pair "uri,views"
-        Map<String, Long> eventsViews = new HashMap<>();
+        Map<String, Long> eventsViewsMap = new HashMap<>();
 
         // get response from stat-svc
         Optional.ofNullable(statClient.getHits(rangeStart, rangeEnd, eventUris, true).getBody()).ifPresent(statSvcResponseJson -> {
             // filter out entries are not applicable for main application and populate map "uri, view"
             objectMapper.convertValue(statSvcResponseJson, new TypeReference<List<DtoHitOut>>() {
-            }).stream().filter(dtoHitOut -> dtoHitOut.getApp().equals(applicationName)).forEach(eventView -> eventsViews.put(eventView.getUri(), eventView.getHits()));
+                    })
+                    .stream()
+                    .filter(dtoHitOut -> dtoHitOut.getApp().equals(applicationName))
+                    .forEach(eventView -> eventsViewsMap.put(eventView.getUri(), eventView.getHits()));
 
             // put views value into list of EventShortDto
-            eventShortDtoList.forEach(eventShortDto -> eventShortDto.setViews(eventsViews.get("/events/" + eventShortDto.getId())));
+            eventShortDtoList.forEach(eventShortDto -> eventShortDto.setViews(eventsViewsMap.get("/events/" + eventShortDto.getId())));
         });
 
 // TODO - добавить запрос реквестов
-// TODO - добавить сортировку
-        
+
+        // sort event list
+        eventShortDtoList.sort(sort.equals(EventSort.EVENT_DATE.name()) ? new ComparatorByEventDate() : new ComparatorByViews());
+
+        // save stat
         statClient.saveHit(DtoHitIn.builder()
                 .app(applicationName)
                 .uri(request.getRequestURI())
@@ -223,4 +233,24 @@ public class EventServiceImpl implements EventService {
             currentEvent.setLocation(newLocation);
         });
     }
+
+    private static class ComparatorByEventDate implements Comparator<EventShortDto> {
+        @Override
+        public int compare(EventShortDto o1, EventShortDto o2) {
+            if (o1.getEventDate().isAfter(o2.getEventDate()))
+                return 1;
+            else if (o2.getEventDate().isAfter(o1.getEventDate()))
+                return -1;
+            else
+                return 0;
+        }
+    }
+
+    private static class ComparatorByViews implements Comparator<EventShortDto> {
+        @Override
+        public int compare(EventShortDto o1, EventShortDto o2) {
+            return Optional.ofNullable(o1.getViews()).orElse(0L).compareTo(Optional.ofNullable(o2.getViews()).orElse(0L));
+        }
+    }
+
 }

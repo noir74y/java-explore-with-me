@@ -7,9 +7,7 @@ import ru.practicum.ewm.main_svc.model.dto.CategoryDto;
 import ru.practicum.ewm.main_svc.model.dto.NewCategoryDto;
 import ru.practicum.ewm.main_svc.model.entity.Category;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor

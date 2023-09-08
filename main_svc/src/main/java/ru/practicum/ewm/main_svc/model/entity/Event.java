@@ -4,12 +4,10 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import ru.practicum.ewm.main_svc.model.util.enums.EventState;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Entity
 @Table(name = "events")

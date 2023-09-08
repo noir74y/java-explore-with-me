@@ -84,7 +84,7 @@ public class EventServiceImpl implements EventService {
             throw new MainEwmException("the event is not updatable", HttpStatus.CONFLICT);
 
         Optional.ofNullable(updateEventUserRequest.getStateAction())
-                .ifPresent(newState -> currentEvent.setState(newState == EventUserState.SEND_TO_REVIEW.name() ? EventState.PENDING.name() : EventState.CANCELED.name()));
+                .ifPresent(newState -> currentEvent.setState(newState.equals(EventUserState.SEND_TO_REVIEW.name()) ? EventState.PENDING.name() : EventState.CANCELED.name()));
 
         updateEventParameters(currentEvent, updateEventUserRequest);
 
@@ -122,7 +122,9 @@ public class EventServiceImpl implements EventService {
 
         Optional.ofNullable(updateEventAdminRequest.getStateAction()).ifPresent(newState -> {
             if (currentEvent.getState().equals(EventState.PENDING.name()))
-                currentEvent.setState(updateEventAdminRequest.getStateAction().equals(EventAdminState.PUBLISH_EVENT.name()) ? EventState.PUBLISHED.name() : EventState.CANCELED.name());
+                currentEvent.setState(updateEventAdminRequest.getStateAction().equals(EventAdminState.PUBLISH_EVENT.name())
+                        ? EventState.PUBLISHED.name()
+                        : EventState.CANCELED.name());
             else
                 throw new MainEwmException("wrong state to update this event", HttpStatus.CONFLICT);
         });
@@ -185,7 +187,9 @@ public class EventServiceImpl implements EventService {
 // TODO - добавить запрос реквестов
 
         // sort event list
-        eventShortDtoList.sort(sort.equals(EventSort.EVENT_DATE.name()) ? new ComparatorByEventDate() : new ComparatorByViews());
+        eventShortDtoList.sort(sort.equals(EventSort.EVENT_DATE.name())
+                ? Comparator.comparing(EventShortDto::getEventDate)
+                : Comparator.comparing((EventShortDto eventShortDto) -> Optional.ofNullable(eventShortDto.getViews()).orElse(0L)));
 
         // save stat
         statClient.saveHit(DtoHitIn.builder()
@@ -233,24 +237,4 @@ public class EventServiceImpl implements EventService {
             currentEvent.setLocation(newLocation);
         });
     }
-
-    private static class ComparatorByEventDate implements Comparator<EventShortDto> {
-        @Override
-        public int compare(EventShortDto o1, EventShortDto o2) {
-            if (o1.getEventDate().isAfter(o2.getEventDate()))
-                return 1;
-            else if (o2.getEventDate().isAfter(o1.getEventDate()))
-                return -1;
-            else
-                return 0;
-        }
-    }
-
-    private static class ComparatorByViews implements Comparator<EventShortDto> {
-        @Override
-        public int compare(EventShortDto o1, EventShortDto o2) {
-            return Optional.ofNullable(o1.getViews()).orElse(0L).compareTo(Optional.ofNullable(o2.getViews()).orElse(0L));
-        }
-    }
-
 }

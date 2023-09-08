@@ -1,6 +1,5 @@
 package ru.practicum.ewm.main_svc.repository;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,12 +23,12 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "AND (:categories IS NULL OR e.category.id IN :categories) " +
             "AND e.eventDate BETWEEN :rangeStart AND :rangeEnd " +
             "ORDER BY e.createdOn DESC")
-   Optional<List<Event>> adminFind(List<Long> initiators,
-                          List<String> states,
-                          List<Long> categories,
-                          LocalDateTime rangeStart,
-                          LocalDateTime rangeEnd,
-                          Pageable pageable);
+    Optional<List<Event>> adminFind(List<Long> initiators,
+                                    List<String> states,
+                                    List<Long> categories,
+                                    LocalDateTime rangeStart,
+                                    LocalDateTime rangeEnd,
+                                    Pageable pageable);
 
     @Query("SELECT e FROM Event e " +
             "WHERE e.state IN :state " +

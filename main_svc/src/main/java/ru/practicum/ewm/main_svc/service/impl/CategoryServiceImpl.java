@@ -31,7 +31,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     public void adminDelete(Long catId) {
         if (categoryRepository.existsById(catId)) categoryRepository.deleteById(catId);
-        else throw new MainEwmException(String.format("Category with id=%d was not found.", catId), HttpStatus.NOT_FOUND);
+        else
+            throw new MainEwmException(String.format("Category with id=%d was not found.", catId), HttpStatus.NOT_FOUND);
     }
 
     @Override

@@ -3,14 +3,12 @@ package ru.practicum.ewm.main_svc.service.impl;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.main_svc.error.EwmException;
 import ru.practicum.ewm.main_svc.model.dto.*;
 import ru.practicum.ewm.main_svc.model.entity.Event;
-import ru.practicum.ewm.main_svc.model.entity.User;
 import ru.practicum.ewm.main_svc.model.util.enums.EventAdminState;
 import ru.practicum.ewm.main_svc.model.util.enums.EventState;
 import ru.practicum.ewm.main_svc.model.util.enums.EventUserState;
@@ -92,13 +90,6 @@ public class EventServiceImpl implements EventService {
                                         Integer size) {
         if (rangeStart.isAfter(rangeEnd))
             throw new EwmException("rangeStart is after rangeEnd", HttpStatus.BAD_REQUEST);
-
-//        Page<Event> xxx =  eventRepository
-//                .adminFind(initiators
-//                        //.stream()
-//                        //.map(id -> userRepository.findById(id).orElse(User.builder().build()))
-//                        //.collect(Collectors.toList())
-//                        , states, categories, rangeStart, rangeEnd, PageRequest.of(from, size));
 
         return eventRepository
                 .adminFind(initiators, states, categories, rangeStart, rangeEnd, PageRequest.of(from, size))

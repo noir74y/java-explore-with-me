@@ -42,6 +42,6 @@ public class StatClient extends BaseClient {
                 "uris", String.join(",", uris),
                 "unique", unique
         );
-        return get("${stat.server.path}" + "?start={start}&end={end}&uris={uris}&unique={unique}", null, paramsMap);
+        return get("/stats?start={start}&end={end}&uris={uris}&unique={unique}", null, paramsMap);
     }
 }

@@ -1,5 +1,7 @@
 package ru.practicum.ewm.main_svc.service.impl;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -22,13 +24,11 @@ import ru.practicum.ewm.main_svc.repository.UserRepository;
 import ru.practicum.ewm.main_svc.service.EventService;
 import ru.practicum.ewm.stat_svc.client.StatClient;
 import ru.practicum.ewm.stat_svc.other.model.DtoHitIn;
+import ru.practicum.ewm.stat_svc.other.model.DtoHitOut;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,6 +42,7 @@ public class EventServiceImpl implements EventService {
     final LocationMapper locationMapper;
     final UserRepository userRepository;
     final StatClient statClient;
+    final ObjectMapper objectMapper = new ObjectMapper();
 
     @Value("${application.name}")
     String applicationName;
@@ -142,23 +143,41 @@ public class EventServiceImpl implements EventService {
                                           Integer size,
                                           HttpServletRequest request) {
 
+        rangeStart = Optional.ofNullable(rangeStart).orElse(LocalDateTime.now());
+        rangeEnd = Optional.ofNullable(rangeEnd).orElse(LocalDateTime.MAX);
+
         var eventShortDtoList = eventRepository.publicFind(
                         EventState.PUBLISHED.name(),
                         searchPattern.toLowerCase(),
                         categories,
                         paid,
-                        Optional.ofNullable(rangeStart).orElse(LocalDateTime.now()),
-                        Optional.ofNullable(rangeEnd).orElse(LocalDateTime.MAX),
+                        rangeStart,
+                        rangeEnd,
                         PageRequest.of(from, size))
                 .orElse(Collections.emptyList())
                 .stream()
                 .map(eventMapper::entity2eventShortDto)
                 .collect(Collectors.toList());
 
-// TODO - добавить запрос статистики
+        // prepare list of uri to be sent to stat-svc
+        List<String> eventUris = eventShortDtoList.stream().map(eventShortDto -> "/events/" + eventShortDto.getId()).collect(Collectors.toList());
+
+        // initialize map to store pair "uri,views"
+        Map<String, Long> eventsViews = new HashMap<>();
+
+        // get response from stat-svc
+        Optional.ofNullable(statClient.getHits(rangeStart, rangeEnd, eventUris, true).getBody()).ifPresent(statSvcResponseJson -> {
+            // filter out entries are not applicable for main application and populate map "uri, view"
+            objectMapper.convertValue(statSvcResponseJson, new TypeReference<List<DtoHitOut>>() {
+            }).stream().filter(dtoHitOut -> dtoHitOut.getApp().equals(applicationName)).forEach(eventView -> eventsViews.put(eventView.getUri(), eventView.getHits()));
+
+            // put views value into list of EventShortDto
+            eventShortDtoList.forEach(eventShortDto -> eventShortDto.setViews(eventsViews.get("/events/" + eventShortDto.getId())));
+        });
+
 // TODO - добавить запрос реквестов
 // TODO - добавить сортировку
-
+        
         statClient.saveHit(DtoHitIn.builder()
                 .app(applicationName)
                 .uri(request.getRequestURI())

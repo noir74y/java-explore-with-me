@@ -27,7 +27,7 @@ public class EventPublicController {
     private final EventService eventService;
 
     @GetMapping
-    public List<EventShortDto> publicFind(@RequestParam String searchPattern,
+    public List<EventShortDto> publicFind(@RequestParam("text") String searchPattern,
                                           @RequestParam List<Long> categories,
                                           @RequestParam Boolean paid,
                                           @RequestParam @FutureOrPresent @DateTimeFormat(pattern = MainAppConfig.DATE_TIME_FORMAT) LocalDateTime rangeStart,

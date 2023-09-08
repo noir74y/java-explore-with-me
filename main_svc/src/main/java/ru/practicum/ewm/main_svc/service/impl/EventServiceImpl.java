@@ -202,7 +202,29 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventFullDto publicFindById(Long id, HttpServletRequest request) {
+    public EventFullDto publicFindById(Long id, HttpServletRequest request) throws Throwable {
+
+        var eventFullDto = eventMapper.entity2eventFullDto(eventRepository
+                .findById(id)
+                .orElseThrow(() -> new MainEwmException("there is no such event", HttpStatus.NOT_FOUND)));
+
+        // initialize map to store pair "uri,views"
+        Map<String, Long> eventsViewsMap = new HashMap<>();
+
+        // get response from stat-svc
+        Optional.ofNullable(statClient.getHits(LocalDateTime.MIN, LocalDateTime.MAX, List.of(request.getRequestURI()), true).getBody()).ifPresent(statSvcResponseJson -> {
+            // filter out entries are not applicable for main application and populate map "uri, view"
+            objectMapper.convertValue(statSvcResponseJson, new TypeReference<List<DtoHitOut>>() {
+                    })
+                    .stream()
+                    .filter(dtoHitOut -> dtoHitOut.getApp().equals(applicationName))
+                    .forEach(eventView -> eventsViewsMap.put(eventView.getUri(), eventView.getHits()));
+
+            // put views value into list of EventShortDto
+            eventFullDto.setViews(0L);
+        });
+
+// TODO - добавить запрос реквестов
 
         statClient.saveHit(DtoHitIn.builder()
                 .app(applicationName)
@@ -210,7 +232,7 @@ public class EventServiceImpl implements EventService {
                 .ip(request.getRemoteAddr())
                 .timestamp(LocalDateTime.now()).build());
 
-        return null;
+        return eventFullDto;
     }
 
     private void updateEventParameters(Event currentEvent, UpdateEventRequest updateEventRequest) {
@@ -237,4 +259,22 @@ public class EventServiceImpl implements EventService {
             currentEvent.setLocation(newLocation);
         });
     }
+
+//    private T<extends Object> void prepareDto(LocalDateTime rangeStart, LocalDateTime rangeEnd, List<String> uris, List<T> eventShortDtoList) {
+//        // initialize map to store pair "uri,views"
+//        Map<String, Long> eventsViewsMap = new HashMap<>();
+//
+//        // get response from stat-svc
+//        Optional.ofNullable(statClient.getHits(rangeStart, rangeEnd, eventUris, true).getBody()).ifPresent(statSvcResponseJson -> {
+//            // filter out entries are not applicable for main application and populate map "uri, view"
+//            objectMapper.convertValue(statSvcResponseJson, new TypeReference<List<DtoHitOut>>() {
+//                    })
+//                    .stream()
+//                    .filter(dtoHitOut -> dtoHitOut.getApp().equals(applicationName))
+//                    .forEach(eventView -> eventsViewsMap.put(eventView.getUri(), eventView.getHits()));
+//
+//            // put views value into list of EventShortDto
+//            eventShortDtoList.forEach(eventShortDto -> eventShortDto.setViews(eventsViewsMap.get("/events/" + eventShortDto.getId())));
+//        });
+//    }
 }

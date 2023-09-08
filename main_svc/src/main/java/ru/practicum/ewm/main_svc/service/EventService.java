@@ -45,5 +45,5 @@ public interface EventService {
                                    Integer size,
                                    HttpServletRequest request);
 
-    EventFullDto publicFindById(Long id, HttpServletRequest request);
+    EventFullDto publicFindById(Long id, HttpServletRequest request) throws Throwable;
 }

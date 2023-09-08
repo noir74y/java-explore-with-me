@@ -51,7 +51,7 @@ public class EventPublicController {
 
     @GetMapping("/{id}")
     public EventFullDto publicFindById(@PathVariable @NotNull Long id,
-                                       HttpServletRequest request) {
+                                       HttpServletRequest request) throws Throwable {
         return eventService.publicFindById(id, request);
     }
 }

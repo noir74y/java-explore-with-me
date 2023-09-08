@@ -31,7 +31,7 @@ public class EventMapper {
     public Event newEventDto2entity(Long initiatorId,
                                     NewEventDto newEventDto) {
         var event = modelMapper.map(newEventDto, Event.class);
-        event.setState(EventState.PENDING);
+        event.setState(EventState.PENDING.name());
         event.setInitiator(userRepository.findById(initiatorId).orElse(null));
         event.setCategory(categoryRepository.findById(newEventDto.getCatId()).orElse(null));
         event.setLocation(locationRepository.save(locationMapper.locationDto2entity(newEventDto.getLocationDto())));

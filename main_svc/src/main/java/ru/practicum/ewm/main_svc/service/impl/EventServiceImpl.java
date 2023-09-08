@@ -71,11 +71,11 @@ public class EventServiceImpl implements EventService {
         var currentEvent = Optional.ofNullable(eventRepository.findByInitiatorIdAndId(initiatorId, eventId))
                 .orElseThrow(() -> new EwmException(String.format("there is no event with id=%d and initiatorId=%d", initiatorId, eventId), HttpStatus.NOT_FOUND));
 
-        if (currentEvent.getState().equals(EventState.PUBLISHED) || LocalDateTime.now().plusHours(2).isAfter(currentEvent.getEventDate()))
+        if (currentEvent.getState().equals(EventState.PUBLISHED.name()) || LocalDateTime.now().plusHours(2).isAfter(currentEvent.getEventDate()))
             throw new EwmException("the event is not updatable", HttpStatus.CONFLICT);
 
         Optional.ofNullable(updateEventUserRequest.getStateAction())
-                .ifPresent(newState -> currentEvent.setState(EventUserState.valueOf(newState) == EventUserState.SEND_TO_REVIEW ? EventState.PENDING : EventState.CANCELED));
+                .ifPresent(newState -> currentEvent.setState(newState == EventUserState.SEND_TO_REVIEW.name() ? EventState.PENDING.name() : EventState.CANCELED.name()));
 
         updateEventParameters(currentEvent, updateEventUserRequest);
 
@@ -119,8 +119,8 @@ public class EventServiceImpl implements EventService {
             throw new EwmException("it's too late to update this event", HttpStatus.CONFLICT);
 
         Optional.ofNullable(updateEventAdminRequest.getStateAction()).ifPresent(newState -> {
-            if (currentEvent.getState().equals(EventState.PENDING))
-                currentEvent.setState(updateEventAdminRequest.getStateAction().equals(EventAdminState.PUBLISH_EVENT.name()) ? EventState.PUBLISHED : EventState.CANCELED);
+            if (currentEvent.getState().equals(EventState.PENDING.name()))
+                currentEvent.setState(updateEventAdminRequest.getStateAction().equals(EventAdminState.PUBLISH_EVENT.name()) ? EventState.PUBLISHED.name() : EventState.CANCELED.name());
             else
                 throw new EwmException("wrong state to update this event", HttpStatus.CONFLICT);
         });

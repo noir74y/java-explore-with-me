@@ -47,8 +47,7 @@ public class Event {
     Category category;
 
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    EventState state;
+    String state;
 
     Boolean paid;
 

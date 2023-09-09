@@ -7,8 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.main_svc.model.dto.EventRequestStatusUpdateRequest;
-import ru.practicum.ewm.main_svc.model.dto.EventRequestStatusUpdateResult;
+import ru.practicum.ewm.main_svc.model.dto.EventRequestStatusUpdateReq;
+import ru.practicum.ewm.main_svc.model.dto.EventRequestStatusUpdateResp;
 import ru.practicum.ewm.main_svc.model.dto.ParticipationRequestDto;
 import ru.practicum.ewm.main_svc.service.RequestService;
 
@@ -50,9 +50,9 @@ public class RequestPrivateController {
     }
 
     @PatchMapping("/{userId}/events/{eventId}/requests")
-    public EventRequestStatusUpdateResult privateUpdateStatus(@PathVariable("userId") @NotNull Long initiatorId,
-                                                              @PathVariable @NotNull Long eventId,
-                                                              @RequestBody @NotNull @Valid EventRequestStatusUpdateRequest updateReq) {
-        return requestService.privateUpdateStatus(initiatorId, eventId, updateReq);
+    public EventRequestStatusUpdateResp privateUpdateStatus(@PathVariable("userId") @NotNull Long initiatorId,
+                                                            @PathVariable @NotNull Long eventId,
+                                                            @RequestBody @NotNull @Valid EventRequestStatusUpdateReq eventRequestStatusUpdateReq) {
+        return requestService.privateUpdateStatus(initiatorId, eventId, eventRequestStatusUpdateReq);
     }
 }

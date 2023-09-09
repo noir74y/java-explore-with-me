@@ -1,8 +1,8 @@
 package ru.practicum.ewm.main_svc.service;
 
 import org.springframework.stereotype.Service;
-import ru.practicum.ewm.main_svc.model.dto.EventRequestStatusUpdateRequest;
-import ru.practicum.ewm.main_svc.model.dto.EventRequestStatusUpdateResult;
+import ru.practicum.ewm.main_svc.model.dto.EventRequestStatusUpdateReq;
+import ru.practicum.ewm.main_svc.model.dto.EventRequestStatusUpdateResp;
 import ru.practicum.ewm.main_svc.model.dto.ParticipationRequestDto;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public interface RequestService {
     List<ParticipationRequestDto> privateFindByInitiatorAndEvent(Long initiatorId,
                                                                  Long eventId);
 
-    EventRequestStatusUpdateResult privateUpdateStatus(Long initiatorId,
-                                                       Long eventId,
-                                                       EventRequestStatusUpdateRequest updateReq);
+    EventRequestStatusUpdateResp privateUpdateStatus(Long initiatorId,
+                                                     Long eventId,
+                                                     EventRequestStatusUpdateReq eventRequestStatusUpdateReq);
 }

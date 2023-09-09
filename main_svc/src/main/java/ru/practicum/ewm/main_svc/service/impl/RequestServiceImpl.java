@@ -5,8 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.main_svc.error.MainEwmException;
-import ru.practicum.ewm.main_svc.model.dto.EventRequestStatusUpdateRequest;
-import ru.practicum.ewm.main_svc.model.dto.EventRequestStatusUpdateResult;
+import ru.practicum.ewm.main_svc.model.dto.EventRequestStatusUpdateReq;
+import ru.practicum.ewm.main_svc.model.dto.EventRequestStatusUpdateResp;
 import ru.practicum.ewm.main_svc.model.dto.ParticipationRequestDto;
 import ru.practicum.ewm.main_svc.model.entity.Request;
 import ru.practicum.ewm.main_svc.model.util.enums.EventState;
@@ -18,10 +18,7 @@ import ru.practicum.ewm.main_svc.repository.UserRepository;
 import ru.practicum.ewm.main_svc.service.RequestService;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,7 +56,7 @@ public class RequestServiceImpl implements RequestService {
                 .createdOn(LocalDateTime.now())
                 .requestor(requestor)
                 .event(event)
-                .status(event.getRequestModeration() ? RequestStatus.PENDING : RequestStatus.CONFIRMED).build()));
+                .status(event.getParticipantLimit() == 0 || !event.getRequestModeration() ? RequestStatus.CONFIRMED : RequestStatus.PENDING).build()));
     }
 
     @Override
@@ -100,7 +97,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     @Transactional
-    public EventRequestStatusUpdateResult privateUpdateStatus(Long initiatorId, Long eventId, EventRequestStatusUpdateRequest updateReq) {
+    public EventRequestStatusUpdateResp privateUpdateStatus(Long initiatorId, Long eventId, EventRequestStatusUpdateReq eventRequestStatusUpdateReq) {
         if (!userRepository.existsById(initiatorId))
             throw new MainEwmException(String.format("there is no user with id=%d", initiatorId), HttpStatus.NOT_FOUND);
 
@@ -113,26 +110,37 @@ public class RequestServiceImpl implements RequestService {
 
         var o = new Object() {
             long currentParticipantsNumber = requestRepository.countByEventIdAndStatus(eventId, RequestStatus.CONFIRMED);
-            boolean isLimitReached = event.getParticipantLimit() != 0 && event.getParticipantLimit() < currentParticipantsNumber;
+            Boolean isLimitReached;
         };
 
-        List<Request> requests = requestRepository.findAllByEventIdAndStatus(eventId, RequestStatus.PENDING)
+        List<ParticipationRequestDto> confirmedRequests = new ArrayList<>();
+        List<ParticipationRequestDto> rejectedRequests = new ArrayList<>();
+
+        List<Request> requests = requestRepository
+                .findAllByStatusAndIdIn(RequestStatus.PENDING, eventRequestStatusUpdateReq.getRequestsIdList())
                 .orElse(Collections.emptyList())
                 .stream()
                 .peek(request -> {
-                    if (event.getParticipantLimit() != 0 && event.getParticipantLimit() < o.currentParticipantsNumber) {
+                    if (event.getParticipantLimit() == 0 || !event.getRequestModeration())
                         request.setStatus(RequestStatus.CONFIRMED);
-                        o.isLimitReached = event.getParticipantLimit() < ++o.currentParticipantsNumber;
-                    } else
-                        request.setStatus(RequestStatus.CANCELED);
+                    else if (event.getParticipantLimit() < o.currentParticipantsNumber) {
+                        request.setStatus(RequestStatus.CONFIRMED);
+                        o.isLimitReached = ++o.currentParticipantsNumber == event.getParticipantLimit() ? true : null;
+                        confirmedRequests.add(requestMapper.entity2participationRequestDto(request));
+                    } else {
+                        request.setStatus(RequestStatus.REJECTED);
+                        rejectedRequests.add(requestMapper.entity2participationRequestDto(request));
+                    }
                 })
                 .collect(Collectors.toList());
 
         requestRepository.saveAll(requests);
 
         if (o.isLimitReached)
-            throw new MainEwmException("limit iss reached", HttpStatus.CONFLICT);
+            throw new MainEwmException("limit is reached", HttpStatus.CONFLICT);
 
-        return null;
+        return EventRequestStatusUpdateResp.builder()
+                .confirmedRequests(confirmedRequests)
+                .rejectedRequests(rejectedRequests).build();
     }
 }

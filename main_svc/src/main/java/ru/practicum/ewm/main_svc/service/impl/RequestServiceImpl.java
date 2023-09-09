@@ -111,13 +111,27 @@ public class RequestServiceImpl implements RequestService {
         if (!event.getState().equals(EventState.PUBLISHED.name()))
             throw new MainEwmException("the event is not published yet", HttpStatus.CONFLICT);
 
-        var requests = requestRepository.findAllByEventIdAndStatus(eventId, RequestStatus.PENDING).orElse(Collections.emptyList());
+        var o = new Object() {
+            long currentParticipantsNumber = requestRepository.countByEventIdAndStatus(eventId, RequestStatus.CONFIRMED);
+            boolean isLimitReached = event.getParticipantLimit() != 0 && event.getParticipantLimit() < currentParticipantsNumber;
+        };
 
-        requests.forEach(request -> {
-
-        });
+        List<Request> requests = requestRepository.findAllByEventIdAndStatus(eventId, RequestStatus.PENDING)
+                .orElse(Collections.emptyList())
+                .stream()
+                .peek(request -> {
+                    if (event.getParticipantLimit() != 0 && event.getParticipantLimit() < o.currentParticipantsNumber) {
+                        request.setStatus(RequestStatus.CONFIRMED);
+                        o.isLimitReached = event.getParticipantLimit() < ++o.currentParticipantsNumber;
+                    } else
+                        request.setStatus(RequestStatus.CANCELED);
+                })
+                .collect(Collectors.toList());
 
         requestRepository.saveAll(requests);
+
+        if (o.isLimitReached)
+            throw new MainEwmException("limit iss reached", HttpStatus.CONFLICT);
 
         return null;
     }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.main_svc.error.MainEwmException;
 import ru.practicum.ewm.main_svc.model.dto.*;
 import ru.practicum.ewm.main_svc.model.entity.Event;
@@ -49,6 +50,7 @@ public class EventServiceImpl implements EventService {
     String applicationName;
 
     @Override
+    @Transactional(readOnly = true)
     public List<EventShortDto> privateFindByUser(Long initiatorId,
                                                  Integer from,
                                                  Integer size) {
@@ -60,12 +62,14 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
     public EventFullDto privateCreate(Long initiatorId,
                                       NewEventDto newEventDto) {
         return eventMapper.entity2eventFullDto(eventRepository.save(eventMapper.newEventDto2entity(initiatorId, newEventDto)));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public EventFullDto privateFindById(Long initiatorId,
                                         Long eventId) throws Throwable {
         return Optional.ofNullable(eventMapper.entity2eventFullDto(eventRepository.findByInitiatorIdAndId(initiatorId, eventId)))
@@ -73,6 +77,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
     public EventFullDto privateUpdate(Long initiatorId,
                                       Long eventId,
                                       UpdateEventUserRequest updateEventUserRequest) throws Throwable {
@@ -92,6 +97,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<EventFullDto> adminFind(List<Long> initiators,
                                         List<String> states,
                                         List<Long> categories,
@@ -111,6 +117,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
     public EventFullDto adminUpdate(Long eventId,
                                     UpdateEventAdminRequest updateEventAdminRequest) {
 
@@ -135,6 +142,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<EventShortDto> publicFind(String searchPattern,
                                           Iterable<Long> categories,
                                           Boolean paid,
@@ -186,6 +194,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public EventFullDto publicFindById(Long id, HttpServletRequest request) throws Throwable {
 
         var eventFullDto = eventMapper.entity2eventFullDto(eventRepository

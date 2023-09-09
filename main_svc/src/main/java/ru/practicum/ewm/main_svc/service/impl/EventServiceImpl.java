@@ -29,7 +29,6 @@ import ru.practicum.ewm.stat_svc.other.model.DtoHitOut;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -169,9 +168,7 @@ public class EventServiceImpl implements EventService {
                 .map(eventShortDto -> "/events/" + eventShortDto.getId())
                 .collect(Collectors.toList());
 
-        fullFillViews(LocalDateTime.now().minusYears(10), LocalDateTime.now(), eventUris, eventShortDtoList);
-
-// TODO - добавить запрос реквестов
+        addViewAndRequestInfo(LocalDateTime.now().minusYears(10), LocalDateTime.now(), eventUris, eventShortDtoList);
 
         // sort event list
         eventShortDtoList.sort(sort.equals(EventSort.EVENT_DATE.name())
@@ -195,9 +192,7 @@ public class EventServiceImpl implements EventService {
                 .findById(id)
                 .orElseThrow(() -> new MainEwmException("there is no such event", HttpStatus.NOT_FOUND)));
 
-        fullFillViews(LocalDateTime.now().minusYears(10), LocalDateTime.now(), List.of(request.getRequestURI()), List.of(eventFullDto));
-
-// TODO - добавить запрос реквестов
+        addViewAndRequestInfo(LocalDateTime.now().minusYears(10), LocalDateTime.now(), List.of(request.getRequestURI()), List.of(eventFullDto));
 
         statClient.saveHit(DtoHitIn.builder()
                 .app(applicationName)
@@ -233,7 +228,7 @@ public class EventServiceImpl implements EventService {
         });
     }
 
-    private void fullFillViews(LocalDateTime rangeStart, LocalDateTime rangeEnd, List<String> eventUris, List<EventShortDto> eventDtoList) {
+    private void addViewAndRequestInfo(LocalDateTime rangeStart, LocalDateTime rangeEnd, List<String> eventUris, List<EventShortDto> eventDtoList) {
         // initialize map to store pair "uri,views"
         Map<String, Long> eventsViewsMap = new HashMap<>();
 
@@ -248,6 +243,10 @@ public class EventServiceImpl implements EventService {
 
             // put views value into list of EventShortDto
             eventDtoList.forEach(eventShortDto -> eventShortDto.setViews(eventsViewsMap.get("/events/" + eventShortDto.getId())));
+
+            // TODO - добавить запрос реквестов
+
         });
     }
 }
+

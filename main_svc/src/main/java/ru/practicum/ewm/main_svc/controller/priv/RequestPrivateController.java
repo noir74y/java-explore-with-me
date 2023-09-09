@@ -27,32 +27,32 @@ public class RequestPrivateController {
 
     @PostMapping("/{userId}/requests")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public ParticipationRequestDto privateCreate(@PathVariable @NotNull Long userId,
+    public ParticipationRequestDto privateCreate(@PathVariable("userId") @NotNull Long requestorId,
                                                  @PathVariable @NotNull Long eventId) {
-        return requestService.privateCreate(userId, eventId);
+        return requestService.privateCreate(requestorId, eventId);
     }
 
     @PatchMapping("/{userId}/requests/{requestId}/cancel")
-    public ParticipationRequestDto privateCancelStatus(@PathVariable @NotNull Long userId,
+    public ParticipationRequestDto privateCancelStatus(@PathVariable("userId") @NotNull Long requestorId,
                                                        @PathVariable @NotNull Long requestId) {
-        return requestService.privateCancelStatus(userId, requestId);
+        return requestService.privateCancelStatus(requestorId, requestId);
     }
 
     @GetMapping("/{userId}/requests")
-    public List<ParticipationRequestDto> privateFindByRequestor(@PathVariable @NotNull Long userId) {
-        return requestService.privateFindByRequestor(userId);
+    public List<ParticipationRequestDto> privateFindByRequestor(@PathVariable("userId") @NotNull Long requestorId) {
+        return requestService.privateFindByRequestor(requestorId);
     }
 
     @GetMapping("/{userId}/events/{eventId}/requests")
-    public List<ParticipationRequestDto> privateFindByRequestorAndEvent(@PathVariable @NotNull Long userId,
+    public List<ParticipationRequestDto> privateFindByRequestorAndEvent(@PathVariable("userId") @NotNull Long requestorId,
                                                                         @PathVariable @NotNull Long eventId) {
-        return requestService.privateFindByRequestorAndEvent(userId, eventId);
+        return requestService.privateFindByRequestorAndEvent(requestorId, eventId);
     }
 
     @PatchMapping("/{userId}/events/{eventId}/requests")
-    public EventRequestStatusUpdateResult privateUpdateStatus(@PathVariable @NotNull Long userId,
+    public EventRequestStatusUpdateResult privateUpdateStatus(@PathVariable("userId") @NotNull Long requestorId,
                                                               @PathVariable @NotNull Long eventId,
                                                               @RequestBody @NotNull @Valid EventRequestStatusUpdateRequest updateReq) {
-        return requestService.privateUpdateStatus(userId, eventId, updateReq);
+        return requestService.privateUpdateStatus(requestorId, eventId, updateReq);
     }
 }

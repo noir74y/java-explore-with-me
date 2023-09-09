@@ -58,22 +58,27 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public ParticipationRequestDto privateCancelStatus(Long userId, Long requestId) {
+    public ParticipationRequestDto privateCancelStatus(Long requestorId, Long requestId) {
+        var request = requestRepository
+                .findByIdAndRequestorIdAndStatusIn(requestId, requestorId, List.of(RequestStatus.PENDING, RequestStatus.CONFIRMED))
+                .orElseThrow(() -> new MainEwmException("there is no such your request in a proper status", HttpStatus.NOT_FOUND));
+
+        request.setStatus(RequestStatus.CANCELED);
+        return requestMapper.entity2participationRequestDto(requestRepository.save(request));
+    }
+
+    @Override
+    public List<ParticipationRequestDto> privateFindByRequestor(Long requestorId) {
         return null;
     }
 
     @Override
-    public List<ParticipationRequestDto> privateFindByRequestor(Long userId) {
+    public List<ParticipationRequestDto> privateFindByRequestorAndEvent(Long requestorId, Long eventId) {
         return null;
     }
 
     @Override
-    public List<ParticipationRequestDto> privateFindByRequestorAndEvent(Long userId, Long eventId) {
-        return null;
-    }
-
-    @Override
-    public EventRequestStatusUpdateResult privateUpdateStatus(Long userId, Long eventId, EventRequestStatusUpdateRequest updateReq) {
+    public EventRequestStatusUpdateResult privateUpdateStatus(Long requestorId, Long eventId, EventRequestStatusUpdateRequest updateReq) {
         return null;
     }
 }

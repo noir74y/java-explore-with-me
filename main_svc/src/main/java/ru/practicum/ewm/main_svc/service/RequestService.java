@@ -9,18 +9,18 @@ import java.util.List;
 
 @Service
 public interface RequestService {
-    ParticipationRequestDto privateCreate(Long requestorId,
-                                          Long eventId);
+    ParticipationRequestDto privateCreateRequest(Long requestorId,
+                                                 Long eventId);
 
-    ParticipationRequestDto privateCancelStatus(Long requestorId,
-                                                Long requestId);
+    ParticipationRequestDto privateCancelRequestStatus(Long requestorId,
+                                                       Long requestId);
 
-    List<ParticipationRequestDto> privateFindByRequestor(Long requestorId);
+    List<ParticipationRequestDto> privateFindRequestsByRequestor(Long requestorId);
 
-    List<ParticipationRequestDto> privateFindByInitiatorAndEvent(Long initiatorId,
-                                                                 Long eventId);
+    List<ParticipationRequestDto> privateFindRequestsByInitiatorAndEvent(Long initiatorId,
+                                                                         Long eventId);
 
-    EventRequestStatusUpdateResp privateUpdateStatus(Long initiatorId,
-                                                     Long eventId,
-                                                     EventRequestStatusUpdateReq eventRequestStatusUpdateReq);
+    EventRequestStatusUpdateResp privateUpdateRequestStatus(Long initiatorId,
+                                                            Long eventId,
+                                                            EventRequestStatusUpdateReq eventRequestStatusUpdateReq);
 }

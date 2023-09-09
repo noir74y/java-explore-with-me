@@ -15,16 +15,21 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MainEwmException extends RuntimeException {
     String reason;
-    HttpStatus status;
+    HttpStatus httpStatus;
 
     public ResponseEntity<MainErrorMessage> getApiErrorMessage() {
         return ResponseEntity
-                .status(status)
+                .status(httpStatus)
                 .body(MainErrorMessage.builder()
-                        .errors(Arrays.stream(this.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.toList()))
-                        .message(this.getMessage())
                         .reason(reason)
-                        .status(status.toString())
+                        .message(this.getMessage())
+                        .status(httpStatus.toString())
+                        .errors(Arrays.stream(this.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.toList()))
                         .build());
+    }
+
+    public MainEwmException(Exception exception, HttpStatus httpStatus) {
+        this.reason = exception.toString();
+        this.httpStatus = httpStatus;
     }
 }

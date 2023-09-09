@@ -20,22 +20,22 @@ public class CategoryAdminController {
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public CategoryDto adminCreate(@RequestBody @NotNull @Valid NewCategoryDto newCategoryDto) {
+    public CategoryDto adminCreateCategory(@RequestBody @NotNull @Valid NewCategoryDto newCategoryDto) {
         log.info("POST /admin/categories {}", newCategoryDto);
-        return categoryService.adminCreate(newCategoryDto);
+        return categoryService.adminCreateCategory(newCategoryDto);
     }
 
     @DeleteMapping("/{catId}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    public void adminDelete(@PathVariable @NotNull Long catId) {
+    public void adminDeleteCategory(@PathVariable @NotNull Long catId) {
         log.info("DELETE /admin/categories/{}", catId);
-        categoryService.adminDelete(catId);
+        categoryService.adminDeleteCategory(catId);
     }
 
     @PatchMapping("/{catId}")
-    public CategoryDto adminUpdate(@PathVariable @NotNull Long catId,
+    public CategoryDto adminUpdateCategory(@PathVariable @NotNull Long catId,
                                    @RequestBody @NotNull @Valid CategoryDto categoryDto) {
         log.info("PATH /admin/categories/{} {}", catId, categoryDto);
-        return categoryService.adminUpdate(catId, categoryDto);
+        return categoryService.adminUpdateCategory(catId, categoryDto);
     }
 }

@@ -25,33 +25,33 @@ public class EventPrivateController {
     private final EventService eventService;
 
     @GetMapping("/{userId}/events")
-    public List<EventShortDto> privateFindByInitiator(@PathVariable("userId") @NotNull Long initiatorId,
-                                                      @RequestParam(defaultValue = MainAppConfig.FROM) @NotNull @PositiveOrZero Integer from,
-                                                      @RequestParam(defaultValue = MainAppConfig.SIZE) @NotNull @Positive Integer size) {
+    public List<EventShortDto> privateFindEventsByInitiator(@PathVariable("userId") @NotNull Long initiatorId,
+                                                            @RequestParam(defaultValue = MainAppConfig.FROM) @NotNull @PositiveOrZero Integer from,
+                                                            @RequestParam(defaultValue = MainAppConfig.SIZE) @NotNull @Positive Integer size) {
         log.info("GET /users/{}/events {}, {}", initiatorId, from, size);
-        return eventService.privateFindByUser(initiatorId, from, size);
+        return eventService.privateFindEventsByInitiator(initiatorId, from, size);
     }
 
     @PostMapping("/{userId}/events")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public EventFullDto privateCreate(@PathVariable("userId") @NotNull Long initiatorId,
+    public EventFullDto privateCreateEvent(@PathVariable("userId") @NotNull Long initiatorId,
                                       @RequestBody @NotNull @Valid NewEventDto newEventDto) {
         log.info("POST /users/{}/events {}", initiatorId, newEventDto);
-        return eventService.privateCreate(initiatorId, newEventDto);
+        return eventService.privateCreateEvent(initiatorId, newEventDto);
     }
 
     @GetMapping("/{userId}/events/{eventId}")
-    public EventFullDto privateFindById(@PathVariable("userId") @NotNull Long initiatorId,
+    public EventFullDto privateFindEventById(@PathVariable("userId") @NotNull Long initiatorId,
                                         @PathVariable @NotNull Long eventId) throws Throwable {
         log.info("GET /users/{}/events/{}", initiatorId, eventId);
-        return eventService.privateFindById(initiatorId, eventId);
+        return eventService.privateFindEventById(initiatorId, eventId);
     }
 
     @PatchMapping("/{userId}/events/{eventId}")
-    public EventFullDto privateUpdate(@PathVariable("userId") @NotNull Long initiatorId,
+    public EventFullDto privateUpdateEvent(@PathVariable("userId") @NotNull Long initiatorId,
                                       @PathVariable @NotNull Long eventId,
                                       @RequestBody @NotNull @Valid UpdateEventUserRequest updateEventUserRequest) throws Throwable {
         log.info("PATCH /users/{}/events/{}", initiatorId, eventId);
-        return eventService.privateUpdate(initiatorId, eventId, updateEventUserRequest);
+        return eventService.privateUpdateEvent(initiatorId, eventId, updateEventUserRequest);
     }
 }

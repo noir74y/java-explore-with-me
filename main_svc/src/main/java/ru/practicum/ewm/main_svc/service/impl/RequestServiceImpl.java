@@ -31,7 +31,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     @Transactional
-    public ParticipationRequestDto privateCreate(Long requestorId, Long eventId) {
+    public ParticipationRequestDto privateCreateRequest(Long requestorId, Long eventId) {
         var requestor = userRepository
                 .findById(requestorId)
                 .orElseThrow(() -> new MainEwmException(String.format("there is no requestor with user_id=%d", requestorId), HttpStatus.NOT_FOUND));
@@ -61,7 +61,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     @Transactional
-    public ParticipationRequestDto privateCancelStatus(Long requestorId, Long requestId) {
+    public ParticipationRequestDto privateCancelRequestStatus(Long requestorId, Long requestId) {
         var request = requestRepository
                 .findByIdAndRequestorIdAndStatusIn(requestId, requestorId, List.of(RequestStatus.PENDING, RequestStatus.CONFIRMED))
                 .orElseThrow(() -> new MainEwmException("there is no such your request in a proper status", HttpStatus.NOT_FOUND));
@@ -72,7 +72,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ParticipationRequestDto> privateFindByRequestor(Long requestorId) {
+    public List<ParticipationRequestDto> privateFindRequestsByRequestor(Long requestorId) {
         if (!userRepository.existsById(requestorId))
             throw new MainEwmException(String.format("there is no requestor with user_id=%d", requestorId), HttpStatus.NOT_FOUND);
 
@@ -86,7 +86,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ParticipationRequestDto> privateFindByInitiatorAndEvent(Long initiatorId, Long eventId) {
+    public List<ParticipationRequestDto> privateFindRequestsByInitiatorAndEvent(Long initiatorId, Long eventId) {
         return requestRepository
                 .findAllByInitiatorIdAndEventId(initiatorId, eventId)
                 .orElse(Collections.emptyList())
@@ -97,7 +97,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     @Transactional
-    public EventRequestStatusUpdateResp privateUpdateStatus(Long initiatorId, Long eventId, EventRequestStatusUpdateReq eventRequestStatusUpdateReq) {
+    public EventRequestStatusUpdateResp privateUpdateRequestStatus(Long initiatorId, Long eventId, EventRequestStatusUpdateReq eventRequestStatusUpdateReq) {
         if (!userRepository.existsById(initiatorId))
             throw new MainEwmException(String.format("there is no user with id=%d", initiatorId), HttpStatus.NOT_FOUND);
 

@@ -9,17 +9,17 @@ import java.util.List;
 
 @Service
 public interface CompilationService {
-    List<CompilationDto> publicFindAll(Boolean pinned,
-                                       Integer from,
-                                       Integer size);
+    List<CompilationDto> publicFindAllCompilations(Boolean pinned,
+                                                   Integer from,
+                                                   Integer size);
 
-    CompilationDto publicFindById(Long compId);
+    CompilationDto publicFindCompilationById(Long compId);
 
-    CompilationDto adminCreate(NewCompilationDto newCompilationDto);
+    CompilationDto adminCreateCompilation(NewCompilationDto newCompilationDto);
 
-    void adminDelete(Long compId);
+    void adminDeleteCompilation(Long compId);
 
-    CompilationDto adminUpdate(Long compId,
-                               UpdateCompilationRequest updateCompilationRequest);
+    CompilationDto adminUpdateCompilation(Long compId,
+                                          UpdateCompilationRequest updateCompilationRequest);
 
 }

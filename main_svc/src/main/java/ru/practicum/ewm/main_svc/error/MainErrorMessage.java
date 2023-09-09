@@ -14,10 +14,10 @@ import java.util.List;
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MainErrorMessage {
-    final List<String> errors;
-    final String message;
     final String reason;
+    final String message;
     final String status;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = MainAppConfig.DATE_TIME_FORMAT)
     final LocalDateTime timestamp = LocalDateTime.now();
+    final List<String> errors;
 }

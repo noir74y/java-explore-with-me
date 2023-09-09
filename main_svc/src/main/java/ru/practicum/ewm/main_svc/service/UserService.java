@@ -8,11 +8,11 @@ import java.util.List;
 
 @Service
 public interface UserService {
-    List<UserDto> adminFindByIds(List<Long> ids,
-                                 Integer from,
-                                 Integer size);
+    List<UserDto> adminFindUsersByIds(List<Long> ids,
+                                      Integer from,
+                                      Integer size);
 
-    UserDto adminCreate(NewUserRequest newUserRequest);
+    UserDto adminCreateUser(NewUserRequest newUserRequest);
 
-    void adminDelete(Long userId);
+    void adminDeleteUser(Long userId);
 }

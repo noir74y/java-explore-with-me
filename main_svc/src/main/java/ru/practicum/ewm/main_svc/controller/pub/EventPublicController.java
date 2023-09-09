@@ -27,7 +27,7 @@ public class EventPublicController {
     private final EventService eventService;
 
     @GetMapping
-    public List<EventShortDto> publicFind(@RequestParam(value = "text", required = false) String searchPattern,
+    public List<EventShortDto> publicFindEvents(@RequestParam(value = "text", required = false) String searchPattern,
                                           @RequestParam(required = false) List<Long> categories,
                                           @RequestParam(required = false) Boolean paid,
                                           @RequestParam(required = false) @FutureOrPresent @DateTimeFormat(pattern = MainAppConfig.DATE_TIME_FORMAT) LocalDateTime rangeStart,
@@ -37,7 +37,7 @@ public class EventPublicController {
                                           @RequestParam(defaultValue = MainAppConfig.FROM) @PositiveOrZero Integer from,
                                           @RequestParam(defaultValue = MainAppConfig.SIZE) @Positive Integer size,
                                           HttpServletRequest request) {
-        return eventService.publicFind(searchPattern,
+        return eventService.publicFindEvents(searchPattern,
                 categories,
                 paid,
                 rangeStart,
@@ -50,8 +50,8 @@ public class EventPublicController {
     }
 
     @GetMapping("/{id}")
-    public EventFullDto publicFindById(@PathVariable @NotNull Long id,
+    public EventFullDto publicFindEventById(@PathVariable @NotNull Long id,
                                        HttpServletRequest request) throws Throwable {
-        return eventService.publicFindById(id, request);
+        return eventService.publicFindEventById(id, request);
     }
 }

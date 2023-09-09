@@ -9,41 +9,41 @@ import java.util.List;
 
 @Service
 public interface EventService {
-    List<EventShortDto> privateFindByUser(Long initiatorId,
-                                          Integer from,
-                                          Integer size);
+    List<EventShortDto> privateFindEventsByInitiator(Long initiatorId,
+                                                     Integer from,
+                                                     Integer size);
 
-    EventFullDto privateCreate(Long initiatorId,
-                               NewEventDto newEventDto);
+    EventFullDto privateCreateEvent(Long initiatorId,
+                                    NewEventDto newEventDto);
 
-    EventFullDto privateFindById(Long initiatorId,
-                                 Long eventId) throws Throwable;
+    EventFullDto privateFindEventById(Long initiatorId,
+                                      Long eventId) throws Throwable;
 
-    EventFullDto privateUpdate(Long initiatorId,
-                               Long eventId,
-                               UpdateEventUserRequest updateEventUserRequest) throws Throwable;
+    EventFullDto privateUpdateEvent(Long initiatorId,
+                                    Long eventId,
+                                    UpdateEventUserRequest updateEventUserRequest) throws Throwable;
 
-    List<EventFullDto> adminFind(List<Long> initiators,
-                                 List<String> states,
-                                 List<Long> categories,
-                                 LocalDateTime rangeStart,
-                                 LocalDateTime rangeEnd,
-                                 Integer from,
-                                 Integer size);
+    List<EventFullDto> adminFindEvents(List<Long> initiators,
+                                       List<String> states,
+                                       List<Long> categories,
+                                       LocalDateTime rangeStart,
+                                       LocalDateTime rangeEnd,
+                                       Integer from,
+                                       Integer size);
 
-    EventFullDto adminUpdate(Long eventId,
-                             UpdateEventAdminRequest updateEventAdminRequest);
+    EventFullDto adminUpdateEvent(Long eventId,
+                                  UpdateEventAdminRequest updateEventAdminRequest);
 
-    List<EventShortDto> publicFind(String searchPattern,
-                                   Iterable<Long> categories,
-                                   Boolean paid,
-                                   LocalDateTime rangeStart,
-                                   LocalDateTime rangeEnd,
-                                   Boolean onlyAvailable,
-                                   String sort,
-                                   Integer from,
-                                   Integer size,
-                                   HttpServletRequest request);
+    List<EventShortDto> publicFindEvents(String searchPattern,
+                                         Iterable<Long> categories,
+                                         Boolean paid,
+                                         LocalDateTime rangeStart,
+                                         LocalDateTime rangeEnd,
+                                         Boolean onlyAvailable,
+                                         String sort,
+                                         Integer from,
+                                         Integer size,
+                                         HttpServletRequest request);
 
-    EventFullDto publicFindById(Long id, HttpServletRequest request) throws Throwable;
+    EventFullDto publicFindEventById(Long id, HttpServletRequest request) throws Throwable;
 }

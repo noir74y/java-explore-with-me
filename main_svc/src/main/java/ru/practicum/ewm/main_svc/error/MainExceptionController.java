@@ -26,7 +26,7 @@ public class MainExceptionController {
         else if (exception instanceof MainEwmException)
             mainEwmException = (MainEwmException) exception;
         else
-            mainEwmException = new MainEwmException("UnknownException", HttpStatus.INTERNAL_SERVER_ERROR);
+            mainEwmException = new MainEwmException(exception, HttpStatus.INTERNAL_SERVER_ERROR);
 
         return mainEwmException.getApiErrorMessage();
     }

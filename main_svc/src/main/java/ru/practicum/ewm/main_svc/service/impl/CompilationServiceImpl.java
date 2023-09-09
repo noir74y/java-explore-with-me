@@ -13,27 +13,27 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CompilationServiceImpl implements CompilationService {
     @Override
-    public List<CompilationDto> publicFindAll(Boolean pinned, Integer from, Integer size) {
+    public List<CompilationDto> publicFindAllCompilations(Boolean pinned, Integer from, Integer size) {
         return null;
     }
 
     @Override
-    public CompilationDto publicFindById(Long compId) {
+    public CompilationDto publicFindCompilationById(Long compId) {
         return null;
     }
 
     @Override
-    public CompilationDto adminCreate(NewCompilationDto newCompilationDto) {
+    public CompilationDto adminCreateCompilation(NewCompilationDto newCompilationDto) {
         return null;
     }
 
     @Override
-    public void adminDelete(Long compId) {
+    public void adminDeleteCompilation(Long compId) {
 
     }
 
     @Override
-    public CompilationDto adminUpdate(Long compId, UpdateCompilationRequest updateCompilationRequest) {
+    public CompilationDto adminUpdateCompilation(Long compId, UpdateCompilationRequest updateCompilationRequest) {
         return null;
     }
 }

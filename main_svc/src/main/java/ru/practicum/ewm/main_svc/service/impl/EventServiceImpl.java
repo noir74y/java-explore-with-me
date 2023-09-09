@@ -46,9 +46,9 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<EventShortDto> privateFindByUser(Long initiatorId,
-                                                 Integer from,
-                                                 Integer size) {
+    public List<EventShortDto> privateFindEventsByInitiator(Long initiatorId,
+                                                            Integer from,
+                                                            Integer size) {
         return eventRepository
                 .findAllByInitiatorId(initiatorId, PageRequest.of(from / size, size))
                 .stream()
@@ -58,24 +58,24 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
-    public EventFullDto privateCreate(Long initiatorId,
-                                      NewEventDto newEventDto) {
+    public EventFullDto privateCreateEvent(Long initiatorId,
+                                           NewEventDto newEventDto) {
         return eventMapper.entity2eventFullDto(eventRepository.save(eventMapper.newEventDto2entity(initiatorId, newEventDto)));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public EventFullDto privateFindById(Long initiatorId,
-                                        Long eventId) throws Throwable {
+    public EventFullDto privateFindEventById(Long initiatorId,
+                                             Long eventId) throws Throwable {
         return Optional.ofNullable(eventMapper.entity2eventFullDto(eventRepository.findByInitiatorIdAndId(initiatorId, eventId)))
                 .orElseThrow(() -> new MainEwmException(String.format("there is no event with id=%d and initiatorId=%d", initiatorId, eventId), HttpStatus.NOT_FOUND));
     }
 
     @Override
     @Transactional
-    public EventFullDto privateUpdate(Long initiatorId,
-                                      Long eventId,
-                                      UpdateEventUserRequest updateEventUserRequest) throws Throwable {
+    public EventFullDto privateUpdateEvent(Long initiatorId,
+                                           Long eventId,
+                                           UpdateEventUserRequest updateEventUserRequest) throws Throwable {
 
         var currentEvent = Optional.ofNullable(eventRepository.findByInitiatorIdAndId(initiatorId, eventId))
                 .orElseThrow(() -> new MainEwmException(String.format("there is no event with id=%d and initiatorId=%d", initiatorId, eventId), HttpStatus.NOT_FOUND));
@@ -93,13 +93,13 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<EventFullDto> adminFind(List<Long> initiators,
-                                        List<String> states,
-                                        List<Long> categories,
-                                        LocalDateTime rangeStart,
-                                        LocalDateTime rangeEnd,
-                                        Integer from,
-                                        Integer size) {
+    public List<EventFullDto> adminFindEvents(List<Long> initiators,
+                                              List<String> states,
+                                              List<Long> categories,
+                                              LocalDateTime rangeStart,
+                                              LocalDateTime rangeEnd,
+                                              Integer from,
+                                              Integer size) {
         if (rangeStart.isAfter(rangeEnd))
             throw new MainEwmException("rangeStart is after rangeEnd", HttpStatus.BAD_REQUEST);
 
@@ -113,8 +113,8 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
-    public EventFullDto adminUpdate(Long eventId,
-                                    UpdateEventAdminRequest updateEventAdminRequest) {
+    public EventFullDto adminUpdateEvent(Long eventId,
+                                         UpdateEventAdminRequest updateEventAdminRequest) {
 
         var currentEvent = eventRepository.findById(eventId)
                 .orElseThrow(() -> new MainEwmException(String.format("there is no event with id=%d", eventId), HttpStatus.NOT_FOUND));
@@ -138,16 +138,16 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<EventShortDto> publicFind(String searchPattern,
-                                          Iterable<Long> categories,
-                                          Boolean paid,
-                                          LocalDateTime rangeStart,
-                                          LocalDateTime rangeEnd,
-                                          Boolean onlyAvailable,
-                                          String sort,
-                                          Integer from,
-                                          Integer size,
-                                          HttpServletRequest request) {
+    public List<EventShortDto> publicFindEvents(String searchPattern,
+                                                Iterable<Long> categories,
+                                                Boolean paid,
+                                                LocalDateTime rangeStart,
+                                                LocalDateTime rangeEnd,
+                                                Boolean onlyAvailable,
+                                                String sort,
+                                                Integer from,
+                                                Integer size,
+                                                HttpServletRequest request) {
 
         rangeStart = Optional.ofNullable(rangeStart).orElse(LocalDateTime.now());
         rangeEnd = Optional.ofNullable(rangeEnd).orElse(LocalDateTime.now().plusYears(10));
@@ -190,7 +190,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(readOnly = true)
-    public EventFullDto publicFindById(Long id, HttpServletRequest request) throws Throwable {
+    public EventFullDto publicFindEventById(Long id, HttpServletRequest request) throws Throwable {
 
         var eventFullDto = eventMapper.entity2eventFullDto(eventRepository
                 .findById(id)

@@ -23,24 +23,24 @@ public class UserAdminController {
     private final UserService userService;
 
     @GetMapping
-    public List<UserDto> adminFindByIds(@RequestParam List<Long> ids,
+    public List<UserDto> adminFindUsersByIds(@RequestParam List<Long> ids,
                                         @RequestParam(defaultValue = MainAppConfig.FROM) @PositiveOrZero Integer from,
                                         @RequestParam(defaultValue = MainAppConfig.SIZE) @Positive Integer size) {
         log.info("GET /admin/users {}, {}, {}", ids, from, size);
-        return userService.adminFindByIds(ids, from, size);
+        return userService.adminFindUsersByIds(ids, from, size);
     }
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public UserDto adminCreate(@RequestBody @NotNull @Valid NewUserRequest newUserRequest) {
+    public UserDto adminCreateUser(@RequestBody @NotNull @Valid NewUserRequest newUserRequest) {
         log.info("POST /admin/users {}", newUserRequest);
-        return userService.adminCreate(newUserRequest);
+        return userService.adminCreateUser(newUserRequest);
     }
 
     @DeleteMapping("/{userId}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    public void adminDelete(@PathVariable @NotNull Long userId) {
+    public void adminDeleteUser(@PathVariable @NotNull Long userId) {
         log.info("DELETE /admin/{}", userId);
-        userService.adminDelete(userId);
+        userService.adminDeleteUser(userId);
     }
 }

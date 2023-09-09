@@ -19,18 +19,18 @@ public class CompilationAdminController {
     private final CompilationService compilationService;
 
     @PostMapping
-    public CompilationDto adminCreate(@RequestBody @NotNull @Valid NewCompilationDto newCompilationDto) {
-        return compilationService.adminCreate(newCompilationDto);
+    public CompilationDto adminCreateCompilation(@RequestBody @NotNull @Valid NewCompilationDto newCompilationDto) {
+        return compilationService.adminCreateCompilation(newCompilationDto);
     }
 
     @DeleteMapping("/{compId}")
-    public void adminDelete(@PathVariable @NotNull Long compId) {
-        compilationService.adminDelete(compId);
+    public void adminDeleteCompilation(@PathVariable @NotNull Long compId) {
+        compilationService.adminDeleteCompilation(compId);
     }
 
     @PatchMapping("/{compId}")
-    public CompilationDto adminUpdate(@PathVariable @NotNull Long compId,
+    public CompilationDto adminUpdateCompilation(@PathVariable @NotNull Long compId,
                                       @RequestBody @NotNull @Valid UpdateCompilationRequest updateCompilationRequest) {
-        return compilationService.adminUpdate(compId, updateCompilationRequest);
+        return compilationService.adminUpdateCompilation(compId, updateCompilationRequest);
     }
 }

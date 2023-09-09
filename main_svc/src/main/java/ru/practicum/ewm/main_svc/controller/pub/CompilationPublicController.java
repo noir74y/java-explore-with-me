@@ -25,15 +25,15 @@ public class CompilationPublicController {
     CompilationService compilationService;
 
     @GetMapping
-    public List<CompilationDto> publicFindAll(@RequestParam Boolean pinned,
+    public List<CompilationDto> publicFindAllCompilations(@RequestParam Boolean pinned,
                                               @RequestParam(defaultValue = MainAppConfig.FROM) @PositiveOrZero Integer from,
                                               @RequestParam(defaultValue = MainAppConfig.SIZE) @Positive Integer size) {
-        return compilationService.publicFindAll(pinned, from, size);
+        return compilationService.publicFindAllCompilations(pinned, from, size);
     }
 
     @GetMapping("/{compId}")
-    public CompilationDto publicFindById(@PathVariable @NotNull Long compId) {
-        return compilationService.publicFindById(compId);
+    public CompilationDto publicFindCompilationById(@PathVariable @NotNull Long compId) {
+        return compilationService.publicFindCompilationById(compId);
     }
 }
 

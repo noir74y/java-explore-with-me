@@ -23,13 +23,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    public CategoryDto adminCreate(NewCategoryDto newCategoryDto) {
+    public CategoryDto adminCreateCategory(NewCategoryDto newCategoryDto) {
         return categoryMapper.entity2categoryDto(categoryRepository.save(categoryMapper.newCategoryDto2entity(newCategoryDto)));
     }
 
     @Override
     @Transactional
-    public void adminDelete(Long catId) {
+    public void adminDeleteCategory(Long catId) {
         if (categoryRepository.existsById(catId)) categoryRepository.deleteById(catId);
         else
             throw new MainEwmException(String.format("Category with id=%d was not found.", catId), HttpStatus.NOT_FOUND);
@@ -37,7 +37,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    public CategoryDto adminUpdate(Long catId, CategoryDto categoryDto) {
+    public CategoryDto adminUpdateCategory(Long catId, CategoryDto categoryDto) {
         var category = categoryRepository.findById(catId)
                 .orElseThrow(() -> new MainEwmException(String.format("Category with id=%d was not found.", catId), HttpStatus.NOT_FOUND));
 
@@ -51,7 +51,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CategoryDto> publicFindAll(Integer from, Integer size) {
+    public List<CategoryDto> publicFindAllCategories(Integer from, Integer size) {
         return categoryRepository
                 .findAll(PageRequest.of(from / size, size))
                 .stream()
@@ -61,7 +61,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional(readOnly = true)
-    public CategoryDto publicFindById(Long catId) {
+    public CategoryDto publicFindCategoryById(Long catId) {
         return categoryMapper.entity2categoryDto(categoryRepository.findById(catId)
                 .orElseThrow(() -> new MainEwmException(String.format("Category with id=%d was not found.", catId), HttpStatus.NOT_FOUND)));
     }

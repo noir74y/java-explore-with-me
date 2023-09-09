@@ -14,7 +14,7 @@ import java.util.Optional;
 public class CategoryMapper {
     private final ModelMapper modelMapper;
 
-    public Category categoryDto2entity(NewCategoryDto newCategoryDto) {
+    public Category newCategoryDto2entity(NewCategoryDto newCategoryDto) {
         return Optional.ofNullable(newCategoryDto).map(obj -> modelMapper.map(obj, Category.class)).orElse(null);
     }
 

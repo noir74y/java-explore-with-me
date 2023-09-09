@@ -24,7 +24,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public CategoryDto adminCreate(NewCategoryDto newCategoryDto) {
-        return categoryMapper.entity2categoryDto(categoryRepository.save(categoryMapper.categoryDto2entity(newCategoryDto)));
+        return categoryMapper.entity2categoryDto(categoryRepository.save(categoryMapper.newCategoryDto2entity(newCategoryDto)));
     }
 
     @Override

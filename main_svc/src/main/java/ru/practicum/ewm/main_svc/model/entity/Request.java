@@ -23,9 +23,9 @@ public class Request {
     Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "initiator_id")
+    @JoinColumn(name = "requestor_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    User initiator;
+    User requestor;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")

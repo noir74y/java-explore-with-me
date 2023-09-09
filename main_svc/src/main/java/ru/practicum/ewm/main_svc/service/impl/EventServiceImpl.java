@@ -13,16 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.main_svc.error.MainEwmException;
 import ru.practicum.ewm.main_svc.model.dto.*;
 import ru.practicum.ewm.main_svc.model.entity.Event;
-import ru.practicum.ewm.main_svc.model.util.enums.EventAdminState;
-import ru.practicum.ewm.main_svc.model.util.enums.EventSort;
-import ru.practicum.ewm.main_svc.model.util.enums.EventState;
-import ru.practicum.ewm.main_svc.model.util.enums.EventUserState;
+import ru.practicum.ewm.main_svc.model.util.enums.*;
 import ru.practicum.ewm.main_svc.model.util.mappers.EventMapper;
 import ru.practicum.ewm.main_svc.model.util.mappers.LocationMapper;
 import ru.practicum.ewm.main_svc.repository.CategoryRepository;
 import ru.practicum.ewm.main_svc.repository.EventRepository;
-import ru.practicum.ewm.main_svc.repository.LocationRepository;
-import ru.practicum.ewm.main_svc.repository.UserRepository;
+import ru.practicum.ewm.main_svc.repository.RequestRepository;
 import ru.practicum.ewm.main_svc.service.EventService;
 import ru.practicum.ewm.stat_svc.client.StatClient;
 import ru.practicum.ewm.stat_svc.other.model.DtoHitIn;
@@ -40,9 +36,8 @@ public class EventServiceImpl implements EventService {
     final EventRepository eventRepository;
     final EventMapper eventMapper;
     final CategoryRepository categoryRepository;
-    final LocationRepository locationRepository;
     final LocationMapper locationMapper;
-    final UserRepository userRepository;
+    final RequestRepository requestRepository;
     final StatClient statClient;
     final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -237,7 +232,7 @@ public class EventServiceImpl implements EventService {
         });
     }
 
-    private void addViewAndRequestInfo(LocalDateTime rangeStart, LocalDateTime rangeEnd, List<String> eventUris, List<EventShortDto> eventDtoList) {
+    private void addViewAndRequestInfo(LocalDateTime rangeStart, LocalDateTime rangeEnd, List<String> eventUris, List<EventShortDto> eventShortDtoList) {
         // initialize map to store pair "uri,views"
         Map<String, Long> eventsViewsMap = new HashMap<>();
 
@@ -250,11 +245,20 @@ public class EventServiceImpl implements EventService {
                     .filter(dtoHitOut -> dtoHitOut.getApp().equals(applicationName))
                     .forEach(eventView -> eventsViewsMap.put(eventView.getUri(), eventView.getHits()));
 
-            // put views value into list of EventShortDto
-            eventDtoList.forEach(eventShortDto -> eventShortDto.setViews(eventsViewsMap.get("/events/" + eventShortDto.getId())));
+            // add views value into list of EventShortDto
+            eventShortDtoList.forEach(eventShortDto -> eventShortDto.setViews(eventsViewsMap.get("/events/" + eventShortDto.getId())));
 
-            // TODO - добавить запрос реквестов
+            // prepare Map(eventId -> count of confirmed requests)
+            Map<Long, Long> eventsToConfirmedRequestsMap = requestRepository
+                    .findEventsToConfirmedRequestsMap(RequestStatus.CONFIRMED, eventShortDtoList
+                            .stream()
+                            .map(EventShortDto::getId)
+                            .collect(Collectors.toList()));
 
+            // add confirmedRequests value into list of EventShortDto
+            eventShortDtoList
+                    .forEach(eventShortDto -> eventShortDto
+                            .setConfirmedRequests(eventsToConfirmedRequestsMap.getOrDefault(eventShortDto.getId(), null)));
         });
     }
 }

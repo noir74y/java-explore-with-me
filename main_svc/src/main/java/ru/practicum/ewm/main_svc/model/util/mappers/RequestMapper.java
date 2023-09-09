@@ -3,9 +3,7 @@ package ru.practicum.ewm.main_svc.model.util.mappers;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
-import ru.practicum.ewm.main_svc.model.dto.LocationDto;
 import ru.practicum.ewm.main_svc.model.dto.ParticipationRequestDto;
-import ru.practicum.ewm.main_svc.model.entity.Location;
 import ru.practicum.ewm.main_svc.model.entity.Request;
 
 import java.util.Optional;

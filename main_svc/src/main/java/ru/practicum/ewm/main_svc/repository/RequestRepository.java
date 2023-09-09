@@ -6,8 +6,11 @@ import org.springframework.stereotype.Repository;
 import ru.practicum.ewm.main_svc.model.entity.Request;
 import ru.practicum.ewm.main_svc.model.util.enums.RequestStatus;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public interface RequestRepository extends JpaRepository<Request, Long> {
@@ -25,4 +28,13 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
     Optional<List<Request>> findAllByInitiatorIdAndEventId(Long initiatorId, Long eventId);
 
     Optional<List<Request>> findAllByStatusAndIdIn(RequestStatus status, List<Long> requestIdList);
+
+    Optional<List<Request>> findAllByStatusAndEventIdIn(RequestStatus status, List<Long> eventIdList);
+
+    default Map<Long, Long> findEventsToConfirmedRequestsMap(RequestStatus status, List<Long> eventIdList) {
+        return findAllByStatusAndEventIdIn(status, eventIdList)
+                .orElse(Collections.emptyList())
+                .stream()
+                .collect(Collectors.groupingBy(Request::getEventIdForMap, Collectors.counting()));
+    }
 }

@@ -38,4 +38,8 @@ public class Request {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     RequestStatus status;
+
+    public Long getEventIdForMap() {
+        return event.getId();
+    }
 }

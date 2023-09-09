@@ -8,6 +8,7 @@ import ru.practicum.ewm.main_svc.model.dto.EventRequestStatusUpdateRequest;
 import ru.practicum.ewm.main_svc.model.dto.EventRequestStatusUpdateResult;
 import ru.practicum.ewm.main_svc.model.dto.ParticipationRequestDto;
 import ru.practicum.ewm.main_svc.model.entity.Request;
+import ru.practicum.ewm.main_svc.model.util.enums.EventState;
 import ru.practicum.ewm.main_svc.model.util.enums.RequestStatus;
 import ru.practicum.ewm.main_svc.model.util.mappers.RequestMapper;
 import ru.practicum.ewm.main_svc.repository.EventRepository;
@@ -37,14 +38,23 @@ public class RequestServiceImpl implements RequestService {
                 .findById(eventId)
                 .orElseThrow(() -> new MainEwmException("there is no event with id=%d", HttpStatus.NOT_FOUND));
 
+        if (requestRepository.existsByRequestorIdAndEventIdAndStatus(requestorId, eventId, RequestStatus.PENDING))
+            throw new MainEwmException("such pending request is already exists", HttpStatus.CONFLICT);
+
         if (Objects.equals(event.getInitiator().getId(), requestorId))
             throw new MainEwmException("requestor is an initiator of the event", HttpStatus.CONFLICT);
+
+        if (!event.getState().equals(EventState.PUBLISHED.name()))
+            throw new MainEwmException("the event is not published yet", HttpStatus.CONFLICT);
+
+        if (requestRepository.countByEventIdAndStatus(eventId, RequestStatus.CONFIRMED) == event.getParticipantLimit())
+            throw new MainEwmException("there are too many participants already", HttpStatus.CONFLICT);
 
         return requestMapper.entity2participationRequestDto(requestRepository.save(Request.builder()
                 .createdOn(LocalDateTime.now())
                 .requestor(requestor)
                 .event(event)
-                .status(RequestStatus.PENDING).build()));
+                .status(event.getRequestModeration() ? RequestStatus.PENDING : RequestStatus.CONFIRMED).build()));
     }
 
     @Override

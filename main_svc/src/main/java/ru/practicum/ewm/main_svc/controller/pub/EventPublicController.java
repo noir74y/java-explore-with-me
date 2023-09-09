@@ -27,13 +27,13 @@ public class EventPublicController {
     private final EventService eventService;
 
     @GetMapping
-    public List<EventShortDto> publicFind(@RequestParam("text") String searchPattern,
-                                          @RequestParam List<Long> categories,
-                                          @RequestParam Boolean paid,
-                                          @RequestParam @FutureOrPresent @DateTimeFormat(pattern = MainAppConfig.DATE_TIME_FORMAT) LocalDateTime rangeStart,
-                                          @RequestParam @FutureOrPresent @DateTimeFormat(pattern = MainAppConfig.DATE_TIME_FORMAT) LocalDateTime rangeEnd,
+    public List<EventShortDto> publicFind(@RequestParam(value = "text", required = false) String searchPattern,
+                                          @RequestParam(required = false) List<Long> categories,
+                                          @RequestParam(required = false) Boolean paid,
+                                          @RequestParam(required = false) @FutureOrPresent @DateTimeFormat(pattern = MainAppConfig.DATE_TIME_FORMAT) LocalDateTime rangeStart,
+                                          @RequestParam(required = false) @FutureOrPresent @DateTimeFormat(pattern = MainAppConfig.DATE_TIME_FORMAT) LocalDateTime rangeEnd,
                                           @RequestParam(defaultValue = "false") Boolean onlyAvailable,
-                                          @RequestParam @ValueOfEnumConstraint(enumClass = EventSort.class) String sort,
+                                          @RequestParam(required = false) @ValueOfEnumConstraint(enumClass = EventSort.class) String sort,
                                           @RequestParam(defaultValue = MainAppConfig.FROM) @PositiveOrZero Integer from,
                                           @RequestParam(defaultValue = MainAppConfig.SIZE) @Positive Integer size,
                                           HttpServletRequest request) {

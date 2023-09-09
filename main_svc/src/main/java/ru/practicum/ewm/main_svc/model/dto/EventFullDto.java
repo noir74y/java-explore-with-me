@@ -7,25 +7,11 @@ import lombok.experimental.FieldDefaults;
 import java.time.LocalDateTime;
 
 @Data
-@Builder
+@Builder(builderMethodName = "EventFullDtoBuilder")
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class EventFullDto {
-    String description;
-    String annotation;
-    CategoryDto category;
-    Long confirmedRequests;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    LocalDateTime eventDate;
-
-    Long id;
-    UserShortDto initiator;
-    Boolean paid;
-    String title;
-    Long views;
-
+public class EventFullDto extends EventShortDto {
     Integer participantLimit;
     LocationDto location;
     Boolean requestModeration;

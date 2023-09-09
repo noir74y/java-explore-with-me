@@ -17,8 +17,10 @@ import ru.practicum.ewm.main_svc.repository.UserRepository;
 import ru.practicum.ewm.main_svc.service.RequestService;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -69,7 +71,15 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public List<ParticipationRequestDto> privateFindByRequestor(Long requestorId) {
-        return null;
+        if (!userRepository.existsById(requestorId))
+            throw new MainEwmException(String.format("there is no requestor with user_id=%d", requestorId), HttpStatus.NOT_FOUND);
+
+        return requestRepository
+                .findAllByRequestorId(requestorId)
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(requestMapper::entity2participationRequestDto)
+                .collect(Collectors.toList());
     }
 
     @Override

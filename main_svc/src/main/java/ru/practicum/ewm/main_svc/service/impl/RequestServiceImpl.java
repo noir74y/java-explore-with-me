@@ -83,12 +83,17 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public List<ParticipationRequestDto> privateFindByRequestorAndEvent(Long requestorId, Long eventId) {
-        return null;
+    public List<ParticipationRequestDto> privateFindByInitiatorAndEvent(Long initiatorId, Long eventId) {
+        return requestRepository
+                .findAllByInitiatorIdAndEventId(initiatorId, eventId)
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(requestMapper::entity2participationRequestDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public EventRequestStatusUpdateResult privateUpdateStatus(Long requestorId, Long eventId, EventRequestStatusUpdateRequest updateReq) {
+    public EventRequestStatusUpdateResult privateUpdateStatus(Long initiatorId, Long eventId, EventRequestStatusUpdateRequest updateReq) {
         return null;
     }
 }

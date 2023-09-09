@@ -44,15 +44,15 @@ public class RequestPrivateController {
     }
 
     @GetMapping("/{userId}/events/{eventId}/requests")
-    public List<ParticipationRequestDto> privateFindByRequestorAndEvent(@PathVariable("userId") @NotNull Long requestorId,
+    public List<ParticipationRequestDto> privateFindByInitiatorAndEvent(@PathVariable("userId") @NotNull Long initiatorId,
                                                                         @PathVariable @NotNull Long eventId) {
-        return requestService.privateFindByRequestorAndEvent(requestorId, eventId);
+        return requestService.privateFindByInitiatorAndEvent(initiatorId, eventId);
     }
 
     @PatchMapping("/{userId}/events/{eventId}/requests")
-    public EventRequestStatusUpdateResult privateUpdateStatus(@PathVariable("userId") @NotNull Long requestorId,
+    public EventRequestStatusUpdateResult privateUpdateStatus(@PathVariable("userId") @NotNull Long initiatorId,
                                                               @PathVariable @NotNull Long eventId,
                                                               @RequestBody @NotNull @Valid EventRequestStatusUpdateRequest updateReq) {
-        return requestService.privateUpdateStatus(requestorId, eventId, updateReq);
+        return requestService.privateUpdateStatus(initiatorId, eventId, updateReq);
     }
 }

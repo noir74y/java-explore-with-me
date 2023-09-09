@@ -17,10 +17,10 @@ public interface RequestService {
 
     List<ParticipationRequestDto> privateFindByRequestor(Long requestorId);
 
-    List<ParticipationRequestDto> privateFindByRequestorAndEvent(Long requestorId,
+    List<ParticipationRequestDto> privateFindByInitiatorAndEvent(Long initiatorId,
                                                                  Long eventId);
 
-    EventRequestStatusUpdateResult privateUpdateStatus(Long requestorId,
+    EventRequestStatusUpdateResult privateUpdateStatus(Long initiatorId,
                                                        Long eventId,
                                                        EventRequestStatusUpdateRequest updateReq);
 }

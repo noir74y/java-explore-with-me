@@ -26,12 +26,14 @@ public class CategoryPublicController {
 
     @GetMapping
     public List<CategoryDto> publicFindAllCategories(@RequestParam(defaultValue = MainAppConfig.FROM) @PositiveOrZero Integer from,
-                                           @RequestParam(defaultValue = MainAppConfig.SIZE) @Positive Integer size) {
+                                                     @RequestParam(defaultValue = MainAppConfig.SIZE) @Positive Integer size) {
+        log.info("GET /categories {} {}", from, size);
         return categoryService.publicFindAllCategories(from, size);
     }
 
     @GetMapping("/{catId}")
     public CategoryDto publicFindCategoryById(@PathVariable @NotNull Long catId) {
+        log.info("GET /categories/{}", catId);
         return categoryService.publicFindCategoryById(catId);
     }
 }

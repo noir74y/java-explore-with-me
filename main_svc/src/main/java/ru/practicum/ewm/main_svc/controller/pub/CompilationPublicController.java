@@ -22,7 +22,7 @@ import java.util.List;
 @Validated
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CompilationPublicController {
-    CompilationService compilationService;
+    final CompilationService compilationService;
 
     @GetMapping
     public List<CompilationDto> publicFindAllCompilations(@RequestParam Boolean pinned,

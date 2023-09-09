@@ -29,6 +29,10 @@ public class NewEventDto {
     Long catId;
 
     @NotNull
+    @Size(min = 2, max = 7000)
+    String description;
+
+    @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = MainAppConfig.DATE_TIME_FORMAT)
     @Future
     LocalDateTime eventDate;

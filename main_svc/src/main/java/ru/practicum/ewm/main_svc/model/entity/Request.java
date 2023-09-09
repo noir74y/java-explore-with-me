@@ -10,7 +10,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "request")
+@Table(name = "requests")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -32,8 +32,8 @@ public class Request {
     @OnDelete(action = OnDeleteAction.CASCADE)
     Event event;
 
-    @Column(name = "created_on", nullable = false)
-    LocalDateTime createdOn;
+    @Column(nullable = false)
+    LocalDateTime created;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

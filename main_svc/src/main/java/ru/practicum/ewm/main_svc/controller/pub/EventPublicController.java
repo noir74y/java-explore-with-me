@@ -37,6 +37,7 @@ public class EventPublicController {
                                           @RequestParam(defaultValue = MainAppConfig.FROM) @PositiveOrZero Integer from,
                                           @RequestParam(defaultValue = MainAppConfig.SIZE) @Positive Integer size,
                                           HttpServletRequest request) {
+        log.info("GET /events");
         return eventService.publicFindEvents(searchPattern,
                 categories,
                 paid,
@@ -52,6 +53,7 @@ public class EventPublicController {
     @GetMapping("/{id}")
     public EventFullDto publicFindEventById(@PathVariable @NotNull Long id,
                                        HttpServletRequest request) throws Throwable {
+        log.info("GET /events/{}", id);
         return eventService.publicFindEventById(id, request);
     }
 }

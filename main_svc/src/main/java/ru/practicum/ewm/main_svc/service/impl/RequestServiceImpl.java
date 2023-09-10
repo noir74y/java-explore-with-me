@@ -52,14 +52,15 @@ public class RequestServiceImpl implements RequestService {
         if (!event.getState().equals(EventState.PUBLISHED.name()))
             throw new MainEwmException("the event is not published yet", HttpStatus.CONFLICT);
 
-        if (event.getParticipantLimit() != 0 && requestRepository.countByEventIdAndStatus(eventId, RequestStatus.CONFIRMED) == event.getParticipantLimit())
+        if (event.getParticipantLimit() != 0 &&
+                requestRepository.countByEventIdAndStatusIn(eventId, List.of(RequestStatus.CONFIRMED, RequestStatus.PENDING)) == event.getParticipantLimit())
             throw new MainEwmException("there are too many participants already", HttpStatus.CONFLICT);
 
         return requestMapper.entity2participationRequestDto(requestRepository.save(Request.builder()
                 .created(LocalDateTime.now())
                 .requestor(requestor)
                 .event(event)
-                .status(event.getParticipantLimit() == 0 || !event.getRequestModeration() ? RequestStatus.CONFIRMED : RequestStatus.PENDING).build()));
+                .status(RequestStatus.PENDING).build()));
     }
 
     @Override

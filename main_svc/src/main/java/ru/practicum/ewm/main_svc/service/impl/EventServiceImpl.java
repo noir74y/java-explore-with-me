@@ -99,7 +99,8 @@ public class EventServiceImpl implements EventService {
                                               LocalDateTime rangeStart,
                                               LocalDateTime rangeEnd,
                                               Integer from,
-                                              Integer size) {
+                                              Integer size,
+                                              HttpServletRequest request) {
 
         rangeStart = Optional.ofNullable(rangeStart).orElse(LocalDateTime.now());
         rangeEnd = Optional.ofNullable(rangeEnd).orElse(LocalDateTime.now().plusYears(10));
@@ -107,12 +108,16 @@ public class EventServiceImpl implements EventService {
         if (rangeStart.isAfter(rangeEnd))
             throw new MainEwmException("rangeStart is after rangeEnd", HttpStatus.BAD_REQUEST);
 
-        return eventRepository
+        List<EventFullDto> eventFullDtoList = eventRepository
                 .adminFindEvents(initiators, states, categories, rangeStart, rangeEnd, PageRequest.of(from, size))
                 .orElse(Collections.emptyList())
                 .stream()
                 .map(eventMapper::entity2eventFullDto)
                 .collect(Collectors.toCollection(LinkedList::new));
+
+        //addViewAndRequestInfo(LocalDateTime.now().minusYears(10), LocalDateTime.now(), List.of(request.getRequestURI()), eventFullDtoList);
+
+        return eventFullDtoList;
     }
 
     @Override
@@ -178,9 +183,11 @@ public class EventServiceImpl implements EventService {
         addViewAndRequestInfo(LocalDateTime.now().minusYears(10), LocalDateTime.now(), eventUris, eventShortDtoList);
 
         // sort event list
-        eventShortDtoList.sort(sort.equals(EventSort.EVENT_DATE.name())
-                ? Comparator.comparing(EventShortDto::getEventDate)
-                : Comparator.comparing((EventShortDto eventShortDto) -> Optional.ofNullable(eventShortDto.getViews()).orElse(0L)));
+        Optional.ofNullable(sort).ifPresent(sortType -> {
+            eventShortDtoList.sort(sortType.equals(EventSort.EVENT_DATE.name())
+                    ? Comparator.comparing(EventShortDto::getEventDate)
+                    : Comparator.comparing((EventShortDto eventShortDto) -> Optional.ofNullable(eventShortDto.getViews()).orElse(0L)));
+        });
 
         // save stat
         statClient.saveHit(DtoHitIn.builder()
@@ -197,8 +204,8 @@ public class EventServiceImpl implements EventService {
     public EventFullDto publicFindEventById(Long id, HttpServletRequest request) throws Throwable {
 
         var eventFullDto = eventMapper.entity2eventFullDto(eventRepository
-                .findById(id)
-                .orElseThrow(() -> new MainEwmException("there is no such event", HttpStatus.NOT_FOUND)));
+                .findByIdAndState(id, EventState.PUBLISHED.name())
+                .orElseThrow(() -> new MainEwmException("there is no such published event", HttpStatus.NOT_FOUND)));
 
         addViewAndRequestInfo(LocalDateTime.now().minusYears(10), LocalDateTime.now(), List.of(request.getRequestURI()), List.of(eventFullDto));
 

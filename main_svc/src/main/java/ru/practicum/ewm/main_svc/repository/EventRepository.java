@@ -13,6 +13,9 @@ import java.util.Optional;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
+
+    Optional<Event> findByIdAndState(Long id, String state);
+
     List<Event> findAllByInitiatorId(Long initiatorId, PageRequest pageRequest);
 
     Event findByInitiatorIdAndId(Long initiatorId, Long eventId);

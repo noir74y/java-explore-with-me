@@ -6,6 +6,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -19,9 +20,11 @@ public class MainExceptionController {
 
         log.error("{}", exception.getMessage());
 
-        if (exception instanceof MethodArgumentNotValidException)
+        if (exception instanceof MethodArgumentNotValidException ||
+                exception instanceof MissingServletRequestParameterException)
             mainEwmException = new MainEwmException("Incorrectly made request.", HttpStatus.BAD_REQUEST);
-        else if (exception instanceof PSQLException || exception instanceof DataIntegrityViolationException)
+        else if (exception instanceof PSQLException ||
+                exception instanceof DataIntegrityViolationException)
             mainEwmException = new MainEwmException("Integrity constraint has been violated.", HttpStatus.CONFLICT);
         else if (exception instanceof MainEwmException)
             mainEwmException = (MainEwmException) exception;

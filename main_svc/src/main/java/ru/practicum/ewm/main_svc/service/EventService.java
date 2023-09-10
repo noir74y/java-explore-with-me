@@ -29,7 +29,8 @@ public interface EventService {
                                        LocalDateTime rangeStart,
                                        LocalDateTime rangeEnd,
                                        Integer from,
-                                       Integer size);
+                                       Integer size,
+                                       HttpServletRequest request);
 
     EventFullDto adminUpdateEvent(Long eventId,
                                   UpdateEventAdminRequest updateEventAdminRequest);

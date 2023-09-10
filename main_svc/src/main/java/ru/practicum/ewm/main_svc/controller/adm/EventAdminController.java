@@ -25,11 +25,11 @@ public class EventAdminController {
     private final EventService eventService;
 
     @GetMapping
-    public List<EventFullDto> adminFindEvents(@RequestParam("users") List<Long> initiators,
-                                        @RequestParam List<String> states,
-                                        @RequestParam List<Long> categories,
-                                        @RequestParam @FutureOrPresent @DateTimeFormat(pattern = MainAppConfig.DATE_TIME_FORMAT) LocalDateTime rangeStart,
-                                        @RequestParam @FutureOrPresent @DateTimeFormat(pattern = MainAppConfig.DATE_TIME_FORMAT) LocalDateTime rangeEnd,
+    public List<EventFullDto> adminFindEvents(@RequestParam(value = "users", required = false) List<Long> initiators,
+                                        @RequestParam(required = false) List<String> states,
+                                        @RequestParam(required = false) List<Long> categories,
+                                        @RequestParam(required = false) @FutureOrPresent @DateTimeFormat(pattern = MainAppConfig.DATE_TIME_FORMAT) LocalDateTime rangeStart,
+                                        @RequestParam(required = false) @FutureOrPresent @DateTimeFormat(pattern = MainAppConfig.DATE_TIME_FORMAT) LocalDateTime rangeEnd,
                                         @RequestParam(defaultValue = MainAppConfig.FROM) @PositiveOrZero Integer from,
                                         @RequestParam(defaultValue = MainAppConfig.SIZE) @Positive Integer size) {
         log.info("GET /admin/events");

@@ -13,6 +13,7 @@ import ru.practicum.ewm.main_svc.repository.UserRepository;
 import ru.practicum.ewm.main_svc.service.UserService;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +24,12 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public List<UserDto> adminFindUsersByIds(List<Long> ids, Integer from, Integer size) {
-        return userMapper.bulkEntity2userShortDto(userRepository.findByIdIn(ids, PageRequest.of(from / size, size)));
+        PageRequest pageRequest = PageRequest.of(from / size, size);
+        return userMapper.bulkEntity2userShortDto(
+                Objects.isNull(ids)
+                        ? userRepository.findAll(pageRequest).getContent()
+                        : userRepository.findByIdIn(ids, pageRequest)
+        );
     }
 
     @Override

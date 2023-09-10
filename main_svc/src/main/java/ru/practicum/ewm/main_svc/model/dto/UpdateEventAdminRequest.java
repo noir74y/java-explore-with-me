@@ -7,11 +7,14 @@ import lombok.NoArgsConstructor;
 import ru.practicum.ewm.main_svc.model.util.enums.EventAdminState;
 import ru.practicum.ewm.main_svc.model.util.validation.ValueOfEnumConstraint;
 
+import javax.validation.constraints.NotBlank;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateEventAdminRequest extends UpdateEventRequest {
+    @NotBlank
     @ValueOfEnumConstraint(enumClass = EventAdminState.class)
     private String stateAction;
 }

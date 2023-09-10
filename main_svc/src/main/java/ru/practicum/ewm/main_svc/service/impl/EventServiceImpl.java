@@ -100,11 +100,15 @@ public class EventServiceImpl implements EventService {
                                               LocalDateTime rangeEnd,
                                               Integer from,
                                               Integer size) {
+
+        rangeStart = Optional.ofNullable(rangeStart).orElse(LocalDateTime.now());
+        rangeEnd = Optional.ofNullable(rangeEnd).orElse(LocalDateTime.now().plusYears(10));
+
         if (rangeStart.isAfter(rangeEnd))
             throw new MainEwmException("rangeStart is after rangeEnd", HttpStatus.BAD_REQUEST);
 
         return eventRepository
-                .adminFind(initiators, states, categories, rangeStart, rangeEnd, PageRequest.of(from, size))
+                .adminFindEvents(initiators, states, categories, rangeStart, rangeEnd, PageRequest.of(from, size))
                 .orElse(Collections.emptyList())
                 .stream()
                 .map(eventMapper::entity2eventFullDto)
@@ -152,7 +156,7 @@ public class EventServiceImpl implements EventService {
         rangeStart = Optional.ofNullable(rangeStart).orElse(LocalDateTime.now());
         rangeEnd = Optional.ofNullable(rangeEnd).orElse(LocalDateTime.now().plusYears(10));
 
-        var eventShortDtoList = eventRepository.publicFind(
+        var eventShortDtoList = eventRepository.publicFindEvents(
                         EventState.PUBLISHED.name(),
                         searchPattern.toLowerCase(),
                         categories,

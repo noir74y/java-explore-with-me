@@ -7,10 +7,7 @@ import lombok.experimental.FieldDefaults;
 import ru.practicum.ewm.main_svc.model.util.MainAppConfig;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Future;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
 @Data
@@ -19,7 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NewEventDto {
-    @NotNull
+    @NotBlank
     @Size(min = 2, max = 2000)
     String annotation;
 
@@ -28,7 +25,7 @@ public class NewEventDto {
     @JsonAlias("category")
     Long catId;
 
-    @NotNull
+    @NotBlank
     @Size(min = 2, max = 7000)
     String description;
 
@@ -49,7 +46,7 @@ public class NewEventDto {
 
     Boolean requestModeration = true;
 
-    @NotNull
+    @NotBlank
     @Size(min = 3, max = 120)
     String title;
 }

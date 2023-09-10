@@ -23,12 +23,12 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "AND (:categories IS NULL OR e.category.id IN :categories) " +
             "AND e.eventDate BETWEEN :rangeStart AND :rangeEnd " +
             "ORDER BY e.createdOn DESC")
-    Optional<List<Event>> adminFind(List<Long> initiators,
-                                    List<String> states,
-                                    List<Long> categories,
-                                    LocalDateTime rangeStart,
-                                    LocalDateTime rangeEnd,
-                                    Pageable pageable);
+    Optional<List<Event>> adminFindEvents(List<Long> initiators,
+                                          List<String> states,
+                                          List<Long> categories,
+                                          LocalDateTime rangeStart,
+                                          LocalDateTime rangeEnd,
+                                          Pageable pageable);
 
     @Query("SELECT e FROM Event e " +
             "WHERE e.state IN :state " +
@@ -38,11 +38,11 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "AND (:categories IS NULL OR e.category.id IN :categories) " +
             "AND (:paid IS NULL OR e.paid IN :paid) " +
             "AND e.eventDate BETWEEN :rangeStart AND :rangeEnd")
-    Optional<List<Event>> publicFind(String state,
-                                     String searchPattern,
-                                     Iterable<Long> categories,
-                                     Boolean paid,
-                                     LocalDateTime rangeStart,
-                                     LocalDateTime rangeEnd,
-                                     Pageable pageable);
+    Optional<List<Event>> publicFindEvents(String state,
+                                           String searchPattern,
+                                           Iterable<Long> categories,
+                                           Boolean paid,
+                                           LocalDateTime rangeStart,
+                                           LocalDateTime rangeEnd,
+                                           Pageable pageable);
 }

@@ -5,6 +5,7 @@ import lombok.experimental.FieldDefaults;
 import ru.practicum.ewm.main_svc.model.util.enums.RequestStatus;
 import ru.practicum.ewm.main_svc.model.util.validation.ValueOfEnumConstraint;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventRequestStatusUpdateReq {
     List<Long> requestsIdList;
-    @NotNull
+    @NotBlank
     @ValueOfEnumConstraint(enumClass = RequestStatus.class)
     String status;
 }

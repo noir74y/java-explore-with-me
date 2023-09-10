@@ -2,6 +2,7 @@ package ru.practicum.ewm.main_svc.controller.adm;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.main_svc.model.dto.CompilationDto;
 import ru.practicum.ewm.main_svc.model.dto.NewCompilationDto;
@@ -15,6 +16,7 @@ import javax.validation.constraints.NotNull;
 @RestController
 @RequestMapping("/admin/compilations")
 @RequiredArgsConstructor
+@Validated
 public class CompilationAdminController {
     private final CompilationService compilationService;
 

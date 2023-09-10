@@ -31,8 +31,6 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
 
     List<Request> findAllByStatusAndIdIn(RequestStatus status, List<Long> requestIdList);
 
-    Optional<List<Request>> findAllByStatus(RequestStatus status);
-
     Optional<List<Request>> findAllByStatusAndEventIdIn(RequestStatus status, List<Long> eventIdList);
 
     default Map<Long, Long> findEventsToConfirmedRequestsMap(RequestStatus status, List<Long> eventIdList) {

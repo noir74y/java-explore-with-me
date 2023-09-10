@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NewEventDto {
     @NotBlank
-    @Size(min = 2, max = 2000)
+    @Size(min = 20, max = 2000)
     String annotation;
 
     @NotNull
@@ -26,7 +26,7 @@ public class NewEventDto {
     Long catId;
 
     @NotBlank
-    @Size(min = 2, max = 7000)
+    @Size(min = 20, max = 7000)
     String description;
 
     @NotNull

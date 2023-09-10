@@ -100,7 +100,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     @Transactional
-    public synchronized EventRequestStatusUpdateResp privateUpdateRequestStatus(Long initiatorId, Long eventId, EventRequestStatusUpdateReq eventRequestStatusUpdateReq) {
+    public EventRequestStatusUpdateResp privateUpdateRequestStatus(Long initiatorId, Long eventId, EventRequestStatusUpdateReq eventRequestStatusUpdateReq) {
         if (!userRepository.existsById(initiatorId))
             throw new MainEwmException(String.format("there is no user with id=%d", initiatorId), HttpStatus.NOT_FOUND);
 
@@ -111,46 +111,60 @@ public class RequestServiceImpl implements RequestService {
         if (!event.getState().equals(EventState.PUBLISHED.name()))
             throw new MainEwmException("the event is not published yet", HttpStatus.CONFLICT);
 
-        // get all pending requests according to eventRequestStatusUpdateReq.requestsIdList, otherwise get all pending request for the event
+        // get all pending requests according to eventRequestStatusUpdateReq.requestsIdList
         List<Request> requests = !Objects.isNull(eventRequestStatusUpdateReq.getRequestsIdList()) && !eventRequestStatusUpdateReq.getRequestsIdList().isEmpty()
                 ? requestRepository.findAllByStatusAndIdIn(RequestStatus.PENDING, eventRequestStatusUpdateReq.getRequestsIdList())
-                : requestRepository.findAllByStatusAndEventId(RequestStatus.PENDING, eventId);
-
-        Optional.ofNullable(requests).orElseThrow(() -> new MainEwmException("requests aren't found", HttpStatus.NOT_FOUND));
+                : Collections.emptyList();
 
         List<ParticipationRequestDto> confirmedRequests = new ArrayList<>();
         List<ParticipationRequestDto> rejectedRequests = new ArrayList<>();
+
         var o = new Object() {
             long currentParticipantsNumber;
             Boolean isLimitReached;
         };
 
+        // if we're asked to reject
         if (eventRequestStatusUpdateReq.getStatus().equals(RequestStatus.REJECTED.name()))
+            // then just reject all requests
             rejectedRequests
                     .addAll(requests.stream().peek(request -> {
                         request.setStatus(RequestStatus.REJECTED);
                     }).map(requestMapper::entity2participationRequestDto).collect(Collectors.toList()));
-        else if (eventRequestStatusUpdateReq.getStatus().equals(RequestStatus.CONFIRMED.name()) &&
-                (event.getParticipantLimit() == 0 || !event.getRequestModeration()))
-            confirmedRequests
-                    .addAll(requests.stream().peek(request -> {
+        else
+            // if we're asked to confirm request to either unlimited event or non-moderated event
+            if (eventRequestStatusUpdateReq.getStatus().equals(RequestStatus.CONFIRMED.name()) &&
+                    (event.getParticipantLimit() == 0 || !event.getRequestModeration()))
+                // then just confirmed all requests
+                confirmedRequests
+                        .addAll(requests.stream().peek(request -> {
+                            request.setStatus(RequestStatus.CONFIRMED);
+                        }).map(requestMapper::entity2participationRequestDto).collect(Collectors.toList()));
+            else {
+                // otherwise check current number of participants
+                o.currentParticipantsNumber = requestRepository.countByEventIdAndStatus(eventId, RequestStatus.CONFIRMED);
+                // then check each request
+                requests.forEach(request -> {
+                    // if limit isn't reached yet
+                    if (o.currentParticipantsNumber < event.getParticipantLimit()) {
+                        // then confirm request
                         request.setStatus(RequestStatus.CONFIRMED);
-                    }).map(requestMapper::entity2participationRequestDto).collect(Collectors.toList()));
-        else {
-            o.currentParticipantsNumber = requestRepository.countByEventIdAndStatus(eventId, RequestStatus.CONFIRMED);
-            requests.forEach(request -> {
-                if (event.getParticipantLimit() < o.currentParticipantsNumber) {
-                    request.setStatus(RequestStatus.CONFIRMED);
-                    o.isLimitReached = ++o.currentParticipantsNumber == event.getParticipantLimit() ? true : null;
-                    confirmedRequests.add(requestMapper.entity2participationRequestDto(request));
-                } else {
-                    request.setStatus(RequestStatus.REJECTED);
-                    rejectedRequests.add(requestMapper.entity2participationRequestDto(request));
-                }
-            });
-        }
+                        // then check whether limit is already reached, then set the flag (increment participant's counter as well)
+                        o.isLimitReached = ++o.currentParticipantsNumber == event.getParticipantLimit() ? true : null;
+                        // and add confirmed request to its output list
+                        confirmedRequests.add(requestMapper.entity2participationRequestDto(request));
+                    } else // otherwise if limit has been already reached
+                    {
+                        // then reject request
+                        request.setStatus(RequestStatus.REJECTED);
+                        // and add rejected request to its output list
+                        rejectedRequests.add(requestMapper.entity2participationRequestDto(request));
+                    }
+                });
+            }
 
-        requestRepository.saveAll(requests);
+        if (!requests.isEmpty())
+            requestRepository.saveAll(requests);
 
         Optional.ofNullable(o.isLimitReached).ifPresent(obj -> {
             throw new MainEwmException("limit of participants has been reached", HttpStatus.CONFLICT);

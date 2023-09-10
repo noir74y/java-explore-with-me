@@ -3,7 +3,10 @@ package ru.practicum.ewm.main_svc.controller.pub;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.ewm.main_svc.error.MainEwmException;
 import ru.practicum.ewm.main_svc.model.dto.EventFullDto;
 import ru.practicum.ewm.main_svc.model.dto.EventShortDto;
 import ru.practicum.ewm.main_svc.model.util.MainAppConfig;
@@ -18,11 +21,13 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RestController
 @RequestMapping("/events")
 @RequiredArgsConstructor
+@Validated
 public class EventPublicController {
     private final EventService eventService;
 
@@ -38,6 +43,13 @@ public class EventPublicController {
                                           @RequestParam(defaultValue = MainAppConfig.SIZE) @Positive Integer size,
                                           HttpServletRequest request) {
         log.info("GET /events");
+
+        rangeStart = Optional.ofNullable(rangeStart).orElse(LocalDateTime.now());
+        rangeEnd = Optional.ofNullable(rangeEnd).orElse(LocalDateTime.now().plusYears(10));
+
+        if (rangeEnd.isBefore(rangeStart))
+            throw new MainEwmException("rangeEndis before rangeStart",HttpStatus.BAD_REQUEST);
+
         return eventService.publicFindEvents(searchPattern,
                 categories,
                 paid,

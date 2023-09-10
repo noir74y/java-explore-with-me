@@ -31,11 +31,11 @@ public class Event {
     @Column(nullable = false)
     String title;
 
-    @Size(max = 1024)
+    @Size(max = 2000)
     @Column(nullable = false)
     String annotation;
 
-    @Size(max = 1024)
+    @Size(max = 7000)
     @Column(nullable = false)
     String description;
 

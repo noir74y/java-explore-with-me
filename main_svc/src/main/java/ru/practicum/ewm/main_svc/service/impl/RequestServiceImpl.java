@@ -113,8 +113,8 @@ public class RequestServiceImpl implements RequestService {
             throw new MainEwmException("the event is not published yet", HttpStatus.CONFLICT);
 
         // get all pending requests according to eventRequestStatusUpdateReq.requestsIdList
-        List<Request> requests = !Objects.isNull(eventRequestStatusUpdateReq.getRequestsIdList()) && !eventRequestStatusUpdateReq.getRequestsIdList().isEmpty()
-                ? requestRepository.findAllByStatusAndIdIn(RequestStatus.PENDING, eventRequestStatusUpdateReq.getRequestsIdList())
+        List<Request> requests = !Objects.isNull(eventRequestStatusUpdateReq.getRequestIds()) && !eventRequestStatusUpdateReq.getRequestIds().isEmpty()
+                ? requestRepository.findAllByStatusAndIdIn(RequestStatus.PENDING, eventRequestStatusUpdateReq.getRequestIds())
                 : Collections.emptyList();
 
         List<ParticipationRequestDto> confirmedRequests = new ArrayList<>();

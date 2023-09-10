@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventRequestStatusUpdateReq {
-    List<Long> requestsIdList;
+    List<Long> requestIds;
     @NotBlank
     @ValueOfEnumConstraint(enumClass = RequestStatus.class)
     String status;

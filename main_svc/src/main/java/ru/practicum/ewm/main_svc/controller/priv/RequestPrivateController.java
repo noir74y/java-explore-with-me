@@ -56,8 +56,10 @@ public class RequestPrivateController {
     @PatchMapping("/events/{eventId}/requests")
     public EventRequestStatusUpdateResp privateUpdateRequestStatus(@PathVariable("userId") @NotNull Long initiatorId,
                                                                    @PathVariable @NotNull Long eventId,
-                                                                   @RequestBody EventRequestStatusUpdateReq eventRequestStatusUpdateReq) {
+                                                                   @Valid @RequestBody EventRequestStatusUpdateReq eventRequestStatusUpdateReq) {
         log.info("PATCH /users/{}/events/{}/requests {}", initiatorId, eventId, eventRequestStatusUpdateReq);
+        log.info("eventRequestStatusUpdateReq.getRequestIds()={}", eventRequestStatusUpdateReq.getRequestIds());
+        log.info("eventRequestStatusUpdateReq.getStatus()={}", eventRequestStatusUpdateReq.getStatus());
         return requestService.privateUpdateRequestStatus(initiatorId, eventId, eventRequestStatusUpdateReq);
     }
 }

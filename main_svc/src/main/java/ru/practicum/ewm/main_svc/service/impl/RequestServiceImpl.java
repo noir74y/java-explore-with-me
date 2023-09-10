@@ -146,7 +146,7 @@ public class RequestServiceImpl implements RequestService {
                     // otherwise check current number of participants
                     o.currentParticipantsNumber = requestRepository.countByEventIdAndStatus(eventId, RequestStatus.CONFIRMED);
                     // then check each request
-                    requests.forEach(request -> {
+                    requests = requests.stream().peek(request -> {
                         // if limit isn't reached yet
                         if (o.currentParticipantsNumber < event.getParticipantLimit()) {
                             // then confirm request
@@ -162,7 +162,7 @@ public class RequestServiceImpl implements RequestService {
                             // and add rejected request to its output list
                             rejectedRequests.add(requestMapper.entity2participationRequestDto(request));
                         }
-                    });
+                    }).collect(Collectors.toList());
                 }
 
         if (!requests.isEmpty())

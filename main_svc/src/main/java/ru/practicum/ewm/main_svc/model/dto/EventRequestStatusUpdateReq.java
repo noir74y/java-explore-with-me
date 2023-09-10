@@ -10,14 +10,13 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class EventRequestStatusUpdateReq {
     List<Long> requestIds;
-    @NotBlank
-    @ValueOfEnumConstraint(enumClass = RequestStatus.class)
     String status;
 }

@@ -60,7 +60,7 @@ public class RequestServiceImpl implements RequestService {
                 .created(LocalDateTime.now())
                 .requestor(requestor)
                 .event(event)
-                .status(RequestStatus.PENDING).build()));
+                .status(event.getParticipantLimit() == 0 || !event.getRequestModeration() ? RequestStatus.CONFIRMED : RequestStatus.PENDING).build()));
     }
 
     @Override

@@ -14,7 +14,6 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateEventAdminRequest extends UpdateEventRequest {
-    @NotBlank
     @ValueOfEnumConstraint(enumClass = EventAdminState.class)
     private String stateAction;
 }

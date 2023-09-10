@@ -31,7 +31,6 @@ public class UpdateEventRequest {
     LocalDateTime eventDate;
 
     LocationDto location;
-
     Boolean paid;
 
     @PositiveOrZero

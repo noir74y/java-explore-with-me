@@ -101,13 +101,6 @@ public class EventServiceImpl implements EventService {
                                               Integer from,
                                               Integer size,
                                               HttpServletRequest request) {
-
-        rangeStart = Optional.ofNullable(rangeStart).orElse(LocalDateTime.now());
-        rangeEnd = Optional.ofNullable(rangeEnd).orElse(LocalDateTime.now().plusYears(10));
-
-        if (rangeStart.isAfter(rangeEnd))
-            throw new MainEwmException("rangeStart is after rangeEnd", HttpStatus.BAD_REQUEST);
-
         var eventFullDtoList = eventRepository
                 .adminFindEvents(initiators, states, categories, rangeStart, rangeEnd, PageRequest.of(from, size))
                 .orElse(Collections.emptyList())

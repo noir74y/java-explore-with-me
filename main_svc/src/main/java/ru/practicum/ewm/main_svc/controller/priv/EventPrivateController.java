@@ -22,7 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
-@Validated
+//@Validated
 public class EventPrivateController {
     private final EventService eventService;
 

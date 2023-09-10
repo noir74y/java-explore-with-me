@@ -19,8 +19,11 @@ public class StatClient extends BaseClient {
     @Autowired
     private ParamCoder paramCoder;
 
-    @Value("${stat.server.path}")
-    private String serverPath;
+    @Value("${saveHit.stat.server.path}")
+    private String saveHitPath;
+
+    @Value("${getHits.stat.server.path}")
+    private String getHitsPath;
 
     @Autowired
     public StatClient(@Value("${stat.server.url}") String serverUrl, RestTemplateBuilder builder) {
@@ -32,16 +35,18 @@ public class StatClient extends BaseClient {
 
 
     public void saveHit(DtoHitIn hitIn) {
-        post(serverPath, null, null, hitIn);
+        saveHitPath = saveHitPath.replaceAll("\"", "");
+        post(saveHitPath, null, null, hitIn);
     }
 
     public ResponseEntity<Object> getHits(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
+        getHitsPath = getHitsPath.replaceAll("\"", "");
         Map<String, Object> paramsMap = Map.of(
                 "start", paramCoder.ldt2encodedString(start),
                 "end", paramCoder.ldt2encodedString(end),
                 "uris", String.join(",", uris),
                 "unique", unique
         );
-        return get("/stats?start={start}&end={end}&uris={uris}&unique={unique}", null, paramsMap);
+        return get(getHitsPath +"/?start={start}&end={end}&uris={uris}&unique={unique}", null, paramsMap);
     }
 }

@@ -29,7 +29,7 @@ public class RequestPrivateController {
     @ResponseStatus(code = HttpStatus.CREATED)
     public ParticipationRequestDto privateCreateRequest(@PathVariable("userId") @NotNull Long requestorId,
                                                         @RequestParam @NotNull Long eventId) {
-        log.info("POST /users/{}/requests {}", requestorId, eventId);
+        log.info("POST /users/{}/requests eventId={}", requestorId, eventId);
         return requestService.privateCreateRequest(requestorId, eventId);
     }
 

@@ -259,7 +259,7 @@ public class EventServiceImpl implements EventService {
             // add confirmedRequests value into list of EventShortDto
             eventShortDtoList
                     .forEach(eventShortDto -> eventShortDto
-                            .setConfirmedRequests(eventsToConfirmedRequestsMap.getOrDefault(eventShortDto.getId(), null)));
+                            .setConfirmedRequests(eventsToConfirmedRequestsMap.getOrDefault(eventShortDto.getId(), 0L)));
         });
     }
 }

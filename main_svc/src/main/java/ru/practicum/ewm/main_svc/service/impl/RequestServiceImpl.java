@@ -43,7 +43,7 @@ public class RequestServiceImpl implements RequestService {
                 .findById(eventId)
                 .orElseThrow(() -> new MainEwmException(String.format("there is no event with id=%d", eventId), HttpStatus.NOT_FOUND));
 
-        if (requestRepository.existsByRequestorIdAndEventIdAndStatus(requestorId, eventId, RequestStatus.PENDING))
+        if (requestRepository.existsByRequestorIdAndEventId(requestorId, eventId))
             throw new MainEwmException("such pending request is already exists", HttpStatus.CONFLICT);
 
         if (Objects.equals(event.getInitiator().getId(), requestorId))
@@ -113,16 +113,20 @@ public class RequestServiceImpl implements RequestService {
             throw new MainEwmException("the event is not published yet", HttpStatus.CONFLICT);
 
         // get all pending requests according to eventRequestStatusUpdateReq.requestsIdList
-        List<Request> requests = !Objects.isNull(eventRequestStatusUpdateReq.getRequestIds()) && !eventRequestStatusUpdateReq.getRequestIds().isEmpty()
-                ? requestRepository.findAllByStatusAndIdIn(RequestStatus.PENDING, eventRequestStatusUpdateReq.getRequestIds())
-                : Collections.emptyList();
+        var requests = requestRepository.findAllByIdIn(eventRequestStatusUpdateReq.getRequestIds()).orElse(Collections.emptyList());
+        if (!requests.stream().map(Request::getStatus).allMatch(RequestStatus.PENDING::equals)) {
+            throw new MainEwmException("there are request which aren't in PENDING", HttpStatus.CONFLICT);
+        }
+
+        var o = new Object() {
+            long currentParticipantsNumber = requestRepository.countByEventIdAndStatus(eventId, RequestStatus.CONFIRMED);
+        };
+
+        if (o.currentParticipantsNumber == event.getParticipantLimit())
+            throw new MainEwmException("limit of participants is reached", HttpStatus.CONFLICT);
 
         List<ParticipationRequestDto> confirmedRequests = new ArrayList<>();
         List<ParticipationRequestDto> rejectedRequests = new ArrayList<>();
-
-        var o = new Object() {
-            long currentParticipantsNumber;
-        };
 
         // if we're asked to reject
         if (eventRequestStatusUpdateReq.getStatus().equals(RequestStatus.REJECTED.name()))
@@ -141,11 +145,9 @@ public class RequestServiceImpl implements RequestService {
                             .addAll(requests.stream().peek(request -> {
                                 request.setStatus(RequestStatus.CONFIRMED);
                             }).map(requestMapper::entity2participationRequestDto).collect(Collectors.toList()));
-                else {
-                    // otherwise check current number of participants
-                    o.currentParticipantsNumber = requestRepository.countByEventIdAndStatus(eventId, RequestStatus.CONFIRMED);
+                else
                     // then check each request
-                    requests = requests.stream().peek(request -> {
+                    requests.forEach(request -> {
                         // if limit isn't reached yet
                         if (o.currentParticipantsNumber < event.getParticipantLimit()) {
                             // then confirm request
@@ -161,14 +163,10 @@ public class RequestServiceImpl implements RequestService {
                             // and add rejected request to its output list
                             rejectedRequests.add(requestMapper.entity2participationRequestDto(request));
                         }
-                    }).collect(Collectors.toList());
-                }
+                    });
 
         if (!requests.isEmpty())
             requestRepository.saveAll(requests);
-
-        if (o.currentParticipantsNumber == event.getParticipantLimit())
-            throw new MainEwmException("limit of participants has been reached", HttpStatus.CONFLICT);
 
         return EventRequestStatusUpdateResp.builder()
                 .confirmedRequests(confirmedRequests)

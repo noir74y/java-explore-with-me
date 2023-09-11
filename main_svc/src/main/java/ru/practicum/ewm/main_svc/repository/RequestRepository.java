@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @Repository
 public interface RequestRepository extends JpaRepository<Request, Long> {
-    boolean existsByRequestorIdAndEventIdAndStatus(Long requestorId, Long eventId, RequestStatus status);
+    boolean existsByRequestorIdAndEventId(Long requestorId, Long eventId);
 
     long countByEventIdAndStatus(Long eventId, RequestStatus status);
 
@@ -29,7 +29,7 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
             "WHERE r.event.id = :eventId")
     Optional<List<Request>> findAllByInitiatorIdAndEventId(Long initiatorId, Long eventId);
 
-    List<Request> findAllByStatusAndEventId(RequestStatus status, Long eventIdList);
+    Optional<List<Request>> findAllByIdIn(List<Long> requestIds);
 
     List<Request> findAllByStatusAndIdIn(RequestStatus status, List<Long> requestIdList);
 

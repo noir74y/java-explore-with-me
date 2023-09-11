@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RequestServiceImpl implements RequestService {
     final RequestRepository requestRepository;
@@ -33,7 +34,6 @@ public class RequestServiceImpl implements RequestService {
     final EventRepository eventRepository;
 
     @Override
-    @Transactional
     public ParticipationRequestDto privateCreateRequest(Long requestorId, Long eventId) {
         var requestor = userRepository
                 .findById(requestorId)
@@ -64,7 +64,6 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    @Transactional
     public ParticipationRequestDto privateCancelRequestStatus(Long requestorId, Long requestId) {
         var request = requestRepository
                 .findByIdAndRequestorIdAndStatusIn(requestId, requestorId, List.of(RequestStatus.PENDING, RequestStatus.CONFIRMED))
@@ -100,7 +99,6 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    @Transactional
     public EventRequestStatusUpdateResp privateUpdateRequestStatus(Long initiatorId, Long eventId, EventRequestStatusUpdateReq eventRequestStatusUpdateReq) {
         if (!userRepository.existsById(initiatorId))
             throw new MainEwmException(String.format("there is no user with id=%d", initiatorId), HttpStatus.NOT_FOUND);

@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
@@ -33,13 +34,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public UserDto adminCreateUser(NewUserRequest newUserRequest) {
         return userMapper.entity2userDto(userRepository.save(userMapper.newUserRequest2entity(newUserRequest)));
     }
 
     @Override
-    @Transactional
     public void adminDeleteUser(Long userId) {
         if (userRepository.existsById(userId)) userRepository.deleteById(userId);
         else throw new MainEwmException(String.format("User with id=%d was not found.", userId), HttpStatus.NOT_FOUND);

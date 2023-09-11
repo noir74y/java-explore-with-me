@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventServiceImpl implements EventService {
     final EventRepository eventRepository;
@@ -57,7 +58,6 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    @Transactional
     public EventFullDto privateCreateEvent(Long initiatorId,
                                            NewEventDto newEventDto) {
         return eventMapper.entity2eventFullDto(eventRepository.save(eventMapper.newEventDto2entity(initiatorId, newEventDto)));
@@ -72,7 +72,6 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    @Transactional
     public EventFullDto privateUpdateEvent(Long initiatorId,
                                            Long eventId,
                                            UpdateEventUserRequest updateEventUserRequest) throws Throwable {
@@ -115,7 +114,6 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    @Transactional
     public EventFullDto adminUpdateEvent(Long eventId,
                                          UpdateEventAdminRequest updateEventAdminRequest) {
 

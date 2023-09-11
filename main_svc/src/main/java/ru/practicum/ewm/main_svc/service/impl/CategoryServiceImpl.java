@@ -17,18 +17,17 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
 
     @Override
-    @Transactional
     public CategoryDto adminCreateCategory(NewCategoryDto newCategoryDto) {
         return categoryMapper.entity2categoryDto(categoryRepository.save(categoryMapper.newCategoryDto2entity(newCategoryDto)));
     }
 
     @Override
-    @Transactional
     public void adminDeleteCategory(Long catId) {
         if (categoryRepository.existsById(catId)) categoryRepository.deleteById(catId);
         else
@@ -36,7 +35,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @Transactional
     public CategoryDto adminUpdateCategory(Long catId, CategoryDto categoryDto) {
         var category = categoryRepository.findById(catId)
                 .orElseThrow(() -> new MainEwmException(String.format("Category with id=%d was not found.", catId), HttpStatus.NOT_FOUND));

@@ -2,6 +2,8 @@ package ru.practicum.ewm.main_svc.controller.adm;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.main_svc.model.dto.CompilationDto;
@@ -21,6 +23,7 @@ public class CompilationAdminController {
     private final CompilationService compilationService;
 
     @PostMapping
+    @ResponseStatus(code = HttpStatus.CREATED)
     public CompilationDto adminCreateCompilation(@RequestBody @NotNull @Valid NewCompilationDto newCompilationDto) {
         return compilationService.adminCreateCompilation(newCompilationDto);
     }
@@ -32,7 +35,7 @@ public class CompilationAdminController {
 
     @PatchMapping("/{compId}")
     public CompilationDto adminUpdateCompilation(@PathVariable @NotNull Long compId,
-                                      @RequestBody @NotNull @Valid UpdateCompilationRequest updateCompilationRequest) {
+                                                 @RequestBody @NotNull @Valid UpdateCompilationRequest updateCompilationRequest) {
         return compilationService.adminUpdateCompilation(compId, updateCompilationRequest);
     }
 }

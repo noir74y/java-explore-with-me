@@ -3,6 +3,7 @@ package ru.practicum.ewm.main_svc.model.dto;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -11,7 +12,7 @@ import java.util.Set;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CompilationDto {
-    Set<EventShortDto> events;
+    List<EventShortDto> events;
     Long id;
     Boolean pinned;
     String title;

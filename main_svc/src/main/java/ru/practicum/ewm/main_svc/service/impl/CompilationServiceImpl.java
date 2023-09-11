@@ -2,6 +2,7 @@ package ru.practicum.ewm.main_svc.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.main_svc.model.dto.CompilationDto;
 import ru.practicum.ewm.main_svc.model.dto.NewCompilationDto;
 import ru.practicum.ewm.main_svc.model.dto.UpdateCompilationRequest;
@@ -11,13 +12,16 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CompilationServiceImpl implements CompilationService {
     @Override
+    @Transactional(readOnly = true)
     public List<CompilationDto> publicFindAllCompilations(Boolean pinned, Integer from, Integer size) {
         return null;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public CompilationDto publicFindCompilationById(Long compId) {
         return null;
     }
@@ -29,7 +33,6 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public void adminDeleteCompilation(Long compId) {
-
     }
 
     @Override

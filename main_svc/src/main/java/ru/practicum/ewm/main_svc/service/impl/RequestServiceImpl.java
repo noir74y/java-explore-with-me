@@ -122,7 +122,6 @@ public class RequestServiceImpl implements RequestService {
 
         var o = new Object() {
             long currentParticipantsNumber;
-            Boolean isLimitReached;
         };
 
         // if we're asked to reject
@@ -151,8 +150,8 @@ public class RequestServiceImpl implements RequestService {
                         if (o.currentParticipantsNumber < event.getParticipantLimit()) {
                             // then confirm request
                             request.setStatus(RequestStatus.CONFIRMED);
-                            // then check whether limit is already reached, then set the flag (increment participant's counter as well)
-                            o.isLimitReached = ++o.currentParticipantsNumber == event.getParticipantLimit() ? true : null;
+                            // then increment participant's counter
+                            o.currentParticipantsNumber++;
                             // and add confirmed request to its output list
                             confirmedRequests.add(requestMapper.entity2participationRequestDto(request));
                         } else // otherwise if limit has been already reached
@@ -168,9 +167,8 @@ public class RequestServiceImpl implements RequestService {
         if (!requests.isEmpty())
             requestRepository.saveAll(requests);
 
-        Optional.ofNullable(o.isLimitReached).ifPresent(obj -> {
+        if (o.currentParticipantsNumber == event.getParticipantLimit())
             throw new MainEwmException("limit of participants has been reached", HttpStatus.CONFLICT);
-        });
 
         return EventRequestStatusUpdateResp.builder()
                 .confirmedRequests(confirmedRequests)

@@ -4,8 +4,9 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 
 @Data
@@ -20,4 +21,8 @@ public class NewCompilationDto {
     @NotBlank
     @Size(min = 1, max = 50)
     String title;
+
+    public Set<Long> getEventsOptional() {
+        return Optional.ofNullable(events).orElse(Collections.emptySet());
+    }
 }

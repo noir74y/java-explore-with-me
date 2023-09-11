@@ -39,10 +39,6 @@ public class EventMapper {
         return event;
     }
 
-    public Event updateEventUserRequest2entity(UpdateEventUserRequest updateEventUserRequest) {
-        return modelMapper.map(updateEventUserRequest, Event.class);
-    }
-
     public EventShortDto entity2eventShortDto(Event event) {
         return Optional.ofNullable(event).map(obj -> modelMapper.map(obj, EventShortDto.class)).orElse(null);
     }

@@ -25,10 +25,6 @@ public class UserMapper {
         return Optional.ofNullable(user).map(obj -> modelMapper.map(obj, UserDto.class)).orElse(null);
     }
 
-    public UserShortDto entity2userShortDto(User user) {
-        return Optional.ofNullable(user).map(obj -> modelMapper.map(obj, UserShortDto.class)).orElse(null);
-    }
-
     public List<UserDto> bulkEntity2userShortDto(List<User> users) {
         return users
                 .stream()

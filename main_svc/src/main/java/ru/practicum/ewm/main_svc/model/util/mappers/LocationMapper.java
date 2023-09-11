@@ -16,8 +16,4 @@ public class LocationMapper {
     public Location locationDto2entity(LocationDto locationDto) {
         return Optional.ofNullable(locationDto).map(obj -> modelMapper.map(obj, Location.class)).orElse(null);
     }
-
-    public LocationDto entity2userDto(Location location) {
-        return Optional.ofNullable(location).map(obj -> modelMapper.map(obj, LocationDto.class)).orElse(null);
-    }
 }

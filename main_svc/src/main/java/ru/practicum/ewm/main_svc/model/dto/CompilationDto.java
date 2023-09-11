@@ -12,7 +12,7 @@ import java.util.Set;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CompilationDto {
-    List<EventShortDto> events;
+    Set<EventShortDto> events;
     Long id;
     Boolean pinned;
     String title;

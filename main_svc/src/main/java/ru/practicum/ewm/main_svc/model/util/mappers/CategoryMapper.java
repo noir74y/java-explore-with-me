@@ -18,10 +18,6 @@ public class CategoryMapper {
         return Optional.ofNullable(newCategoryDto).map(obj -> modelMapper.map(obj, Category.class)).orElse(null);
     }
 
-    public Category categoryDto2entity(CategoryDto categoryDto) {
-        return Optional.ofNullable(categoryDto).map(obj -> modelMapper.map(obj, Category.class)).orElse(null);
-    }
-
     public CategoryDto entity2categoryDto(Category category) {
         return Optional.ofNullable(category).map(obj -> modelMapper.map(obj, CategoryDto.class)).orElse(null);
     }

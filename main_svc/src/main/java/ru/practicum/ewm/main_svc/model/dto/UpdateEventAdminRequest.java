@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import ru.practicum.ewm.main_svc.model.util.enums.EventAdminState;
 import ru.practicum.ewm.main_svc.model.util.validation.ValueOfEnumConstraint;
 
-import javax.validation.constraints.NotBlank;
-
 @Data
 @Builder
 @NoArgsConstructor

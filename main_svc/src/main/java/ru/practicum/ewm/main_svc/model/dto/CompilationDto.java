@@ -3,7 +3,6 @@ package ru.practicum.ewm.main_svc.model.dto;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
 import java.util.Set;
 
 @Data

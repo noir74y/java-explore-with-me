@@ -3,7 +3,6 @@ package ru.practicum.ewm.main_svc.controller.priv;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.main_svc.model.dto.EventFullDto;
 import ru.practicum.ewm.main_svc.model.dto.EventShortDto;
@@ -37,22 +36,22 @@ public class EventPrivateController {
     @PostMapping("/{userId}/events")
     @ResponseStatus(code = HttpStatus.CREATED)
     public EventFullDto privateCreateEvent(@PathVariable("userId") @NotNull Long initiatorId,
-                                      @RequestBody @NotNull @Valid NewEventDto newEventDto) {
+                                           @RequestBody @NotNull @Valid NewEventDto newEventDto) {
         log.info("POST /users/{}/events {}", initiatorId, newEventDto);
         return eventService.privateCreateEvent(initiatorId, newEventDto);
     }
 
     @GetMapping("/{userId}/events/{eventId}")
     public EventFullDto privateFindEventById(@PathVariable("userId") @NotNull Long initiatorId,
-                                        @PathVariable @NotNull Long eventId) throws Throwable {
+                                             @PathVariable @NotNull Long eventId) throws Throwable {
         log.info("GET /users/{}/events/{}", initiatorId, eventId);
         return eventService.privateFindEventById(initiatorId, eventId);
     }
 
     @PatchMapping("/{userId}/events/{eventId}")
     public EventFullDto privateUpdateEvent(@PathVariable("userId") @NotNull Long initiatorId,
-                                      @PathVariable @NotNull Long eventId,
-                                      @RequestBody @NotNull @Valid UpdateEventUserRequest updateEventUserRequest) throws Throwable {
+                                           @PathVariable @NotNull Long eventId,
+                                           @RequestBody @NotNull @Valid UpdateEventUserRequest updateEventUserRequest) throws Throwable {
         log.info("PATCH /users/{}/events/{}", initiatorId, eventId);
         return eventService.privateUpdateEvent(initiatorId, eventId, updateEventUserRequest);
     }

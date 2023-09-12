@@ -4,8 +4,6 @@ import lombok.*;
 import ru.practicum.ewm.main_svc.model.util.enums.EventUserState;
 import ru.practicum.ewm.main_svc.model.util.validation.ValueOfEnumConstraint;
 
-import javax.validation.constraints.NotBlank;
-
 @Getter
 @Setter
 @Builder

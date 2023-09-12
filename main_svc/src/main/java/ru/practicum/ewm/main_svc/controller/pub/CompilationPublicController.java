@@ -25,9 +25,9 @@ public class CompilationPublicController {
     final CompilationService compilationService;
 
     @GetMapping
-    public List<CompilationDto> publicFindAllCompilations(@RequestParam Boolean pinned,
-                                              @RequestParam(defaultValue = MainAppConfig.FROM) @PositiveOrZero Integer from,
-                                              @RequestParam(defaultValue = MainAppConfig.SIZE) @Positive Integer size) {
+    public List<CompilationDto> publicFindAllCompilations(@RequestParam(required = false) Boolean pinned,
+                                                          @RequestParam(defaultValue = MainAppConfig.FROM) @PositiveOrZero Integer from,
+                                                          @RequestParam(defaultValue = MainAppConfig.SIZE) @Positive Integer size) {
         return compilationService.publicFindAllCompilations(pinned, from, size);
     }
 

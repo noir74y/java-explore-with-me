@@ -28,11 +28,13 @@ public class CompilationPublicController {
     public List<CompilationDto> publicFindAllCompilations(@RequestParam(required = false) Boolean pinned,
                                                           @RequestParam(defaultValue = MainAppConfig.FROM) @PositiveOrZero Integer from,
                                                           @RequestParam(defaultValue = MainAppConfig.SIZE) @Positive Integer size) {
+        log.info("GET /compilations {} {} {}", pinned, from, size);
         return compilationService.publicFindAllCompilations(pinned, from, size);
     }
 
     @GetMapping("/{compId}")
     public CompilationDto publicFindCompilationById(@PathVariable @NotNull Long compId) {
+        log.info("GET /compilations/{}", compId);
         return compilationService.publicFindCompilationById(compId);
     }
 }

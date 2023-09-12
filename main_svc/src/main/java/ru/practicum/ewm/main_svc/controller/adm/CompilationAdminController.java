@@ -24,18 +24,21 @@ public class CompilationAdminController {
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     public CompilationDto adminCreateCompilation(@RequestBody @NotNull @Valid NewCompilationDto newCompilationDto) {
+        log.info("POST /admin/compilations {}", newCompilationDto);
         return compilationService.adminCreateCompilation(newCompilationDto);
     }
 
     @DeleteMapping("/{compId}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void adminDeleteCompilation(@PathVariable @NotNull Long compId) {
+        log.info("DELETE /admin/{}", compId);
         compilationService.adminDeleteCompilation(compId);
     }
 
     @PatchMapping("/{compId}")
     public CompilationDto adminUpdateCompilation(@PathVariable @NotNull Long compId,
                                                  @RequestBody @NotNull @Valid UpdateCompilationRequest updateCompilationRequest) {
+        log.info("DELETE /admin/{} {}", compId, updateCompilationRequest);
         return compilationService.adminUpdateCompilation(compId, updateCompilationRequest);
     }
 }

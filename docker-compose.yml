@@ -1,9 +1,9 @@
 version: '3.1'
 services:
-  stat-svc:
+  stats-service:
     build: stat_svc/server
     image: ewm-stat-svc-server-img
-    container_name: ewm-stat-svc-server-cnt
+    container_name: stats-service
     ports:
       - "9090:9090"
     depends_on:
@@ -22,7 +22,7 @@ services:
   main-svc:
     build: main_svc
     image: ewm-main-svc-server-img
-    container_name: ewm-main-svc-server-cnt
+    container_name: main-service
     ports:
       - "8080:8080"
     depends_on:

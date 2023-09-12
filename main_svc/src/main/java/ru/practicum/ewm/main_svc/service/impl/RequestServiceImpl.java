@@ -154,8 +154,8 @@ public class RequestServiceImpl implements RequestService {
                             o.currentParticipantsNumber++;
                             // and add confirmed request to its output list
                             confirmedRequests.add(requestMapper.entity2participationRequestDto(request));
-                        } else // otherwise if limit has been already reached
-                        {
+                        } else {
+                            // otherwise if limit has been already reached
                             // then reject request
                             request.setStatus(RequestStatus.REJECTED);
                             // and add rejected request to its output list

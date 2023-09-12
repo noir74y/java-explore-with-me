@@ -47,6 +47,7 @@ public class StatClient extends BaseClient {
                 "uris", String.join(",", uris),
                 "unique", unique
         );
-        return get(getHitsPath +"/?start={start}&end={end}&uris={uris}&unique={unique}", null, paramsMap);
+        var path = getHitsPath + "/?start={start}&end={end}&uris={uris}&unique={unique}";
+        return get(path, null, paramsMap);
     }
 }

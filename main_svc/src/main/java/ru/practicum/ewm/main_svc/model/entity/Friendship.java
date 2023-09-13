@@ -7,7 +7,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import ru.practicum.ewm.main_svc.model.util.enums.FriendshipStatus;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
+
 @Entity
 @Table(name = "friendships")
 @Getter

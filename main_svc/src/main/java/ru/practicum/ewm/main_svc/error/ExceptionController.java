@@ -22,7 +22,7 @@ public class ExceptionController {
             MethodArgumentNotValidException.class,
             MethodArgumentTypeMismatchException.class,
             MissingServletRequestParameterException.class})
-    public ResponseEntity<ApiErrorMessage> badRequestExceptionHandler(MethodArgumentNotValidException exception) {
+    public ResponseEntity<ApiErrorMessage> badRequestExceptionHandler(Exception exception) {
         log.error("{}", exception.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)

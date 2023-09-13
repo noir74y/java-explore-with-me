@@ -1,6 +1,8 @@
 package ru.practicum.ewm.main_svc.controller;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +23,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
-//@Validated
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventPrivateController {
-    private final EventService eventService;
+    final EventService eventService;
 
     @GetMapping("/{userId}/events")
     public List<EventShortDto> privateFindEventsByInitiator(@PathVariable("userId") @NotNull Long initiatorId,

@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class MainErrorMessage {
+public class ApiErrorMessage {
     final String reason;
     final String message;
     final String status;

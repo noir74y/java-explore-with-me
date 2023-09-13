@@ -3,10 +3,10 @@ package ru.practicum.ewm.main_svc.service.impl;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.main_svc.error.MainEwmException;
+import ru.practicum.ewm.main_svc.error.ConflictException;
+import ru.practicum.ewm.main_svc.error.NotFoundException;
 import ru.practicum.ewm.main_svc.model.dto.EventRequestStatusUpdateReq;
 import ru.practicum.ewm.main_svc.model.dto.EventRequestStatusUpdateResp;
 import ru.practicum.ewm.main_svc.model.dto.ParticipationRequestDto;
@@ -37,24 +37,24 @@ public class RequestServiceImpl implements RequestService {
     public ParticipationRequestDto privateCreateRequest(Long requestorId, Long eventId) {
         var requestor = userRepository
                 .findById(requestorId)
-                .orElseThrow(() -> new MainEwmException(String.format("there is no requestor with user_id=%d", requestorId), HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(String.format("there is no requestor with user_id=%d", requestorId)));
 
         var event = eventRepository
                 .findById(eventId)
-                .orElseThrow(() -> new MainEwmException(String.format("there is no event with id=%d", eventId), HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(String.format("there is no event with id=%d", eventId)));
 
         if (requestRepository.existsByRequestorIdAndEventId(requestorId, eventId))
-            throw new MainEwmException("such pending request is already exists", HttpStatus.CONFLICT);
+            throw new ConflictException("such pending request is already exists");
 
         if (Objects.equals(event.getInitiator().getId(), requestorId))
-            throw new MainEwmException("requestor is an initiator of the event", HttpStatus.CONFLICT);
+            throw new ConflictException("requestor is an initiator of the event");
 
         if (!event.getState().equals(EventState.PUBLISHED.name()))
-            throw new MainEwmException("the event is not published yet", HttpStatus.CONFLICT);
+            throw new ConflictException("the event is not published yet");
 
         if (event.getParticipantLimit() != 0 &&
                 requestRepository.countByEventIdAndStatusIn(eventId, List.of(RequestStatus.CONFIRMED)) == event.getParticipantLimit())
-            throw new MainEwmException("there are too many participants already", HttpStatus.CONFLICT);
+            throw new ConflictException("there are too many participants already");
 
         return requestMapper.entity2participationRequestDto(requestRepository.save(Request.builder()
                 .created(LocalDateTime.now())
@@ -67,7 +67,7 @@ public class RequestServiceImpl implements RequestService {
     public ParticipationRequestDto privateCancelRequestStatus(Long requestorId, Long requestId) {
         var request = requestRepository
                 .findByIdAndRequestorIdAndStatusIn(requestId, requestorId, List.of(RequestStatus.PENDING, RequestStatus.CONFIRMED))
-                .orElseThrow(() -> new MainEwmException("there is no such your request in a proper status", HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException("there is no such your request in a proper status"));
 
         request.setStatus(RequestStatus.CANCELED);
         return requestMapper.entity2participationRequestDto(requestRepository.save(request));
@@ -77,7 +77,7 @@ public class RequestServiceImpl implements RequestService {
     @Transactional(readOnly = true)
     public List<ParticipationRequestDto> privateFindRequestsByRequestor(Long requestorId) {
         if (!userRepository.existsById(requestorId))
-            throw new MainEwmException(String.format("there is no requestor with user_id=%d", requestorId), HttpStatus.NOT_FOUND);
+            throw new NotFoundException(String.format("there is no requestor with user_id=%d", requestorId));
 
         return requestRepository
                 .findAllByRequestorId(requestorId)
@@ -101,19 +101,19 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public EventRequestStatusUpdateResp privateUpdateRequestStatus(Long initiatorId, Long eventId, EventRequestStatusUpdateReq eventRequestStatusUpdateReq) {
         if (!userRepository.existsById(initiatorId))
-            throw new MainEwmException(String.format("there is no user with id=%d", initiatorId), HttpStatus.NOT_FOUND);
+            throw new NotFoundException(String.format("there is no user with id=%d", initiatorId));
 
         var event = Optional.ofNullable(eventRepository
                         .findByInitiatorIdAndId(initiatorId, eventId))
-                .orElseThrow(() -> new MainEwmException(String.format("there is no event with id=%d and initiator_id=%d", eventId, initiatorId), HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(String.format("there is no event with id=%d and initiator_id=%d", eventId, initiatorId)));
 
         if (!event.getState().equals(EventState.PUBLISHED.name()))
-            throw new MainEwmException("the event is not published yet", HttpStatus.CONFLICT);
+            throw new ConflictException("the event is not published yet");
 
         // get all pending requests according to eventRequestStatusUpdateReq.requestsIdList
         var requests = requestRepository.findAllByIdIn(eventRequestStatusUpdateReq.getRequestIds()).orElse(Collections.emptyList());
         if (!requests.stream().map(Request::getStatus).allMatch(RequestStatus.PENDING::equals)) {
-            throw new MainEwmException("there are request which aren't in PENDING", HttpStatus.CONFLICT);
+            throw new ConflictException("there are request which aren't in PENDING");
         }
 
         var o = new Object() {
@@ -121,7 +121,7 @@ public class RequestServiceImpl implements RequestService {
         };
 
         if (o.currentParticipantsNumber == event.getParticipantLimit())
-            throw new MainEwmException("limit of participants is reached", HttpStatus.CONFLICT);
+            throw new ConflictException("limit of participants is reached");
 
         List<ParticipationRequestDto> confirmedRequests = new ArrayList<>();
         List<ParticipationRequestDto> rejectedRequests = new ArrayList<>();

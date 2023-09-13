@@ -1,6 +1,8 @@
 package ru.practicum.ewm.main_svc.service.impl;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,9 +20,10 @@ import java.util.Objects;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserServiceImpl implements UserService {
-    private final UserRepository userRepository;
-    private final UserMapper userMapper;
+    final UserRepository userRepository;
+    final UserMapper userMapper;
 
     @Override
     @Transactional(readOnly = true)

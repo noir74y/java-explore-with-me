@@ -1,13 +1,17 @@
 package ru.practicum.ewm.main_svc.model.util.validation;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ValueOfEnumValidator implements ConstraintValidator<ValueOfEnumConstraint, CharSequence> {
-    private List<String> acceptedValues;
+    List<String> acceptedValues;
 
     @Override
     public void initialize(ValueOfEnumConstraint annotation) {

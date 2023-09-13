@@ -1,6 +1,8 @@
 package ru.practicum.ewm.main_svc.controller;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -18,8 +20,9 @@ import javax.validation.constraints.NotNull;
 @RequestMapping("/admin/compilations")
 @RequiredArgsConstructor
 @Validated
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CompilationAdminController {
-    private final CompilationService compilationService;
+    final CompilationService compilationService;
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)

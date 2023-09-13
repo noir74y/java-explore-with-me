@@ -1,6 +1,8 @@
 package ru.practicum.ewm.main_svc.controller;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -27,8 +29,9 @@ import java.util.Optional;
 @RequestMapping("/events")
 @RequiredArgsConstructor
 @Validated
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventPublicController {
-    private final EventService eventService;
+    final EventService eventService;
 
     @GetMapping
     public List<EventShortDto> publicFindEvents(@RequestParam(value = "text", required = false, defaultValue = "") String searchPattern,

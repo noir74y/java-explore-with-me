@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Service
 public interface EventService {
     List<EventShortDto> privateFindEventsByInitiator(Long initiatorId,
                                                      Integer from,

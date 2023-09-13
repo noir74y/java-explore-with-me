@@ -7,7 +7,6 @@ import ru.practicum.ewm.main_svc.model.dto.ParticipationRequestDto;
 
 import java.util.List;
 
-@Service
 public interface RequestService {
     ParticipationRequestDto privateCreateRequest(Long requestorId,
                                                  Long eventId);

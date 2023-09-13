@@ -6,7 +6,6 @@ import ru.practicum.ewm.main_svc.model.dto.UserDto;
 
 import java.util.List;
 
-@Service
 public interface UserService {
     List<UserDto> adminFindUsersByIds(List<Long> ids,
                                       Integer from,

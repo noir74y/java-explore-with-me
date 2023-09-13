@@ -7,7 +7,6 @@ import ru.practicum.ewm.main_svc.model.dto.UpdateCompilationRequest;
 
 import java.util.List;
 
-@Service
 public interface CompilationService {
     List<CompilationDto> publicFindAllCompilations(Boolean pinned,
                                                    Integer from,

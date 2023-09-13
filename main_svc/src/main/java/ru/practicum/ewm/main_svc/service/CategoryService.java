@@ -6,7 +6,6 @@ import ru.practicum.ewm.main_svc.model.dto.NewCategoryDto;
 
 import java.util.List;
 
-@Service
 public interface CategoryService {
     CategoryDto adminCreateCategory(NewCategoryDto newCategoryDto);
 

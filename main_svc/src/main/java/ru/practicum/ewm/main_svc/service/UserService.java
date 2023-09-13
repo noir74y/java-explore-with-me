@@ -1,6 +1,5 @@
 package ru.practicum.ewm.main_svc.service;
 
-import org.springframework.stereotype.Service;
 import ru.practicum.ewm.main_svc.model.dto.NewUserRequest;
 import ru.practicum.ewm.main_svc.model.dto.UserDto;
 

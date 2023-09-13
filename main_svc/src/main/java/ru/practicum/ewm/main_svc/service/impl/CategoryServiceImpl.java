@@ -4,10 +4,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.main_svc.error.MainEwmException;
+import ru.practicum.ewm.main_svc.error.NotFoundException;
 import ru.practicum.ewm.main_svc.model.dto.CategoryDto;
 import ru.practicum.ewm.main_svc.model.dto.NewCategoryDto;
 import ru.practicum.ewm.main_svc.model.util.mappers.CategoryMapper;
@@ -34,13 +33,13 @@ public class CategoryServiceImpl implements CategoryService {
     public void adminDeleteCategory(Long catId) {
         if (categoryRepository.existsById(catId)) categoryRepository.deleteById(catId);
         else
-            throw new MainEwmException(String.format("Category with id=%d was not found.", catId), HttpStatus.NOT_FOUND);
+            throw new NotFoundException(String.format("Category with id=%d was not found.", catId));
     }
 
     @Override
     public CategoryDto adminUpdateCategory(Long catId, CategoryDto categoryDto) {
         var category = categoryRepository.findById(catId)
-                .orElseThrow(() -> new MainEwmException(String.format("Category with id=%d was not found.", catId), HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(String.format("Category with id=%d was not found.", catId)));
 
         if (!categoryDto.getName().equals(category.getName())) {
             category.setName(categoryDto.getName());
@@ -64,6 +63,6 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional(readOnly = true)
     public CategoryDto publicFindCategoryById(Long catId) {
         return categoryMapper.entity2categoryDto(categoryRepository.findById(catId)
-                .orElseThrow(() -> new MainEwmException(String.format("Category with id=%d was not found.", catId), HttpStatus.NOT_FOUND)));
+                .orElseThrow(() -> new NotFoundException(String.format("Category with id=%d was not found.", catId))));
     }
 }

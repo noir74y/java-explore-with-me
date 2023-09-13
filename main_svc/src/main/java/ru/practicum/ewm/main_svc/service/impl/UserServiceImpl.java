@@ -4,10 +4,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.main_svc.error.MainEwmException;
+import ru.practicum.ewm.main_svc.error.NotFoundException;
 import ru.practicum.ewm.main_svc.model.dto.NewUserRequest;
 import ru.practicum.ewm.main_svc.model.dto.UserDto;
 import ru.practicum.ewm.main_svc.model.util.mappers.UserMapper;
@@ -44,6 +43,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public void adminDeleteUser(Long userId) {
         if (userRepository.existsById(userId)) userRepository.deleteById(userId);
-        else throw new MainEwmException(String.format("User with id=%d was not found.", userId), HttpStatus.NOT_FOUND);
+        else throw new NotFoundException(String.format("User with id=%d was not found.", userId));
     }
 }

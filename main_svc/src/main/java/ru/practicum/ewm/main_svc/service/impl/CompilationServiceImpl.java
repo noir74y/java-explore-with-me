@@ -4,10 +4,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.main_svc.error.MainEwmException;
+import ru.practicum.ewm.main_svc.error.NotFoundException;
 import ru.practicum.ewm.main_svc.model.dto.CompilationDto;
 import ru.practicum.ewm.main_svc.model.dto.NewCompilationDto;
 import ru.practicum.ewm.main_svc.model.dto.UpdateCompilationRequest;
@@ -36,7 +35,7 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     public CompilationDto adminUpdateCompilation(Long compId, UpdateCompilationRequest updateCompilationRequest) {
         var compilation = compilationRepository.findById(compId)
-                .orElseThrow(() -> new MainEwmException(String.format("there is no compilation with id=%d", compId), HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(String.format("there is no compilation with id=%d", compId)));
         compilationMapper.updateCompilationRequest2entity(compilation, updateCompilationRequest);
         return compilationMapper.entity2compilationDto(compilationRepository.save(compilation));
     }
@@ -44,7 +43,7 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     public void adminDeleteCompilation(Long compId) {
         if (!compilationRepository.existsById(compId))
-            throw new MainEwmException(String.format("there is no compilation with id=%d", compId), HttpStatus.NOT_FOUND);
+            throw new NotFoundException(String.format("there is no compilation with id=%d", compId));
         compilationRepository.deleteById(compId);
     }
 
@@ -64,6 +63,6 @@ public class CompilationServiceImpl implements CompilationService {
     public CompilationDto publicFindCompilationById(Long compId) {
         return compilationMapper
                 .entity2compilationDto(compilationRepository.findById(compId)
-                        .orElseThrow(() -> new MainEwmException(String.format("there is no compilation with id=%d", compId), HttpStatus.NOT_FOUND)));
+                        .orElseThrow(() -> new NotFoundException(String.format("there is no compilation with id=%d", compId))));
     }
 }

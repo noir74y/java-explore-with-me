@@ -7,10 +7,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.main_svc.error.MainEwmException;
+import ru.practicum.ewm.main_svc.error.ConflictException;
+import ru.practicum.ewm.main_svc.error.NotFoundException;
 import ru.practicum.ewm.main_svc.model.dto.*;
 import ru.practicum.ewm.main_svc.model.entity.Event;
 import ru.practicum.ewm.main_svc.model.util.enums.*;
@@ -68,7 +68,7 @@ public class EventServiceImpl implements EventService {
     public EventFullDto privateFindEventById(Long initiatorId,
                                              Long eventId) throws Throwable {
         return Optional.ofNullable(eventMapper.entity2eventFullDto(eventRepository.findByInitiatorIdAndId(initiatorId, eventId)))
-                .orElseThrow(() -> new MainEwmException(String.format("there is no event with id=%d and initiatorId=%d", initiatorId, eventId), HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(String.format("there is no event with id=%d and initiatorId=%d", initiatorId, eventId)));
     }
 
     @Override
@@ -77,10 +77,10 @@ public class EventServiceImpl implements EventService {
                                            UpdateEventUserRequest updateEventUserRequest) throws Throwable {
 
         var currentEvent = Optional.ofNullable(eventRepository.findByInitiatorIdAndId(initiatorId, eventId))
-                .orElseThrow(() -> new MainEwmException(String.format("there is no event with id=%d and initiatorId=%d", initiatorId, eventId), HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(String.format("there is no event with id=%d and initiatorId=%d", initiatorId, eventId)));
 
         if (currentEvent.getState().equals(EventState.PUBLISHED.name()) || LocalDateTime.now().plusHours(2).isAfter(currentEvent.getEventDate()))
-            throw new MainEwmException("the event is not updatable", HttpStatus.CONFLICT);
+            throw new ConflictException("the event is not updatable");
 
         Optional.ofNullable(updateEventUserRequest.getStateAction())
                 .ifPresent(newState -> currentEvent.setState(newState.equals(EventUserState.SEND_TO_REVIEW.name()) ? EventState.PENDING.name() : EventState.CANCELED.name()));
@@ -118,10 +118,10 @@ public class EventServiceImpl implements EventService {
                                          UpdateEventAdminRequest updateEventAdminRequest) {
 
         var currentEvent = eventRepository.findById(eventId)
-                .orElseThrow(() -> new MainEwmException(String.format("there is no event with id=%d", eventId), HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(String.format("there is no event with id=%d", eventId)));
 
         if (LocalDateTime.now().plusHours(1).isAfter(currentEvent.getEventDate()))
-            throw new MainEwmException("it's too late to update this event", HttpStatus.CONFLICT);
+            throw new ConflictException("it's too late to update this event");
 
         Optional.ofNullable(updateEventAdminRequest.getStateAction()).ifPresent(newState -> {
             if (currentEvent.getState().equals(EventState.PENDING.name()))
@@ -129,7 +129,7 @@ public class EventServiceImpl implements EventService {
                         ? EventState.PUBLISHED.name()
                         : EventState.CANCELED.name());
             else
-                throw new MainEwmException("wrong state to update this event", HttpStatus.CONFLICT);
+                throw new ConflictException("wrong state to update this event");
         });
 
         updateEventParameters(currentEvent, updateEventAdminRequest);
@@ -193,7 +193,7 @@ public class EventServiceImpl implements EventService {
 
         var eventFullDto = eventMapper.entity2eventFullDto(eventRepository
                 .findByIdAndState(id, EventState.PUBLISHED.name())
-                .orElseThrow(() -> new MainEwmException("there is no such published event", HttpStatus.NOT_FOUND)));
+                .orElseThrow(() -> new NotFoundException("there is no such published event")));
 
         addViewAndRequestInfo(LocalDateTime.now().minusYears(10), LocalDateTime.now(), List.of(request.getRequestURI()), List.of(eventFullDto));
 
@@ -209,7 +209,7 @@ public class EventServiceImpl implements EventService {
     private void updateEventParameters(Event currentEvent, UpdateEventRequest updateEventRequest) {
         Optional.ofNullable(updateEventRequest.getCatId())
                 .ifPresent(newCatId -> currentEvent.setCategory(categoryRepository.findById(updateEventRequest.getCatId())
-                        .orElseThrow(() -> new MainEwmException(String.format("there is no category with id=%d", newCatId), HttpStatus.NOT_FOUND))));
+                        .orElseThrow(() -> new NotFoundException(String.format("there is no category with id=%d", newCatId)))));
         Optional.ofNullable(updateEventRequest.getAnnotation())
                 .ifPresent(currentEvent::setAnnotation);
         Optional.ofNullable(updateEventRequest.getDescription())

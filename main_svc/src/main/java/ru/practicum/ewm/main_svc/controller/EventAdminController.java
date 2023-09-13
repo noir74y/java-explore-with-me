@@ -5,10 +5,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.main_svc.error.MainEwmException;
+import ru.practicum.ewm.main_svc.error.BadRequestException;
 import ru.practicum.ewm.main_svc.model.dto.EventFullDto;
 import ru.practicum.ewm.main_svc.model.dto.UpdateEventAdminRequest;
 import ru.practicum.ewm.main_svc.model.util.MainAppConfig;
@@ -47,7 +46,7 @@ public class EventAdminController {
         rangeEnd = Optional.ofNullable(rangeEnd).orElse(LocalDateTime.now().plusYears(10));
 
         if (rangeStart.isAfter(rangeEnd))
-            throw new MainEwmException("rangeStart is after rangeEnd", HttpStatus.BAD_REQUEST);
+            throw new BadRequestException("rangeStart is after rangeEnd");
 
         return eventService.adminFindEvents(initiators, states, categories, rangeStart, rangeEnd, from, size, request);
     }

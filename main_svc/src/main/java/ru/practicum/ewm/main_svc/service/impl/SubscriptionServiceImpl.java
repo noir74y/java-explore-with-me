@@ -10,9 +10,6 @@ import ru.practicum.ewm.main_svc.error.NotFoundException;
 import ru.practicum.ewm.main_svc.model.dto.EventShortDto;
 import ru.practicum.ewm.main_svc.model.dto.SubscriptionDto;
 import ru.practicum.ewm.main_svc.model.entity.Subscription;
-import ru.practicum.ewm.main_svc.model.util.enums.EventState;
-import ru.practicum.ewm.main_svc.model.util.enums.FriendshipStatus;
-import ru.practicum.ewm.main_svc.model.util.enums.RequestStatus;
 import ru.practicum.ewm.main_svc.model.util.mappers.EventMapper;
 import ru.practicum.ewm.main_svc.model.util.mappers.SubscriptionMapper;
 import ru.practicum.ewm.main_svc.repository.FriendshipRepository;
@@ -80,9 +77,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     public List<EventShortDto> findAllEventsByFriendsInitiators(Long userId) {
         throwIfNoSuchUser(userId);
-        return subscriptionRepository.findAllEventsByFriendsInitiators(userId,
-                        FriendshipStatus.CONFIRMED,
-                        EventState.PUBLISHED.name())
+        return subscriptionRepository.findAllEventsByFriendsInitiators(userId)
                 .orElse(Collections.emptyList())
                 .stream()
                 .map(eventMapper::entity2eventShortDto)
@@ -92,10 +87,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     public List<EventShortDto> findAllEventsByFriendsParticipants(Long userId) {
         throwIfNoSuchUser(userId);
-        return subscriptionRepository.findAllEventsByFriendsParticipants(userId,
-                        FriendshipStatus.CONFIRMED,
-                        RequestStatus.CONFIRMED,
-                        EventState.PUBLISHED.name())
+        return subscriptionRepository.findAllEventsByFriendsParticipants(userId)
                 .orElse(Collections.emptyList())
                 .stream()
                 .map(eventMapper::entity2eventShortDto)
@@ -106,10 +98,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public List<EventShortDto> findAllEventsByFriendInitiator(Long userId, Long friendId) {
         throwIfNoSuchUser(userId);
         throwIfNoSuchUser(friendId);
-        return subscriptionRepository.findAllEventsByFriendInitiator(userId,
-                        friendId,
-                        FriendshipStatus.CONFIRMED,
-                        EventState.PUBLISHED.name())
+        return subscriptionRepository.findAllEventsByFriendInitiator(userId, friendId)
                 .orElse(Collections.emptyList())
                 .stream()
                 .map(eventMapper::entity2eventShortDto)
@@ -120,11 +109,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public List<EventShortDto> findAllEventsByFriendParticipant(Long userId, Long friendId) {
         throwIfNoSuchUser(userId);
         throwIfNoSuchUser(friendId);
-        return subscriptionRepository.findAllEventsByFriendParticipant(userId,
-                        friendId,
-                        FriendshipStatus.CONFIRMED,
-                        RequestStatus.CONFIRMED,
-                        EventState.PUBLISHED.name())
+        return subscriptionRepository.findAllEventsByFriendParticipant(userId, friendId)
                 .orElse(Collections.emptyList())
                 .stream()
                 .map(eventMapper::entity2eventShortDto)

@@ -37,10 +37,11 @@ public class FriendshipPrivateController {
     }
 
     @DeleteMapping("/{friendId}/reject")
-    public FriendshipDto rejectFriendship(@PathVariable @NotNull Long userId,
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public void rejectFriendship(@PathVariable @NotNull Long userId,
                                           @PathVariable @NotNull Long friendId) {
         log.info("DELETE /users/{}/friendship/{}/reject", userId, friendId);
-        return friendshipService.rejectFriendship(userId, friendId);
+        friendshipService.rejectFriendship(userId, friendId);
     }
 
     @DeleteMapping("/{friendId}/revoke")

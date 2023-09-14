@@ -23,7 +23,7 @@ import java.util.List;
 public class SubscriptionPrivateController {
     final SubscriptionService subscriptionService;
 
-    @PostMapping("/create/{friendId}")
+    @PostMapping("/{friendId}/create")
     @ResponseStatus(code = HttpStatus.CREATED)
     public SubscriptionDto createSubscription(@PathVariable @NotNull Long userId,
                                               @PathVariable @NotNull Long friendId) {
@@ -31,7 +31,7 @@ public class SubscriptionPrivateController {
         return subscriptionService.createSubscription(userId, friendId);
     }
 
-    @DeleteMapping("/delete/{friendId}")
+    @DeleteMapping("/{friendId}/delete")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void deleteSubscription(@PathVariable @NotNull Long userId,
                                    @PathVariable @NotNull Long friendId) {
@@ -51,22 +51,22 @@ public class SubscriptionPrivateController {
         return subscriptionService.findAllEventsByFriendsInitiators(userId);
     }
 
+    @GetMapping("/initiators/{friendId}")
+    public List<EventShortDto> findAllEventsByFriendInitiator(@PathVariable @NotNull Long userId,
+                                                              @PathVariable Long friendId) {
+        log.info("GET /users/{}/subscription/initiators/{}", userId, friendId);
+        return subscriptionService.findAllEventsByFriendInitiator(userId, friendId);
+    }
+
     @GetMapping("/participants")
     public List<EventShortDto> findAllEventsByFriendsParticipants(@PathVariable @NotNull Long userId) {
         log.info("GET /users/{}/subscription/participants", userId);
         return subscriptionService.findAllEventsByFriendsParticipants(userId);
     }
 
-    @GetMapping("/initiators/{friendId}")
-    public List<EventShortDto> findAllEventsByFriendInitiator(@PathVariable @NotNull Long userId,
-                                                              @PathVariable @NotNull Long friendId) {
-        log.info("GET /users/{}/subscription/initiators/{}", userId, friendId);
-        return subscriptionService.findAllEventsByFriendInitiator(userId, friendId);
-    }
-
     @GetMapping("/participants/{friendId}")
     public List<EventShortDto> findAllEventsByFriendParticipant(@PathVariable @NotNull Long userId,
-                                                                @PathVariable @NotNull Long friendId) {
+                                                                @PathVariable Long friendId) {
         log.info("GET /users/{}/subscription/participants/{}", userId, friendId);
         return subscriptionService.findAllEventsByFriendParticipant(userId, friendId);
     }

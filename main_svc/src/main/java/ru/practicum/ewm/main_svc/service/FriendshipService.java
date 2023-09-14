@@ -10,7 +10,7 @@ public interface FriendshipService {
 
     FriendshipDto confirmFriendship(Long userId, Long friendId);
 
-    FriendshipDto rejectFriendship(Long userId, Long friendId);
+    void rejectFriendship(Long userId, Long friendId);
 
     void revokeFriendship(Long userId, Long friendId);
 

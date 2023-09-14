@@ -21,12 +21,12 @@ public class Subscription {
     Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "subscriber_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    User user;
+    User subscriber;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "friend_id")
+    @JoinColumn(name = "person_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    User friend;
+    User person;
 }

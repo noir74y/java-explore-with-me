@@ -9,17 +9,17 @@ import java.util.List;
 @Service
 public interface SubscriptionService {
 
-    SubscriptionDto createSubscription(Long userId, Long friendId);
+    SubscriptionDto createSubscription(Long subscriberId, Long personId);
 
-    void deleteSubscription(Long userId, Long friendId);
+    void deleteSubscription(Long subscriberId, Long personId);
 
-    List<SubscriptionDto> findAllSubscriptions(Long userId);
+    List<SubscriptionDto> findAllSubscriptions(Long subscriberId);
 
-    List<EventShortDto> findAllEventsByFriendsInitiators(Long userId);
+    List<EventShortDto> findAllEventsByFriendsInitiators(Long subscriberId);
 
-    List<EventShortDto> findAllEventsByFriendsParticipants(Long userId);
+    List<EventShortDto> findAllEventsByFriendsParticipants(Long subscriberId);
 
-    List<EventShortDto> findAllEventsByFriendInitiator(Long userId, Long friendId);
+    List<EventShortDto> findAllEventsByFriendInitiator(Long subscriberId, Long personId);
 
-    List<EventShortDto> findAllEventsByFriendParticipant(Long userId, Long friendId);
+    List<EventShortDto> findAllEventsByFriendParticipant(Long subscriberId, Long personId);
 }

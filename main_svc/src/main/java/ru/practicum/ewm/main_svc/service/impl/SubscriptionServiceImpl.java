@@ -10,6 +10,7 @@ import ru.practicum.ewm.main_svc.error.NotFoundException;
 import ru.practicum.ewm.main_svc.model.dto.EventShortDto;
 import ru.practicum.ewm.main_svc.model.dto.SubscriptionDto;
 import ru.practicum.ewm.main_svc.model.entity.Subscription;
+import ru.practicum.ewm.main_svc.model.entity.User;
 import ru.practicum.ewm.main_svc.model.util.mappers.EventMapper;
 import ru.practicum.ewm.main_svc.model.util.mappers.SubscriptionMapper;
 import ru.practicum.ewm.main_svc.repository.FriendshipRepository;
@@ -27,47 +28,43 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SubscriptionServiceImpl implements SubscriptionService {
     SubscriptionRepository subscriptionRepository;
-
     FriendshipRepository friendshipRepository;
     UserRepository userRepository;
     SubscriptionMapper subscriptionMapper;
     EventMapper eventMapper;
 
     @Override
-    public SubscriptionDto createSubscription(Long userId, Long friendId) {
+    public SubscriptionDto createSubscription(Long subscriberId, Long personId) {
         subscriptionRepository
-                .findByUserIdAndFriendId(userId, friendId)
+                .findBySubscriberIdAndPersonId(subscriberId, personId)
                 .ifPresent(subscription -> {
                     throw new ConflictException("there is such subscription already");
                 });
 
-        if (!friendshipRepository.existsByFriend1IdAndFriend2Id(userId, friendId))
-            throw new NotFoundException("there is no such friendship");
+        throwIfNoSuchFriendship(subscriberId, personId);
 
-        var user = userRepository
-                .findById(userId)
-                .orElseThrow(() -> new NotFoundException(String.format("there is no user with id=%d", userId)));
-
-        var friend = userRepository
-                .findById(friendId)
-                .orElseThrow(() -> new NotFoundException(String.format("there is no friend with id=%d", userId)));
-
-        return subscriptionMapper.toDto(subscriptionRepository.save(Subscription.builder().user(user).friend(friend).build()));
+        return subscriptionMapper.toDto(subscriptionRepository
+                .save(Subscription.builder()
+                        .subscriber(getUserOrThrowIfAbsent(subscriberId))
+                        .person(getUserOrThrowIfAbsent(personId))
+                        .build()));
     }
 
     @Override
-    public void deleteSubscription(Long userId, Long friendId) {
+    public void deleteSubscription(Long subscriberId, Long personId) {
         var subscription = subscriptionRepository
-                .findByUserIdAndFriendId(userId, friendId)
+                .findBySubscriberIdAndPersonId(subscriberId, personId)
                 .orElseThrow(() -> new NotFoundException("there is no subscription"));
+
         subscriptionRepository.delete(subscription);
     }
 
     @Override
-    public List<SubscriptionDto> findAllSubscriptions(Long userId) {
-        throwIfNoSuchUser(userId);
+    public List<SubscriptionDto> findAllSubscriptions(Long subscriberId) {
+        throwIfNoSuchUser(subscriberId);
+
         return subscriptionRepository
-                .findAllByUserId(userId)
+                .findAllBySubscriberId(subscriberId)
                 .orElse(Collections.emptyList())
                 .stream()
                 .map(subscriptionMapper::toDto)
@@ -75,9 +72,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public List<EventShortDto> findAllEventsByFriendsInitiators(Long userId) {
-        throwIfNoSuchUser(userId);
-        return subscriptionRepository.findAllEventsByFriendsInitiators(userId)
+    public List<EventShortDto> findAllEventsByFriendsInitiators(Long subscriberId) {
+        throwIfNoSuchUser(subscriberId);
+
+        return subscriptionRepository.findAllEventsByPersonsInitiators(subscriberId)
                 .orElse(Collections.emptyList())
                 .stream()
                 .map(eventMapper::entity2eventShortDto)
@@ -85,9 +83,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public List<EventShortDto> findAllEventsByFriendsParticipants(Long userId) {
-        throwIfNoSuchUser(userId);
-        return subscriptionRepository.findAllEventsByFriendsParticipants(userId)
+    public List<EventShortDto> findAllEventsByFriendsParticipants(Long subscriberId) {
+        throwIfNoSuchUser(subscriberId);
+
+        return subscriptionRepository.findAllEventsByPersonsParticipants(subscriberId)
                 .orElse(Collections.emptyList())
                 .stream()
                 .map(eventMapper::entity2eventShortDto)
@@ -95,10 +94,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public List<EventShortDto> findAllEventsByFriendInitiator(Long userId, Long friendId) {
-        throwIfNoSuchUser(userId);
-        throwIfNoSuchUser(friendId);
-        return subscriptionRepository.findAllEventsByFriendInitiator(userId, friendId)
+    public List<EventShortDto> findAllEventsByFriendInitiator(Long subscriberId, Long personId) {
+        throwIfNoSuchUser(subscriberId);
+        throwIfNoSuchUser(personId);
+
+        return subscriptionRepository.findAllEventsByPersonInitiator(subscriberId, personId)
                 .orElse(Collections.emptyList())
                 .stream()
                 .map(eventMapper::entity2eventShortDto)
@@ -106,18 +106,30 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public List<EventShortDto> findAllEventsByFriendParticipant(Long userId, Long friendId) {
-        throwIfNoSuchUser(userId);
-        throwIfNoSuchUser(friendId);
-        return subscriptionRepository.findAllEventsByFriendParticipant(userId, friendId)
+    public List<EventShortDto> findAllEventsByFriendParticipant(Long subscriberId, Long personId) {
+        throwIfNoSuchUser(subscriberId);
+        throwIfNoSuchUser(personId);
+
+        return subscriptionRepository.findAllEventsByPersonParticipant(subscriberId, personId)
                 .orElse(Collections.emptyList())
                 .stream()
                 .map(eventMapper::entity2eventShortDto)
                 .collect(Collectors.toList());
     }
 
-    private void throwIfNoSuchUser(Long userId) {
-        if (!userRepository.existsById(userId))
-            throw new NotFoundException(String.format("there is no user with id=%d", userId));
+    private void throwIfNoSuchUser(Long subscriberId) {
+        if (!userRepository.existsById(subscriberId))
+            throw new NotFoundException(String.format("there is no user with id=%d", subscriberId));
+    }
+
+    private void throwIfNoSuchFriendship(Long friend1, Long friend2) {
+        if (!friendshipRepository.existsByFriend1IdAndFriend2Id(friend1, friend2))
+            throw new NotFoundException("there is no such friendship");
+    }
+
+    private User getUserOrThrowIfAbsent(Long userId) {
+        return userRepository
+                .findById(userId)
+                .orElseThrow(() -> new NotFoundException(String.format("there is no user with id=%d", userId)));
     }
 }

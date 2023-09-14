@@ -31,18 +31,21 @@ public class FriendshipServiceImpl implements FriendshipService {
     @Override
     public FriendshipDto requestFriendship(Long userId, Long friendId) {
         var friendshipOptional = friendshipRepository.findByFriend1IdAndFriend2Id(userId, friendId);
+
         friendshipOptional.ifPresent(friendship -> {
             if (friendship.getStatus().equals(FriendshipStatus.PENDING))
                 throw new ConflictException("your request for friendship is still pending");
             else if (friendship.getStatus().equals(FriendshipStatus.CONFIRMED))
                 throw new ConflictException("your request for friendship is confirmed already");
         });
+
         var user = userRepository
                 .findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("there is no user with id=%d", userId)));
         var friend = userRepository
                 .findById(friendId)
                 .orElseThrow(() -> new NotFoundException(String.format("there is no friend with id=%d", userId)));
+
         return friendshipMapper.toDto(friendshipRepository.save(Friendship.builder().friend1(user).friend2(friend).build()));
     }
 
@@ -51,10 +54,12 @@ public class FriendshipServiceImpl implements FriendshipService {
         var friendship = friendshipRepository
                 .findByFriend1IdAndFriend2Id(userId, friendId)
                 .orElseThrow(() -> new NotFoundException("there is no such friendship entry"));
+
         if (friendship.getStatus().equals(FriendshipStatus.CONFIRMED))
             throw new ConflictException("your request for friendship is confirmed already");
         else if (friendship.getStatus().equals(FriendshipStatus.PENDING))
             friendship.setStatus(FriendshipStatus.CONFIRMED);
+
         return friendshipMapper.toDto(friendshipRepository.save(friendship));
     }
 
@@ -63,6 +68,7 @@ public class FriendshipServiceImpl implements FriendshipService {
         var friendship = friendshipRepository
                 .findByFriend1IdAndFriend2Id(userId, friendId).
                 orElseThrow(() -> new NotFoundException("there is no such friendship entry"));
+
         if (friendship.getStatus().equals(FriendshipStatus.PENDING))
             friendshipRepository.delete(friendship);
         else
@@ -74,6 +80,7 @@ public class FriendshipServiceImpl implements FriendshipService {
         var friendship = friendshipRepository
                 .findByFriend1IdAndFriend2Id(userId, friendId)
                 .orElseThrow(() -> new NotFoundException("there is no friendship entry"));
+
         if (friendship.getStatus().equals(FriendshipStatus.CONFIRMED))
             friendshipRepository.delete(friendship);
         else

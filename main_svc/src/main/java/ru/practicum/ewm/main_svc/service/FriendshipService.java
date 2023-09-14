@@ -1,7 +1,18 @@
 package ru.practicum.ewm.main_svc.service;
 
-import org.springframework.stereotype.Service;
+import ru.practicum.ewm.main_svc.model.dto.FriendshipDto;
 
-@Service
+import java.util.List;
+
 public interface FriendshipService {
+
+    FriendshipDto requestFriendship(Long userId, Long friendId);
+
+    FriendshipDto confirmFriendship(Long userId, Long friendId);
+
+    FriendshipDto rejectFriendship(Long userId, Long friendId);
+
+    void revokeFriendship(Long userId, Long friendId);
+
+    List<FriendshipDto> findAllFriends(Long userId);
 }

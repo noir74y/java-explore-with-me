@@ -15,6 +15,7 @@ import ru.practicum.ewm.main_svc.model.util.enums.FriendshipStatus;
 import ru.practicum.ewm.main_svc.model.util.enums.RequestStatus;
 import ru.practicum.ewm.main_svc.model.util.mappers.EventMapper;
 import ru.practicum.ewm.main_svc.model.util.mappers.SubscriptionMapper;
+import ru.practicum.ewm.main_svc.repository.FriendshipRepository;
 import ru.practicum.ewm.main_svc.repository.SubscriptionRepository;
 import ru.practicum.ewm.main_svc.repository.UserRepository;
 import ru.practicum.ewm.main_svc.service.SubscriptionService;
@@ -29,6 +30,8 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SubscriptionServiceImpl implements SubscriptionService {
     SubscriptionRepository subscriptionRepository;
+
+    FriendshipRepository friendshipRepository;
     UserRepository userRepository;
     SubscriptionMapper subscriptionMapper;
     EventMapper eventMapper;
@@ -40,12 +43,18 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 .ifPresent(subscription -> {
                     throw new ConflictException("there is such subscription already");
                 });
+
+        if (!friendshipRepository.existsByFriend1IdAndFriend2Id(userId, friendId))
+            throw new NotFoundException("there is no such friendship");
+
         var user = userRepository
                 .findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("there is no user with id=%d", userId)));
+
         var friend = userRepository
                 .findById(friendId)
                 .orElseThrow(() -> new NotFoundException(String.format("there is no friend with id=%d", userId)));
+
         return subscriptionMapper.toDto(subscriptionRepository.save(Subscription.builder().user(user).friend(friend).build()));
     }
 
@@ -71,59 +80,55 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     public List<EventShortDto> findAllEventsByFriendsInitiators(Long userId) {
         throwIfNoSuchUser(userId);
-//        return subscriptionRepository.findAllEventsByFriendsInitiators(userId,
-//                        FriendshipStatus.CONFIRMED,
-//                        EventState.PUBLISHED.name())
-//                .orElse(Collections.emptyList())
-//                .stream()
-//                .map(eventMapper::entity2eventShortDto)
-//                .collect(Collectors.toList());
-        return null;
+        return subscriptionRepository.findAllEventsByFriendsInitiators(userId,
+                        FriendshipStatus.CONFIRMED,
+                        EventState.PUBLISHED.name())
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(eventMapper::entity2eventShortDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<EventShortDto> findAllEventsByFriendsParticipants(Long userId) {
         throwIfNoSuchUser(userId);
-//        return subscriptionRepository.findAllEventsByFriendsParticipants(userId,
-//                        FriendshipStatus.CONFIRMED,
-//                        RequestStatus.CONFIRMED,
-//                        EventState.PUBLISHED.name())
-//                .orElse(Collections.emptyList())
-//                .stream()
-//                .map(eventMapper::entity2eventShortDto)
-//                .collect(Collectors.toList());
-        return null;
+        return subscriptionRepository.findAllEventsByFriendsParticipants(userId,
+                        FriendshipStatus.CONFIRMED,
+                        RequestStatus.CONFIRMED,
+                        EventState.PUBLISHED.name())
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(eventMapper::entity2eventShortDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<EventShortDto> findAllEventsByFriendInitiator(Long userId, Long friendId) {
         throwIfNoSuchUser(userId);
         throwIfNoSuchUser(friendId);
-//        return subscriptionRepository.findAllEventsByFriendInitiator(userId,
-//                        friendId,
-//                        FriendshipStatus.CONFIRMED,
-//                        EventState.PUBLISHED.name())
-//                .orElse(Collections.emptyList())
-//                .stream()
-//                .map(eventMapper::entity2eventShortDto)
-//                .collect(Collectors.toList());
-        return null;
+        return subscriptionRepository.findAllEventsByFriendInitiator(userId,
+                        friendId,
+                        FriendshipStatus.CONFIRMED,
+                        EventState.PUBLISHED.name())
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(eventMapper::entity2eventShortDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<EventShortDto> findAllEventsByFriendParticipant(Long userId, Long friendId) {
         throwIfNoSuchUser(userId);
         throwIfNoSuchUser(friendId);
-//        return subscriptionRepository.findAllEventsByFriendParticipant(userId,
-//                        friendId,
-//                        FriendshipStatus.CONFIRMED,
-//                        RequestStatus.CONFIRMED,
-//                        EventState.PUBLISHED.name())
-//                .orElse(Collections.emptyList())
-//                .stream()
-//                .map(eventMapper::entity2eventShortDto)
-//                .collect(Collectors.toList());
-        return null;
+        return subscriptionRepository.findAllEventsByFriendParticipant(userId,
+                        friendId,
+                        FriendshipStatus.CONFIRMED,
+                        RequestStatus.CONFIRMED,
+                        EventState.PUBLISHED.name())
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(eventMapper::entity2eventShortDto)
+                .collect(Collectors.toList());
     }
 
     private void throwIfNoSuchUser(Long userId) {

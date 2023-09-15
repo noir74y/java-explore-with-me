@@ -8,37 +8,37 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.ewm.stat_svc.other.error.exception.CustomValidationException;
-import ru.practicum.ewm.stat_svc.other.error.exception.EwmException;
 import ru.practicum.ewm.stat_svc.other.error.exception.OtherException;
+import ru.practicum.ewm.stat_svc.other.error.exception.StatEwmException;
 
 import java.time.format.DateTimeParseException;
 
 @RestControllerAdvice
 @Slf4j
-public class ExceptionController {
+public class StatExceptionController {
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorMessage> exceptionController(Exception exception) {
-        EwmException ewmException;
+    public ResponseEntity<StatErrorMessage> exceptionController(Exception exception) {
+        StatEwmException statEwmException;
 
         log.error("{}", exception.getMessage());
 
         if (exception instanceof DateTimeParseException)
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(new ErrorMessage(exception.getMessage(), "incorrect format for LocalDateTime"));
+                    .body(new StatErrorMessage(exception.getMessage(), "incorrect format for LocalDateTime"));
         else if (exception instanceof HttpMessageNotReadableException)
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(new ErrorMessage(exception.getMessage(), "InvalidFormatException exception"));
+                    .body(new StatErrorMessage(exception.getMessage(), "InvalidFormatException exception"));
         else if (exception instanceof MethodArgumentNotValidException)
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(new ErrorMessage(exception.getMessage(), "validation exception"));
+                    .body(new StatErrorMessage(exception.getMessage(), "validation exception"));
         else if (exception instanceof CustomValidationException)
-            ewmException = (CustomValidationException) exception;
+            statEwmException = (CustomValidationException) exception;
         else
-            ewmException = new OtherException(exception);
+            statEwmException = new OtherException(exception);
 
-        return ResponseEntity.status(ewmException.getHttpErrorStatus()).body(ewmException.prepareErrorMessage());
+        return ResponseEntity.status(statEwmException.getHttpErrorStatus()).body(statEwmException.prepareErrorMessage());
     }
 }

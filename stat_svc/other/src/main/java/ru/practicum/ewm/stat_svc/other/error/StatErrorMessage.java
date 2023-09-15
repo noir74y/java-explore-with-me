@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ErrorMessage {
+public class StatErrorMessage {
     private String cause;
     private String error;
 }

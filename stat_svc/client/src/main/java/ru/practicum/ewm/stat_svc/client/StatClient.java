@@ -19,6 +19,12 @@ public class StatClient extends BaseClient {
     @Autowired
     private ParamCoder paramCoder;
 
+    @Value("${saveHit.stat.server.path}")
+    private String saveHitPath;
+
+    @Value("${getHits.stat.server.path}")
+    private String getHitsPath;
+
     @Autowired
     public StatClient(@Value("${stat.server.url}") String serverUrl, RestTemplateBuilder builder) {
         super(builder
@@ -27,17 +33,21 @@ public class StatClient extends BaseClient {
                 .build());
     }
 
-    public void saveHit(@Value("${stat.server.path}") String serverPath, DtoHitIn hitIn) {
-        post(serverPath, null, null, hitIn);
+
+    public void saveHit(DtoHitIn hitIn) {
+        saveHitPath = saveHitPath.replaceAll("\"", "");
+        post(saveHitPath, null, null, hitIn);
     }
 
-    public ResponseEntity<Object> getHitsWithEncodedLocalDateTime(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
+    public ResponseEntity<Object> getHits(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
+        getHitsPath = getHitsPath.replaceAll("\"", "");
         Map<String, Object> paramsMap = Map.of(
                 "start", paramCoder.ldt2encodedString(start),
                 "end", paramCoder.ldt2encodedString(end),
                 "uris", String.join(",", uris),
                 "unique", unique
         );
-        return get("${stat.server.path}" + "?start={start}&end={end}&uris={uris}&unique={unique}", null, paramsMap);
+        var path = getHitsPath + "/?start={start}&end={end}&uris={uris}&unique={unique}";
+        return get(path, null, paramsMap);
     }
 }

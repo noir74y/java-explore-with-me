@@ -19,7 +19,7 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
 
-  main-server:
+  ewm-service:
     build: main_svc
     image: ewm-main-svc-server-img
     container_name: main-service

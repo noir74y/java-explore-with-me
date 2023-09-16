@@ -27,7 +27,7 @@ public class SubscriptionPrivateController {
     @ResponseStatus(code = HttpStatus.CREATED)
     public SubscriptionDto createSubscription(@PathVariable @NotNull Long subscriberId,
                                               @PathVariable @NotNull Long personId) {
-        log.info("POST /users/{}/subscription/{}/create", subscriberId, personId);
+        log.info("POST /users/{}/subscription/{}", subscriberId, personId);
         return subscriptionService.createSubscription(subscriberId, personId);
     }
 
@@ -35,39 +35,39 @@ public class SubscriptionPrivateController {
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void deleteSubscription(@PathVariable @NotNull Long subscriberId,
                                    @PathVariable @NotNull Long personId) {
-        log.info("POST /users/{}/subscription/{}/delete", subscriberId, personId);
+        log.info("POST /users/{}/subscription/{}", subscriberId, personId);
         subscriptionService.deleteSubscription(subscriberId, personId);
     }
 
-    @GetMapping()
+    @GetMapping("/events")
     public List<SubscriptionDto> findAllSubscriptions(@PathVariable @NotNull Long subscriberId) {
-        log.info("GET /users/{}/subscription", subscriberId);
+        log.info("GET /users/{}/subscription/events", subscriberId);
         return subscriptionService.findAllSubscriptions(subscriberId);
     }
 
-    @GetMapping("/initiators/")
+    @GetMapping("/events/initiator")
     public List<EventShortDto> findAllEventsByFriendsInitiators(@PathVariable @NotNull Long subscriberId) {
-        log.info("GET /users/{}/subscription/initiators", subscriberId);
+        log.info("GET /users/{}/subscription/events/initiator", subscriberId);
         return subscriptionService.findAllEventsByFriendsInitiators(subscriberId);
     }
 
-    @GetMapping("/initiators/{personId}")
+    @GetMapping("/events/initiator/{personId}")
     public List<EventShortDto> findAllEventsByFriendInitiator(@PathVariable @NotNull Long subscriberId,
                                                               @PathVariable Long personId) {
-        log.info("GET /users/{}/subscription/initiators/{}", subscriberId, personId);
+        log.info("GET /users/{}/subscription/events/initiator/{}", subscriberId, personId);
         return subscriptionService.findAllEventsByFriendInitiator(subscriberId, personId);
     }
 
-    @GetMapping("/participants")
+    @GetMapping("/events/participant")
     public List<EventShortDto> findAllEventsByFriendsParticipants(@PathVariable @NotNull Long subscriberId) {
-        log.info("GET /users/{}/subscription/participants", subscriberId);
+        log.info("GET /users/{}/subscription/events/participant", subscriberId);
         return subscriptionService.findAllEventsByFriendsParticipants(subscriberId);
     }
 
-    @GetMapping("/participants/{personId}")
+    @GetMapping("/events/participant/{personId}")
     public List<EventShortDto> findAllEventsByFriendParticipant(@PathVariable @NotNull Long subscriberId,
                                                                 @PathVariable Long personId) {
-        log.info("GET /users/{}/subscription/participants/{}", subscriberId, personId);
+        log.info("GET /users/{}/subscription/events/participant/{}", subscriberId, personId);
         return subscriptionService.findAllEventsByFriendParticipant(subscriberId, personId);
     }
 

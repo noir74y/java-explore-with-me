@@ -92,7 +92,7 @@ public class FriendshipServiceImpl implements FriendshipService {
     @Transactional(readOnly = true)
     public List<FriendshipDto> findAllFriends(Long userId) {
         return friendshipRepository
-                .findAllByFriend1Id(userId)
+                .findAllByFriend1IdOrderByFriend2Id(userId)
                 .orElse(Collections.emptyList())
                 .stream()
                 .map(friendshipMapper::toDto)

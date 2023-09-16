@@ -26,7 +26,7 @@ public class FriendshipPrivateController {
     @ResponseStatus(code = HttpStatus.CREATED)
     public FriendshipDto requestFriendship(@PathVariable @NotNull Long userId,
                                            @PathVariable @NotNull Long friendId) {
-        log.info("POST /users/{}/friendship/{}/request", userId, friendId);
+        log.info("POST /users/{}/friendship/{}", userId, friendId);
         return friendshipService.requestFriendship(userId, friendId);
     }
 
@@ -49,7 +49,7 @@ public class FriendshipPrivateController {
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void revokeFriendship(@PathVariable @NotNull Long userId,
                                  @PathVariable @NotNull Long friendId) {
-        log.info("DELETE /users/{}/friendship/{}/revoke", userId, friendId);
+        log.info("DELETE /users/{}/friendship/{}", userId, friendId);
         friendshipService.revokeFriendship(userId, friendId);
     }
 

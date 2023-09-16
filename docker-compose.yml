@@ -1,6 +1,6 @@
 version: '3.1'
 services:
-  stats-service:
+  stats-server:
     build: stat_svc/server
     image: ewm-stat-svc-server-img
     container_name: stats-service
@@ -19,7 +19,7 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
 
-  main-svc:
+  main-server:
     build: main_svc
     image: ewm-main-svc-server-img
     container_name: main-service

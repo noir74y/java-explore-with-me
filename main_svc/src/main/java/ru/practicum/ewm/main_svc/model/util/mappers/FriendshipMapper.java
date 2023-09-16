@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import ru.practicum.ewm.main_svc.model.dto.FriendshipDto;
 import ru.practicum.ewm.main_svc.model.entity.Friendship;
+import ru.practicum.ewm.main_svc.repository.UserRepository;
 
 import java.util.Optional;
 
@@ -15,6 +16,7 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FriendshipMapper {
     final ModelMapper modelMapper;
+    final UserRepository userRepository;
 
     public FriendshipDto toDto(Friendship friendship) {
         return Optional.ofNullable(friendship).map(obj -> modelMapper.map(obj, FriendshipDto.class)).orElse(null);

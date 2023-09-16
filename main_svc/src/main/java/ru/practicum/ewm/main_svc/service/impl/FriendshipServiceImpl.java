@@ -46,13 +46,14 @@ public class FriendshipServiceImpl implements FriendshipService {
                 .findById(friendId)
                 .orElseThrow(() -> new NotFoundException(String.format("there is no friend with id=%d", userId)));
 
+
         return friendshipMapper.toDto(friendshipRepository.save(Friendship.builder().friend1(user).friend2(friend).status(FriendshipStatus.PENDING).build()));
     }
 
     @Override
     public FriendshipDto confirmFriendship(Long userId, Long friendId) {
         var friendship = friendshipRepository
-                .findByFriend1IdAndFriend2Id(userId, friendId)
+                .findByFriend2IdAndFriend1Id(userId, friendId)
                 .orElseThrow(() -> new NotFoundException("there is no such friendship entry"));
 
         if (friendship.getStatus().equals(FriendshipStatus.CONFIRMED))
@@ -66,7 +67,7 @@ public class FriendshipServiceImpl implements FriendshipService {
     @Override
     public void rejectFriendship(Long userId, Long friendId) {
         var friendship = friendshipRepository
-                .findByFriend1IdAndFriend2Id(userId, friendId).
+                .findByFriend2IdAndFriend1Id(userId, friendId).
                 orElseThrow(() -> new NotFoundException("there is no such friendship entry"));
 
         if (friendship.getStatus().equals(FriendshipStatus.PENDING))
@@ -88,6 +89,7 @@ public class FriendshipServiceImpl implements FriendshipService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<FriendshipDto> findAllFriends(Long userId) {
         return friendshipRepository
                 .findAllByFriend1Id(userId)

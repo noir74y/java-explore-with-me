@@ -21,12 +21,12 @@ public class Friendship {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "friend1_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     User friend1;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "friend2_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     User friend2;

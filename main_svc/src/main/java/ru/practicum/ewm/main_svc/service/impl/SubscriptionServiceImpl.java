@@ -27,11 +27,11 @@ import java.util.stream.Collectors;
 @Transactional
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SubscriptionServiceImpl implements SubscriptionService {
-    SubscriptionRepository subscriptionRepository;
-    FriendshipRepository friendshipRepository;
-    UserRepository userRepository;
-    SubscriptionMapper subscriptionMapper;
-    EventMapper eventMapper;
+    final SubscriptionRepository subscriptionRepository;
+    final FriendshipRepository friendshipRepository;
+    final UserRepository userRepository;
+    final SubscriptionMapper subscriptionMapper;
+    final EventMapper eventMapper;
 
     @Override
     public SubscriptionDto createSubscription(Long subscriberId, Long personId) {
@@ -60,6 +60,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<SubscriptionDto> findAllSubscriptions(Long subscriberId) {
         throwIfNoSuchUser(subscriberId);
 
@@ -72,6 +73,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<EventShortDto> findAllEventsByFriendsInitiators(Long subscriberId) {
         throwIfNoSuchUser(subscriberId);
 
@@ -83,6 +85,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<EventShortDto> findAllEventsByFriendsParticipants(Long subscriberId) {
         throwIfNoSuchUser(subscriberId);
 
@@ -94,6 +97,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<EventShortDto> findAllEventsByFriendInitiator(Long subscriberId, Long personId) {
         throwIfNoSuchUser(subscriberId);
         throwIfNoSuchUser(personId);
@@ -106,6 +110,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<EventShortDto> findAllEventsByFriendParticipant(Long subscriberId, Long personId) {
         throwIfNoSuchUser(subscriberId);
         throwIfNoSuchUser(personId);

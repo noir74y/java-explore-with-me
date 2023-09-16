@@ -22,7 +22,8 @@ import java.util.List;
 public class FriendshipPrivateController {
     final FriendshipService friendshipService;
 
-    @PostMapping("/{friendId}/request")
+    @PostMapping("/{friendId}")
+    @ResponseStatus(code = HttpStatus.CREATED)
     public FriendshipDto requestFriendship(@PathVariable @NotNull Long userId,
                                            @PathVariable @NotNull Long friendId) {
         log.info("POST /users/{}/friendship/{}/request", userId, friendId);
@@ -36,7 +37,7 @@ public class FriendshipPrivateController {
         return friendshipService.confirmFriendship(userId, friendId);
     }
 
-    @DeleteMapping("/{friendId}/reject")
+    @PatchMapping("/{friendId}/reject")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void rejectFriendship(@PathVariable @NotNull Long userId,
                                  @PathVariable @NotNull Long friendId) {
@@ -44,7 +45,7 @@ public class FriendshipPrivateController {
         friendshipService.rejectFriendship(userId, friendId);
     }
 
-    @DeleteMapping("/{friendId}/revoke")
+    @DeleteMapping("/{friendId}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void revokeFriendship(@PathVariable @NotNull Long userId,
                                  @PathVariable @NotNull Long friendId) {

@@ -23,7 +23,7 @@ import java.util.List;
 public class SubscriptionPrivateController {
     final SubscriptionService subscriptionService;
 
-    @PostMapping("/{personId}/create")
+    @PostMapping("/{personId}")
     @ResponseStatus(code = HttpStatus.CREATED)
     public SubscriptionDto createSubscription(@PathVariable @NotNull Long subscriberId,
                                               @PathVariable @NotNull Long personId) {
@@ -31,7 +31,7 @@ public class SubscriptionPrivateController {
         return subscriptionService.createSubscription(subscriberId, personId);
     }
 
-    @DeleteMapping("/{personId}/delete")
+    @DeleteMapping("/{personId}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void deleteSubscription(@PathVariable @NotNull Long subscriberId,
                                    @PathVariable @NotNull Long personId) {

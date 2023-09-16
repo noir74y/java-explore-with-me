@@ -20,12 +20,12 @@ public class Subscription {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "subscriber_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     User subscriber;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "person_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     User person;

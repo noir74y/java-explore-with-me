@@ -11,6 +11,6 @@ import ru.practicum.ewm.main_svc.model.entity.User;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SubscriptionDto {
     Long id;
-    User user;
-    User friend;
+    User subscriber;
+    User person;
 }

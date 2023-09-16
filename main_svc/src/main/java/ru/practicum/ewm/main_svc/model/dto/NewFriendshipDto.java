@@ -1,5 +1,6 @@
 package ru.practicum.ewm.main_svc.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

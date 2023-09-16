@@ -67,8 +67,8 @@ public class FriendshipServiceImpl implements FriendshipService {
     @Override
     public void rejectFriendship(Long userId, Long friendId) {
         var friendship = friendshipRepository
-                .findByFriend2IdAndFriend1Id(userId, friendId).
-                orElseThrow(() -> new NotFoundException("there is no such friendship entry"));
+                .findByFriend2IdAndFriend1Id(userId, friendId)
+                .orElseThrow(() -> new NotFoundException("there is no such friendship entry"));
 
         if (friendship.getStatus().equals(FriendshipStatus.PENDING))
             friendshipRepository.delete(friendship);

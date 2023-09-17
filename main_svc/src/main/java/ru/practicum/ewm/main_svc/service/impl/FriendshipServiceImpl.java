@@ -46,7 +46,6 @@ public class FriendshipServiceImpl implements FriendshipService {
                 .findById(friendId)
                 .orElseThrow(() -> new NotFoundException(String.format("there is no friend with id=%d", userId)));
 
-
         return friendshipMapper.toDto(friendshipRepository.save(Friendship.builder().friend1(user).friend2(friend).status(FriendshipStatus.PENDING).build()));
     }
 

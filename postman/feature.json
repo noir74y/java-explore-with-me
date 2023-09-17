@@ -53,6 +53,8 @@
 							"        await api.createFriendshipAndSubscription(user1.id, user5.id); \r",
 							"        await api.createFriendshipAndSubscription(user1.id, user6.id); \r",
 							"\r",
+							"        pm.collectionVariables.set(\"uid1\", user1.id)\r",
+							"        \r",
 							"    } catch(err) {\r",
 							"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
 							"    }\r",
@@ -150,7 +152,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1",
+							"value": "{{uid1}}",
 							"description": "(Required) id текущего пользователя"
 						}
 					]
@@ -205,6 +207,8 @@
 							"        await api.createFriendshipAndSubscription(user1.id, user3.id); \r",
 							"        await api.createFriendshipAndSubscription(user1.id, user5.id); \r",
 							"        await api.createFriendshipAndSubscription(user1.id, user6.id); \r",
+							"\r",
+							"        pm.collectionVariables.set(\"uid1\", user1.id)\r",
 							"\r",
 							"    } catch(err) {\r",
 							"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
@@ -304,7 +308,7 @@
 					"variable": [
 						{
 							"key": "subscriberId",
-							"value": "1"
+							"value": "{{uid1}}"
 						}
 					]
 				},
@@ -358,6 +362,8 @@
 							"        await api.createFriendshipAndSubscription(user1.id, user3.id); \r",
 							"        await api.createFriendshipAndSubscription(user1.id, user5.id); \r",
 							"        await api.createFriendshipAndSubscription(user1.id, user6.id); \r",
+							"\r",
+							"        pm.collectionVariables.set(\"uid1\", user1.id)\r",
 							"\r",
 							"    } catch(err) {\r",
 							"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
@@ -460,7 +466,7 @@
 					"variable": [
 						{
 							"key": "subscriberId",
-							"value": "1"
+							"value": "{{uid1}}"
 						}
 					]
 				},
@@ -514,6 +520,9 @@
 							"        await api.createFriendshipAndSubscription(user1.id, user3.id); \r",
 							"        await api.createFriendshipAndSubscription(user1.id, user5.id); \r",
 							"        await api.createFriendshipAndSubscription(user1.id, user6.id); \r",
+							"\r",
+							"        pm.collectionVariables.set(\"uid1\", user1.id)\r",
+							"        pm.collectionVariables.set(\"uid3\", user3.id)\r",
 							"\r",
 							"    } catch(err) {\r",
 							"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
@@ -617,11 +626,11 @@
 					"variable": [
 						{
 							"key": "subscriberId",
-							"value": "1"
+							"value": "{{uid1}}"
 						},
 						{
 							"key": "personId",
-							"value": "3"
+							"value": "{{uid3}}"
 						}
 					]
 				},
@@ -675,6 +684,8 @@
 							"        await api.createFriendshipAndSubscription(user1.id, user3.id); \r",
 							"        await api.createFriendshipAndSubscription(user1.id, user5.id); \r",
 							"        await api.createFriendshipAndSubscription(user1.id, user6.id); \r",
+							"\r",
+							"        pm.collectionVariables.set(\"uid1\", user1.id)\r",
 							"\r",
 							"    } catch(err) {\r",
 							"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
@@ -777,7 +788,7 @@
 					"variable": [
 						{
 							"key": "subscriberId",
-							"value": "1"
+							"value": "{{uid1}}"
 						}
 					]
 				},
@@ -831,6 +842,9 @@
 							"        await api.createFriendshipAndSubscription(user1.id, user3.id); \r",
 							"        await api.createFriendshipAndSubscription(user1.id, user5.id); \r",
 							"        await api.createFriendshipAndSubscription(user1.id, user6.id); \r",
+							"\r",
+							"        pm.collectionVariables.set(\"uid1\", user1.id)\r",
+							"        pm.collectionVariables.set(\"uid6\", user6.id)        \r",
 							"\r",
 							"    } catch(err) {\r",
 							"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
@@ -934,11 +948,11 @@
 					"variable": [
 						{
 							"key": "subscriberId",
-							"value": "1"
+							"value": "{{uid1}}"
 						},
 						{
 							"key": "personId",
-							"value": "6"
+							"value": "{{uid6}}"
 						}
 					]
 				},
@@ -1238,6 +1252,14 @@
 		},
 		{
 			"key": "source",
+			"value": ""
+		},
+		{
+			"key": "uid3",
+			"value": ""
+		},
+		{
+			"key": "uid6",
 			"value": ""
 		}
 	]

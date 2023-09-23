@@ -23,54 +23,34 @@ public class ExceptionController {
             MethodArgumentTypeMismatchException.class,
             MissingServletRequestParameterException.class})
     public ResponseEntity<ApiErrorMessage> badRequestExceptionHandler(Exception exception) {
-        log.error("{}", exception.getMessage());
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(ApiErrorMessage.builder()
-                        .reason("Incorrectly made request.")
-                        .message(exception.getMessage())
-                        .status(HttpStatus.BAD_REQUEST.toString())
-                        .errors(Arrays.stream(exception.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.toList()))
-                        .build());
+        return getResponseEntity(exception, HttpStatus.BAD_REQUEST, "Incorrectly made request.");
     }
 
     @ExceptionHandler({ConflictException.class,
             PSQLException.class,
             DataIntegrityViolationException.class})
     public ResponseEntity<ApiErrorMessage> conflictExceptionHandler(Exception exception) {
-        log.error("{}", exception.getMessage());
-        return ResponseEntity
-                .status(HttpStatus.CONFLICT)
-                .body(ApiErrorMessage.builder()
-                        .reason("Conflict is found")
-                        .message(exception.getMessage())
-                        .status(HttpStatus.CONFLICT.toString())
-                        .errors(Arrays.stream(exception.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.toList()))
-                        .build());
+        return getResponseEntity(exception, HttpStatus.CONFLICT, "Conflict is found.");
     }
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ApiErrorMessage> notFoundExceptionHandler(NotFoundException exception) {
-        log.error("{}", exception.getMessage());
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(ApiErrorMessage.builder()
-                        .reason("Some data is not found")
-                        .message(exception.getMessage())
-                        .status(HttpStatus.NOT_FOUND.toString())
-                        .errors(Arrays.stream(exception.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.toList()))
-                        .build());
+        return getResponseEntity(exception, HttpStatus.NOT_FOUND, "Some data is not found.");
     }
 
     @ExceptionHandler
     public ResponseEntity<ApiErrorMessage> otherExceptionHandler(Exception exception) {
+        return getResponseEntity(exception, HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL SERVER ERROR");
+    }
+
+    private ResponseEntity<ApiErrorMessage> getResponseEntity(Exception exception, HttpStatus httpStatus, String reason) {
         log.error("{}", exception.getMessage());
         return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .status(httpStatus)
                 .body(ApiErrorMessage.builder()
-                        .reason("INTERNAL SERVER ERROR")
+                        .reason(reason)
                         .message(exception.getMessage())
-                        .status(HttpStatus.NOT_FOUND.toString())
+                        .status(httpStatus.toString())
                         .errors(Arrays.stream(exception.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.toList()))
                         .build());
     }

@@ -49,6 +49,5 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                                            Iterable<Long> categories,
                                            Boolean paid,
                                            LocalDateTime rangeStart,
-                                           LocalDateTime rangeEnd,
-                                           Pageable pageable);
+                                           LocalDateTime rangeEnd);
 }

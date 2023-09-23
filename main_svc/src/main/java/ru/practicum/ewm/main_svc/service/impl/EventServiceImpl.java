@@ -155,8 +155,7 @@ public class EventServiceImpl implements EventService {
                         categories,
                         paid,
                         rangeStart,
-                        rangeEnd,
-                        PageRequest.of(from, size))
+                        rangeEnd)
                 .orElse(Collections.emptyList())
                 .stream()
                 .map(eventMapper::entity2eventShortDto)
@@ -178,13 +177,13 @@ public class EventServiceImpl implements EventService {
         });
 
         // save stat
-        statClient.saveHit(DtoHitIn.builder()
-                .app(applicationName)
-                .uri(request.getRequestURI())
-                .ip(request.getRemoteAddr())
-                .timestamp(LocalDateTime.now()).build());
+//        statClient.saveHit(DtoHitIn.builder()
+//                .app(applicationName)
+//                .uri(request.getRequestURI())
+//                .ip(request.getRemoteAddr())
+//                .timestamp(LocalDateTime.now()).build());
 
-        return eventShortDtoList;
+        return eventShortDtoList.stream().skip(from).limit(size).collect(Collectors.toList());
     }
 
     @Override
